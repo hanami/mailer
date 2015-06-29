@@ -56,7 +56,11 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/lotus/mailer.
+---
+**This project is part of the [Rails Girls Summer of Code 2015](https://teams.railsgirlssummerofcode.org/teams/66) program.**
+
+**Until the end of September 2015 we only accept contributions made by the students.**
+---
 
 ## Copyright
 
