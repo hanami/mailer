@@ -18,3 +18,4 @@ end
 
 require 'minitest/autorun'
 $:.unshift 'lib'
+require 'lotus/mailer'
