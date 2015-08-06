@@ -15,7 +15,6 @@ module Lotus
 
       attr_reader :mailers
       attr_reader :modules
-
       # Initialize a configuration instance
       #
       # @return [Lotus::Mailer::Configuration] a new configuration's instance
@@ -274,6 +273,7 @@ module Lotus
 
       # Load the configuration
       def load!
+        mailers.each { |m| m.__send__(:load!) }
         freeze
       end
 

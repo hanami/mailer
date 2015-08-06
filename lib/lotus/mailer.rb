@@ -3,14 +3,15 @@ require 'lotus/utils/class_attribute'
 require 'lotus/mailer/version'
 require 'lotus/mailer/configuration'
 require 'lotus/mailer/dsl'
+require 'lotus/mailer/inheritable'
 
 module Lotus
   module Mailer
     include Utils::ClassAttribute
-    
+
     class_attribute :configuration
     self.configuration = Configuration.new
-    
+
     # Configure the framework.
     # It yields the given block in the context of the configuration
     #
@@ -209,8 +210,6 @@ module Lotus
     #
     # @see http://www.ruby-doc.org/core-2.1.2/Module.html#method-i-included
     #
-    # @see Lotus::Mailer::Dsl
-    #
     # @example
     #   require 'lotus/mailer'
     #
@@ -222,7 +221,7 @@ module Lotus
       conf.add_mailer(base)
 
       base.class_eval do
-        # extend Inheritable.dup
+        extend Inheritable.dup
         extend Dsl.dup
         # extend Rendering.dup
         # extend Escape.dup
@@ -243,13 +242,14 @@ module Lotus
     # @since 0.1.0
     # @api private
     def self.load!
+      puts 'here'
       configuration.load!
     end
-    
+
     # Reset the configuration
     def self.reset!
       configuration.reset!
     end
-    
+
   end
 end

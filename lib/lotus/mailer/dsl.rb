@@ -54,9 +54,10 @@ module Lotus
       # When a value is given, specify the relative path to the template.
       # Otherwise, it returns the name that follows Lotus::Mailer conventions.
       #
+      # @param format [Symbol] template format
       # @param value [String] relative template path
       #
-      # @return [String] the default template name for this mailer
+      # @return [Template] the template with the correspondent format for the mailer
       #
       # @since 0.1.0
       #
@@ -69,8 +70,7 @@ module Lotus
       #       template :json, 'articles/single_article'
       #     end
       #
-      #   Articles::Show.templates     # :json => 'articles/single_article'
-      #   Articles::Show.template      # 'articles'
+      #   Articles::Show.template(:json)      # 'articles'
       #
       # @example With nested namespace
       #   require 'lotus/mailer'
@@ -112,7 +112,7 @@ module Lotus
 
       # Returns the Hash with all the templates of the mailer
       #
-      # @return [String] the Hash with the templates
+      # @return [Hash] the Hash with the templates
       #
       # @since 0.1.0
       #
@@ -124,7 +124,12 @@ module Lotus
       #   end
       def templates(value = nil)
         if value.nil?
-          @templates
+          # If no templates are given, use the default templates instead
+          if @templates.empty?
+            Mailer::Rendering::TemplatesFinder.new(self).find
+          else
+            @templates
+          end
         else
           @templates = value
         end
@@ -140,7 +145,6 @@ module Lotus
       # @see Lotus::Mailer.load!
       def load!
         super
-
         mailers.each do |m|
           m.root.freeze
           m.format.freeze
