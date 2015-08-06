@@ -19,4 +19,9 @@ end
 require 'minitest/autorun'
 $:.unshift 'lib'
 require 'lotus/mailer'
+
+Lotus::Mailer.configure do
+  root Pathname.new __dir__ + '/fixtures/templates'
+end
+
 require 'fixtures'

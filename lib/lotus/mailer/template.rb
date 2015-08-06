@@ -38,6 +38,16 @@ module Lotus
       def render(scope, &blk)
         @_template.render(scope, {}, &blk)
       end
+      
+      # Get the path to the template
+      # 
+      # @return [String] the pathname
+      #
+      # @since 0.1.0
+      def file
+        @_template.file
+      end
+      
     end
   end
 end

@@ -62,12 +62,12 @@ module Lotus
         #   Articles::Show.root     # => "/path/to/templates"
         #   Articles::Show.templates # => {[:html] => "articles/show"}
         #
-        #   # This view has a template:
+        #   # This mailer has a template:
         #   #
         #   #   "/path/to/templates/articles/show.html.erb"
         #
         #   Lotus::Mailer::Rendering::TemplatesFinder.new(Articles::Show).find
-        #     # => [#<Lotus::View::Template:0x007f8a0a86a970 ... @file="/path/to/templates/articles/show.html.erb">]
+        #     # => [#<Lotus::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/articles/show.html.erb">]
         def find
           templates = Hash.new
           _find.map do |template|

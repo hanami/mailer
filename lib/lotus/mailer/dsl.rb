@@ -1,5 +1,6 @@
 require 'lotus/mailer/rendering/template_name'
 require 'lotus/mailer/rendering/templates_finder'
+require 'lotus/mailer/rendering/template_finder'
 
 module Lotus
   module Mailer
@@ -97,14 +98,18 @@ module Lotus
       #   Frontend::InvoiceMailer.template       # => 'standalone_mailer'
       #   Frontend::Mailers::Invoice.template    # => 'standalone'
       #   Frontend::Views::Sessions::New.template # => 'sessions/new'
-      def template(key=nil, value = nil)
+      def template(format = nil, value = nil)
         if value.nil?
-          @template ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
+          if !@templates.has_key?(format)
+            @templates[format] = Rendering::TemplateName.new(name, configuration.namespace).to_s
+          else
+            @templates[format]
+          end
         else
-          @templates[key] = value
+          @templates[format] = Mailer::Template.new("#{ [root, value].join('/') }")
         end
       end
-      
+
       # Returns the Hash with all the templates of the mailer
       #
       # @return [String] the Hash with the templates
@@ -117,7 +122,7 @@ module Lotus
       #     include Lotus::Mailer
       #     self.templates
       #   end
-      def templates (value = nil)
+      def templates(value = nil)
         if value.nil?
           @templates
         else
@@ -135,24 +140,13 @@ module Lotus
       # @see Lotus::Mailer.load!
       def load!
         super
-        find_templates
+
         mailers.each do |m|
           m.root.freeze
           m.format.freeze
           m.templates.freeze
           m.configuration.freeze
         end
-      end
-      
-      # Find templates matching class name in the root folder
-      # with TemplatesFinder
-      #
-      # @api private
-      # @since 0.1.0
-      #
-      # @see Lotus::Mailer.load!
-      def find_templates
-        @templates = Rendering::TemplatesFinder.new(configuration.namespace)
       end
     end
   end
