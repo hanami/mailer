@@ -127,7 +127,7 @@ module Lotus
       # end
       def from (value = nil)
         if value.nil?
-          return new.from
+          return new.eval_proc(@from)
         else
           @from = value
         end
@@ -170,14 +170,12 @@ module Lotus
       # end
       def to (value = nil)
         if value.nil?
-          return @to
+          return new.eval_proc(@to)
         end
-        if value.is_a?(String)
-          @to = value
-        elsif value.is_a?(Array)
+        if value.is_a?(Array)
           @to = value.join(',')
-        elsif value.is_a?(Proc)
-          #@to.instance_eval(value)
+        else
+          @to = value
         end
       end
 
@@ -210,12 +208,9 @@ module Lotus
       # end
       def subject (value = nil)
         if value.nil?
-          return @subject
-        end
-        if value.is_a?(String)
+          return new.eval_proc(@subject)
+        else
           @subject = value
-        elsif value.is_a?(Proc)
-          #@subject.instance_eval(value)
         end
       end
 
