@@ -128,8 +128,7 @@ module Lotus
     #   # it's equivalent to:
     #
     #   module MyApp
-    #     Mailer   = Lotus::Mailer.dupe
-    #     Layout = Lotus::Layout.dup
+    #     Mailer = Lotus::Mailer.dupe
     #
     #     module Mailers
     #     end
@@ -236,6 +235,17 @@ module Lotus
 
       conf.copy!(base)
     end
+
+    def from
+      raise self.class.instance_variables.inspect
+      if (self.class.instance_variable_get(:@from)).is_a?(Proc)
+        instance_exec(&self.class.instance_variable_get(:@from))
+      else
+        self.class.instance_variable_get(:@from)
+      end
+    end
+
+
 
     # Load the framework
     #
