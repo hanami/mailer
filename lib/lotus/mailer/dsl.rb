@@ -112,7 +112,6 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   from "noreply@example.com"
-      #
       # end
       #
       # @example With Procs
@@ -147,7 +146,6 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   to "noreply@example.com"
-      #
       # end
       #
       # @example With Array of Strings
@@ -155,7 +153,6 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   to ["noreply1@example.com", "noreply2@example.com"]
-      #
       # end
       #
       # @example With Procs
@@ -193,14 +190,13 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   subject "This is the subject"
-      #
       # end
       #
       # @example With Procs
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   from = Proc.new { customized_subject }
+      #   subject -> { customized_subject }
       #
       #   def customized_subject
       #     "This is the subject"
