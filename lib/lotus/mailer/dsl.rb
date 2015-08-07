@@ -125,9 +125,9 @@ module Lotus
       #     "user_sender@example.com"
       #   end
       # end
-      def from (value = nil)
+      def from(value = nil)
         if value.nil?
-          return new.eval_proc(@from)
+          new.eval_proc(@from)
         else
           @from = value
         end
@@ -168,7 +168,7 @@ module Lotus
       #     "user_receiver@example.com"
       #   end
       # end
-      def to (value = nil)
+      def to(value = nil)
         if value.nil?
           return new.eval_proc(@to)
         end
@@ -206,9 +206,9 @@ module Lotus
       #     "This is the subject"
       #   end
       # end
-      def subject (value = nil)
+      def subject(value = nil)
         if value.nil?
-          return new.eval_proc(@subject)
+          new.eval_proc(@subject)
         else
           @subject = value
         end
