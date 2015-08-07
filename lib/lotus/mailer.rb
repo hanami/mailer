@@ -241,7 +241,6 @@ module Lotus
     # @since 0.1.0
     # @api private
     def self.load!
-      puts 'here'
       configuration.load!
     end
 
