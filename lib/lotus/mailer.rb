@@ -128,8 +128,7 @@ module Lotus
     #   # it's equivalent to:
     #
     #   module MyApp
-    #     Mailer   = Lotus::Mailer.dupe
-    #     Layout = Lotus::Layout.dup
+    #     Mailer = Lotus::Mailer.dupe
     #
     #     module Mailers
     #     end

@@ -76,7 +76,7 @@ module Lotus
       #   require 'lotus/mailer'
       #
       #   module Frontend
-      #     View = Lotus::Mailer.generate(self)
+      #     Mailer = Lotus::Mailer.generate(self)
       #
       #     class InvoiceMailer
       #       include Frontend::Mailer
@@ -97,7 +97,7 @@ module Lotus
       #
       #   Frontend::InvoiceMailer.template       # => 'standalone_mailer'
       #   Frontend::Mailers::Invoice.template    # => 'standalone'
-      #   Frontend::Views::Sessions::New.template # => 'sessions/new'
+      #   Frontend::Mailers::Sessions::New.template # => 'sessions/new'
       def template(format = nil, value = nil)
         if value.nil?
           if !@templates.has_key?(format)
