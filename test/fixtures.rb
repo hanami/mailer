@@ -23,7 +23,7 @@ end
 class ProcMailer
   include Lotus::Mailer
 
-  from = Proc.new { customized_sender }
+  from -> { customized_sender }
   to -> { customized_receiver }
   subject -> { customized_subject }
 
