@@ -98,6 +98,128 @@ module Lotus
         end
       end
 
+      # When a value is given, specify the sender of the email
+      # Otherwise, it returns the sender of the email
+      #
+      # @param value [Object] String or Proc to be evaluated containing the sender of the email
+      #
+      # @return [String] the sender of the email
+      #
+      # @since 0.1.0
+      #
+      # @example With String
+      # class StringMailer
+      #   include Lotus::Mailer
+      #
+      #   from "noreply@example.com"
+      #
+      # end
+      #
+      # @example With Procs
+      # class ProcMailer
+      #   include Lotus::Mailer
+      #
+      #   from = Proc.new { customized_sender }
+      #
+      #   def customized_sender
+      #     "user_sender@example.com"
+      #   end
+      # end
+      def from (value = nil)
+        if value.nil?
+          return new.from
+        else
+          @from = value
+        end
+      end
+
+      # When a value is given, specify the email addresses that will be the recipients of the email
+      # Otherwise, it returns the email addresses that will be the recipients of the email
+      #
+      # @param value [Object] String, Array of Strings or Proc to be evaluated containing the email addresses that will be the recipients of the email
+      #
+      # @return [String] the email addresses that will be the recipients of the email
+      #
+      # @since 0.1.0
+      #
+      # @example With String
+      # class StringMailer
+      #   include Lotus::Mailer
+      #
+      #   to "noreply@example.com"
+      #
+      # end
+      #
+      # @example With Array of Strings
+      # class ArrayMailer
+      #   include Lotus::Mailer
+      #
+      #   to ["noreply1@example.com", "noreply2@example.com"]
+      #
+      # end
+      #
+      # @example With Procs
+      # class ProcMailer
+      #   include Lotus::Mailer
+      #
+      #   to = Proc.new { customized_receiver }
+      #
+      #   def customized_receiver
+      #     "user_receiver@example.com"
+      #   end
+      # end
+      def to (value = nil)
+        if value.nil?
+          return @to
+        end
+        if value.is_a?(String)
+          @to = value
+        elsif value.is_a?(Array)
+          @to = value.join(',')
+        elsif value.is_a?(Proc)
+          #@to.instance_eval(value)
+        end
+      end
+
+      # When a value is given, specify the subject of the email
+      # Otherwise, it returns the subject of the email
+      #
+      # @param value [Object] String or Proc to be evaluated containing the subject of the email
+      #
+      # @return [String] the subject of the email
+      #
+      # @since 0.1.0
+      #
+      # @example With String
+      # class StringMailer
+      #   include Lotus::Mailer
+      #
+      #   subject "This is the subject"
+      #
+      # end
+      #
+      # @example With Procs
+      # class ProcMailer
+      #   include Lotus::Mailer
+      #
+      #   from = Proc.new { customized_subject }
+      #
+      #   def customized_subject
+      #     "This is the subject"
+      #   end
+      # end
+      def subject (value = nil)
+        if value.nil?
+          return @subject
+        end
+        if value.is_a?(String)
+          @subject = value
+        elsif value.is_a?(Proc)
+          #@subject.instance_eval(value)
+        end
+      end
+
+
       protected
 
       # Loading mechanism hook.
