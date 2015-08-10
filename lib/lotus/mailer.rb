@@ -104,12 +104,6 @@ module Lotus
     #     Mailer = Lotus::Mailer.duplicate(self)
     #   end
     #
-    #   # It will: (TODO: REVIEW THIS)
-    #   #
-    #   # 1. Generate MyApp::Mailer
-    #   # 2. Generate MyApp::Mailers
-    #   # 3. Configure MyApp::Mailers as the default namespace for mailers
-    #
     #  module MyApp::Mailers::Dashboard
     #    class Index
     #      include MyApp::Mailer
@@ -185,10 +179,6 @@ module Lotus
     def self.duplicate(mod, mailers = 'Mailers', &blk)
       dupe.tap do |duplicated|
         mod.module_eval %{ module #{ mailers }; end } if mailers
-        # mod.module_eval %{
-        #   Layout = Lotus::Layout.dup
-        #   Presenter = Lotus::Presenter.dup
-        # }
 
         duplicated.configure do
           namespace [mod, mailers].compact.join '::'
@@ -222,8 +212,6 @@ module Lotus
       base.class_eval do
         extend Inheritable.dup
         extend Dsl.dup
-        # extend Rendering.dup
-        # extend Escape.dup
 
         include Utils::ClassAttribute
         class_attribute :configuration
