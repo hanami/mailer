@@ -182,5 +182,17 @@ describe Lotus::Mailer::Configuration do
       @configuration.root.must_equal root
     end
   end
+
+  describe '#delivery_method' do
+    before do
+      MyCustomDeliveryMethod = :smtp
+      Lotus::Mailer.configure do
+        delivery_method MyCustomDeliveryMethod, foo: 'bar'
+      end
+    end
   
+    it 'saves the delivery method in the configuration' do
+      Lotus::Mailer.configuration.delivery_method.must_equal [:smtp, { foo: 'bar' }]
+    end
+  end
 end
