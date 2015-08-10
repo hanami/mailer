@@ -115,13 +115,6 @@ module Lotus
       # @return [Hash] the Hash with the templates
       #
       # @since 0.1.0
-      #
-      # @example fetch templates
-      #   require 'lotus/mailer'
-      #   class InvoiceMailer
-      #     include Lotus::Mailer
-      #     self.templates
-      #   end
       def templates(value = nil)
         if value.nil?
           # If no templates are given, use the default templates instead
