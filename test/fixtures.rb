@@ -17,7 +17,6 @@ class StringMailer
   from "noreply@example.com"
   to "noreply1@example.com"
   subject "This is the subject"
-
 end
 
 class ProcMailer
@@ -43,8 +42,5 @@ end
 class ArrayMailer
   include Lotus::Mailer
 
-  from "noreply@example.com"
   to ["noreply1@example.com", "noreply2@example.com"]
-  subject "This is the subject"
-
 end
