@@ -118,12 +118,12 @@ module Lotus
           @namespace
         end
       end
-      
+
       # Set the root path where to search for templates
       #
       # If not set, this value defaults to the current directory.
       #
-      # When this method is called with an argument, it will set the corresponding instance variable. 
+      # When this method is called with an argument, it will set the corresponding instance variable.
       # When called without, it will return the already set value, or the default.
       #
       # @overload root(value)
