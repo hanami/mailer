@@ -35,19 +35,19 @@ module Lotus
       # @since 0.1.0
       #
       # @see Lotus::Mailer::Scope
-      def render(scope, &blk)
-        @_template.render(scope, {}, &blk)
+      def render
+        @_template.render
       end
-      
+
       # Get the path to the template
-      # 
+      #
       # @return [String] the pathname
       #
       # @since 0.1.0
       def file
         @_template.file
       end
-      
+
     end
   end
 end

@@ -9,8 +9,8 @@ describe Lotus::Mailer do
   describe '#template' do
     describe 'set_the_correct_templates' do
       it 'has_the_template_in_the_hash' do
-        template_test = InvoiceMailer.templates[:html]
-        template_test.file.must_equal("#{ InvoiceMailer.root }/invoice.html.erb")
+        templateTest = InvoiceMailer.templates[:html]
+        templateTest.file.must_equal("#{ InvoiceMailer.root }/invoice.html.erb")
       end
     end
   end
@@ -18,8 +18,8 @@ describe Lotus::Mailer do
   describe '#templates' do
     describe 'finds_all_the_templates_with_the_same_name' do
       it 'has_the_template_in_the_hash' do
-        template_test = LazyMailer.templates[:html]
-        template_test.file.must_equal("#{ LazyMailer.root }/lazy_mailer.html.erb")
+        templateTest = LazyMailer.templates[:html]
+        templateTest.file.must_equal("#{ LazyMailer.root }/lazy_mailer.html.erb")
       end
     end
   end

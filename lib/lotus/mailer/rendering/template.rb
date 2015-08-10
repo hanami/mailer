@@ -47,9 +47,9 @@ module Lotus
           TemplateFinder.new(@mailer.class, @options).find
         end
 
-        # def scope
-        #   Scope.new(@mailer, @options[:locals])
-        # end
+        def scope
+         Scope.new(@mailer, @options[:locals])
+        end
       end
     end
   end
