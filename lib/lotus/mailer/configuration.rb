@@ -164,7 +164,6 @@ module Lotus
       # Reset the configuration
       def reset!
         root(DEFAULT_ROOT)
-
         @mailers      = Set.new
         @modules    = []
       end
@@ -183,10 +182,50 @@ module Lotus
         end
       end
 
+      # Specify a global delivery method
+      #
+      # @param method [Symbol] delivery method
+      # @param options [Hash] optional settings
+      #
+      # @return [Array] an array containing the delivery method and the optional settings as an Hash
+      #
+      # @since 0.1.0
+      #
+      # @example With Method only
+      # Lotus::Mailer.configure do
+      #   delivery_method :sendmail
+      # end
+      #
+      # @example With Method and Options
+      # Lotus::Mailer.configure do
+      #   delivery_method :smtp, address: "localhost", port: 1025
+      # end
+      #
+      # @example Using a Method Alias
+      # Lotus::Mailer.configure do
+      #   delivery :test
+      # end
+      #
+      # @example With Custom Method
+      # MyCustomDeliveryMethod = :smtp
+      #
+      # Lotus::Mailer.configure do
+      #   delivery_method MyCustomDeliveryMethod, foo: 'bar'
+      # end
+      def delivery_method(method = nil, options = {})
+        if method.nil?
+          @delivery_method
+        else
+          @delivery_method = [method, options]
+        end
+      end
+
       alias_method :unload!, :reset!
+      alias_method :delivery, :delivery_method
 
       protected
       attr_writer :root
+      attr_writer :delivery_method
       attr_writer :namespace
       attr_writer :modules
     end

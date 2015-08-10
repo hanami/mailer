@@ -1,3 +1,5 @@
+require 'mail'
+
 class InvoiceMailer
   include Lotus::Mailer
   template :html, 'invoice.html.erb'
