@@ -3,7 +3,6 @@ require 'lotus/utils/class_attribute'
 require 'lotus/mailer/version'
 require 'lotus/mailer/configuration'
 require 'lotus/mailer/dsl'
-require 'lotus/mailer/inheritable'
 
 module Lotus
   module Mailer
@@ -210,7 +209,6 @@ module Lotus
       conf.add_mailer(base)
 
       base.class_eval do
-        extend Inheritable.dup
         extend Dsl.dup
 
         include Utils::ClassAttribute
