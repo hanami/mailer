@@ -178,67 +178,6 @@ module Lotus
       #
       # @see Lotus::Mailer.configure
       # @see Lotus::Mailer.duplicate
-      #
-      # @example Including shared utilities
-      #   require 'lotus/mailer'
-      #
-      #   module UrlHelpers
-      #     def comments_path
-      #       '/'
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.configure do
-      #     prepare do
-      #       include UrlHelpers
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.load!
-      #
-      #   module Comments
-      #     class New
-      #       # The following include will cause UrlHelpers to be included too.
-      #       # This makes `comments_path` available in the mailer context
-      #       include Lotus::Mailer
-      #
-      #       def form
-      #         %(<form action="#{ comments_path }" method="POST"></form>)
-      #       end
-      #     end
-      #   end
-      #
-      # @example Preparing multiple times
-      #   require 'lotus/mailer'
-      #
-      #   Lotus::Mailer.configure do
-      #     prepare do
-      #       include UrlHelpers
-      #     end
-      #
-      #     prepare do
-      #       format :json
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.configure do
-      #     prepare do
-      #       include FormattingHelpers
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.load!
-      #
-      #   module Articles
-      #     class Index
-      #       # The following include will cause the inclusion of:
-      #       #   * UrlHelpers
-      #       #   * FormattingHelpers
-      #       #
-      #       # It also sets the mailer to render only JSON
-      #       include Lotus::Mailer
-      #     end
-      #   end
       def prepare(&blk)
         if block_given?
           @modules.push(blk)
@@ -265,8 +204,6 @@ module Lotus
         Configuration.new.tap do |c|
           c.namespace  = namespace
           c.root       = root
-          # c.layout     = @layout # lazy loading of the class
-          # c.load_paths = load_paths.dup
           c.modules    = modules.dup
         end
       end
@@ -282,9 +219,6 @@ module Lotus
         root(DEFAULT_ROOT)
 
         @mailers      = Set.new
-        # @layouts    = Set.new
-        # @load_paths = Utils::LoadPaths.new(root)
-        # @layout     = nil
         @modules    = []
       end
 
@@ -307,8 +241,6 @@ module Lotus
       protected
       attr_writer :root
       attr_writer :namespace
-      # attr_writer :load_paths
-      # attr_writer :layout
       attr_writer :modules
     end
   end
