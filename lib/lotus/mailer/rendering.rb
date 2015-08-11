@@ -11,6 +11,7 @@ module Lotus
       #
       # @since 0.1.0
       def render(format)
+        templates
         @templates[format].render
       end
 

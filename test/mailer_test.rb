@@ -20,6 +20,8 @@ describe Lotus::Mailer do
       it 'has_the_template_in_the_hash' do
         templateTest = LazyMailer.templates[:html]
         templateTest.file.must_equal("#{ LazyMailer.root }/lazy_mailer.html.erb")
+        templateTest = LazyMailer.templates[:haml]
+        templateTest.file.must_equal("#{ LazyMailer.root }/lazy_mailer.haml.erb")
       end
     end
   end

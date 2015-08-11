@@ -119,7 +119,7 @@ module Lotus
         if value.nil?
           # If no templates are given, use the default templates instead
           if @templates.empty?
-            Mailer::Rendering::TemplatesFinder.new(self).find
+            @templates = Mailer::Rendering::TemplatesFinder.new(self).find
           else
             @templates
           end
