@@ -113,10 +113,7 @@ describe Lotus::Mailer::Configuration do
   describe '#duplicate' do
     before do
       @configuration.root 'test'
-      # @configuration.load_paths << '..'
-      # @configuration.layout :application
       @configuration.add_mailer( InvoiceMailer )
-      # @configuration.add_layout(ApplicationLayout)
       @configuration.prepare { include Kernel }
 
       @config = @configuration.duplicate
@@ -124,45 +121,22 @@ describe Lotus::Mailer::Configuration do
 
     it 'returns a copy of the configuration' do
       @config.root.must_equal       @configuration.root
-      # @config.load_paths.must_equal @configuration.load_paths
-      # @config.layout.must_equal     @configuration.layout
       @config.modules.must_equal    @configuration.modules
       @config.mailers.must_be_empty
-      # @config.layouts.must_be_empty
     end
 
     it "doesn't affect the original configuration" do
       @config.root '.'
-      # @config.load_paths << '../..'
-      # @config.layout :global
       @config.add_mailer(RenderMailer)
-      # @config.add_layout(GlobalLayout)
       @config.prepare { include Comparable }
 
       @config.root.must_equal         Pathname.new('.').realpath
-
-      # @config.load_paths.must_include @config.root
-      # @config.load_paths.must_include '..'
-      # @config.load_paths.must_include '../..'
-
-      # @config.layout.must_equal       GlobalLayout
       @config.mailers.must_include      RenderMailer
-      # @config.layouts.must_include    GlobalLayout
       @config.modules.size.must_equal 2
 
       @configuration.root.must_equal       Pathname.new('test').realpath
-
-      # @configuration.load_paths.must_include @config.root
-      # @configuration.load_paths.must_include '..'
-      # @configuration.load_paths.wont_include '../..'
-
-      # @configuration.layout.must_equal     ApplicationLayout
-
       @configuration.mailers.must_include    InvoiceMailer
       @configuration.mailers.wont_include    RenderMailer
-
-      # @configuration.layouts.must_include  ApplicationLayout
-      # @configuration.layouts.wont_include  GlobalLayout
     end
 
     it 'duplicates namespace' do
@@ -196,7 +170,7 @@ describe Lotus::Mailer::Configuration do
     end
 
   end
-  
+
   describe '#load!' do
     before do
       @configuration.root 'test'
@@ -208,4 +182,5 @@ describe Lotus::Mailer::Configuration do
       @configuration.root.must_equal root
     end
   end
+  
 end
