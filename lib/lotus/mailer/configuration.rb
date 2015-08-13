@@ -25,59 +25,6 @@ module Lotus
         reset!
       end
 
-      # Return the original configuration of the framework instance associated
-      # with the given class.
-      #
-      # When multiple instances of Lotus::Mailer are used in the same application,
-      # we want to make sure that a controller or an action will  receive the
-      # expected configuration.
-      #
-      # @param base [Class] a mailer
-      #
-      # @return [Lotus::Controller::Configuration] the configuration associated
-      #   to the given class.
-      #
-      # @since 0.1.0
-      # @api private
-      #
-      # @example Direct usage of the framework
-      #   require 'lotus/mailer'
-      #
-      #   class Show
-      #     include Lotus::Mailer
-      #   end
-      #
-      #   Lotus::Mailer::Configuration.for(Show)
-      #     # => will return from Lotus::Mailer
-      #
-      # @example Multiple instances of the framework
-      #   require 'lotus/mailer'
-      #
-      #   module MyApp
-      #     Mailer = Lotus::Mailer.duplicate(self)
-      #
-      #     module Mailers::Dashboard
-      #       class Index
-      #         include MyApp::Mailer
-      #       end
-      #     end
-      #   end
-      #
-      #   class Show
-      #     include Lotus::Action
-      #   end
-      #
-      #   Lotus::Mailer::Configuration.for(Show)
-      #     # => will return from Lotus::Mailer
-      #
-      #   Lotus::Mailer::Configuration.for(MyApp::Views::Dashboard::Index)
-      #     # => will return from MyApp::Mailer
-      def self.for(base)
-        namespace = Utils::String.new(base).namespace
-        framework = Utils::Class.load_from_pattern!("(#{namespace}|Lotus)::Mailer")
-        framework.configuration
-      end
-
       # Set the Ruby namespace where to lookup for mailers.
       #
       # When multiple instances of the framework are used, we want to make sure

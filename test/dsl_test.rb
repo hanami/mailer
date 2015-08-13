@@ -34,4 +34,49 @@ describe Lotus::Mailer do
       end
     end
   end
+
+  describe '#from' do
+    describe 'sets the correct sender address given a string' do
+      it 'has the address in the variable' do
+        StringMailer.from.must_equal 'noreply@example.com'
+      end
+    end
+    describe 'sets the correct sender address given a proc' do
+      it 'has the address in the variable' do
+        ProcMailer.from.must_equal 'user_sender@example.com'
+      end
+    end
+  end
+
+  describe '#to' do
+    describe 'sets the correct recipients given a string' do
+      it 'has the recipients in the variable' do
+        StringMailer.to.must_equal 'noreply1@example.com'
+      end
+    end
+    describe 'sets the correct recipients given an array' do
+      it 'has the recipients in the variable' do
+        ArrayMailer.to.must_equal 'noreply1@example.com,noreply2@example.com'
+      end
+    end
+    describe 'sets the correct recipients given a proc' do
+      it 'has the recipients in the variable' do
+        ProcMailer.to.must_equal 'user_receiver@example.com'
+      end
+    end
+  end
+
+  describe '#subject' do
+    describe 'sets the correct subject given a string' do
+      it 'has the subject in the variable' do
+        StringMailer.subject.must_equal 'This is the subject'
+      end
+    end
+    describe 'sets the correct subject given a proc' do
+      it 'has the subject in the variable' do
+        ProcMailer.subject.must_equal 'This is the subject'
+      end
+    end
+  end
+
 end

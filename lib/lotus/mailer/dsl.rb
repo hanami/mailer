@@ -214,7 +214,6 @@ module Lotus
         end
       end
 
-
       protected
 
       # Loading mechanism hook.
