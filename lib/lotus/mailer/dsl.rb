@@ -74,8 +74,6 @@ module Lotus
         if value.nil?
           if !@templates.has_key?(format)
             @templates[format] = Rendering::TemplateName.new(name, configuration.namespace).to_s
-          else
-            @templates[format]
           end
         else
           @templates[format] = Mailer::Template.new("#{ [root, value].join('/') }")
