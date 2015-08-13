@@ -10,21 +10,6 @@ module Lotus
         @_template = Tilt.new(template)
       end
 
-      # Returns the format that the template handles.
-      #
-      # @return [Symbol] the format name
-      #
-      # @since 0.1.0
-      #
-      # @example
-      #   require 'lotus/mailer'
-      #
-      #   template = Lotus::Mailer::Template.new('index.html.erb')
-      #   template.format # => :html
-      def format
-        @_template.basename.match(/\.([^.]+)/).captures.first.to_sym
-      end
-
       # Render the template within the context of the given scope.
       #
       # @param scope [Lotus::Mailer::Scope] the rendering scope
@@ -38,16 +23,16 @@ module Lotus
       def render(scope, &blk)
         @_template.render(scope, {}, &blk)
       end
-      
+
       # Get the path to the template
-      # 
+      #
       # @return [String] the pathname
       #
       # @since 0.1.0
       def file
         @_template.file
       end
-      
+
     end
   end
 end

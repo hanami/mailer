@@ -1,6 +1,5 @@
 require 'lotus/mailer/rendering/template_name'
 require 'lotus/mailer/rendering/templates_finder'
-require 'lotus/mailer/rendering/template_finder'
 
 module Lotus
   module Mailer
@@ -71,39 +70,10 @@ module Lotus
       #     end
       #
       #   Articles::Show.template(:json)      # 'articles'
-      #
-      # @example With nested namespace
-      #   require 'lotus/mailer'
-      #
-      #   module Frontend
-      #     Mailer = Lotus::Mailer.generate(self)
-      #
-      #     class InvoiceMailer
-      #       include Frontend::Mailer
-      #     end
-      #
-      #     module Mailers
-      #       class Invoice
-      #         include Frontend::Mailer
-      #       end
-      #
-      #       module Sessions
-      #         class New
-      #           include Frontend::Mailer
-      #         end
-      #       end
-      #     end
-      #   end
-      #
-      #   Frontend::InvoiceMailer.template       # => 'standalone_mailer'
-      #   Frontend::Mailers::Invoice.template    # => 'standalone'
-      #   Frontend::Mailers::Sessions::New.template # => 'sessions/new'
       def template(format = nil, value = nil)
         if value.nil?
           if !@templates.has_key?(format)
             @templates[format] = Rendering::TemplateName.new(name, configuration.namespace).to_s
-          else
-            @templates[format]
           end
         else
           @templates[format] = Mailer::Template.new("#{ [root, value].join('/') }")

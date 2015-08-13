@@ -26,7 +26,7 @@ describe Lotus::Mailer do
 
   describe '#templates' do
     describe 'finds all the templates with the same name' do
-      it 'has_the_template_in_the_hash' do
+      it 'has the template in the hash' do
         template_test = LazyMailer.templates[:html]
         template_test.file.must_equal("#{ LazyMailer.root }/lazy_mailer.html.erb")
         template_test = LazyMailer.templates[:haml]
