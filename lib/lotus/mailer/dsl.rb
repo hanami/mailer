@@ -112,22 +112,21 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   from "noreply@example.com"
-      #
       # end
       #
       # @example With Procs
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   from = Proc.new { customized_sender }
+      #   from -> { customized_sender }
       #
       #   def customized_sender
       #     "user_sender@example.com"
       #   end
       # end
-      def from (value = nil)
+      def from(value = nil)
         if value.nil?
-          return new.eval_proc(@from)
+          new.eval_proc(@from)
         else
           @from = value
         end
@@ -147,7 +146,6 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   to "noreply@example.com"
-      #
       # end
       #
       # @example With Array of Strings
@@ -155,20 +153,19 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   to ["noreply1@example.com", "noreply2@example.com"]
-      #
       # end
       #
       # @example With Procs
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   to = Proc.new { customized_receiver }
+      #   to -> { customized_receiver }
       #
       #   def customized_receiver
       #     "user_receiver@example.com"
       #   end
       # end
-      def to (value = nil)
+      def to(value = nil)
         if value.nil?
           return new.eval_proc(@to)
         end
@@ -193,7 +190,6 @@ module Lotus
       #   include Lotus::Mailer
       #
       #   subject "This is the subject"
-      #
       # end
       #
       # @example With Procs
@@ -206,9 +202,9 @@ module Lotus
       #     "This is the subject"
       #   end
       # end
-      def subject (value = nil)
+      def subject(value = nil)
         if value.nil?
-          return new.eval_proc(@subject)
+          new.eval_proc(@subject)
         else
           @subject = value
         end
