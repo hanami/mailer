@@ -159,7 +159,7 @@ module Lotus
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   to = Proc.new { customized_receiver }
+      #   to -> { customized_receiver }
       #
       #   def customized_receiver
       #     "user_receiver@example.com"
@@ -204,7 +204,7 @@ module Lotus
       # end
       def subject(value = nil)
         if value.nil?
-          return new.eval_proc(@subject)
+          new.eval_proc(@subject)
         else
           @subject = value
         end
