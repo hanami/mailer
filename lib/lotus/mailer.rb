@@ -64,6 +64,21 @@ module Lotus
       conf.copy!(base)
     end
 
+    # Evaluate Proc
+    # It evaluates an object, and if it is a Proc executes it
+    #
+    # param var [Object] the object to be evaluated
+    #
+    # @since 0.1.0
+    # @api private
+    def eval_proc(var)
+      if var.is_a?(Proc)
+        instance_exec(&var)
+      else
+        var
+      end
+    end
+
     # Load the framework
     #
     # @since 0.1.0
