@@ -196,7 +196,7 @@ module Lotus
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   from = Proc.new { customized_subject }
+      #   subject -> { customized_subject }
       #
       #   def customized_subject
       #     "This is the subject"
