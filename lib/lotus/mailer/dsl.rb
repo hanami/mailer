@@ -118,7 +118,7 @@ module Lotus
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   from = Proc.new { customized_sender }
+      #   from -> { customized_sender }
       #
       #   def customized_sender
       #     "user_sender@example.com"
@@ -159,7 +159,7 @@ module Lotus
       # class ProcMailer
       #   include Lotus::Mailer
       #
-      #   to = Proc.new { customized_receiver }
+      #   to -> { customized_receiver }
       #
       #   def customized_receiver
       #     "user_receiver@example.com"
