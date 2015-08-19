@@ -12,16 +12,15 @@ module Lotus
 
       # Render the template within the context of the given scope.
       #
-      # @param scope [Lotus::Mailer::Scope] the rendering scope
+      # @param scope [Class] the rendering scope
+      # @param locals [Hash] set of objects passed to the constructor
       #
       # @return [String] the output of the rendering process
       #
       # @api private
       # @since 0.1.0
-      #
-      # @see Lotus::Mailer::Scope
-      def render
-        @_template.render
+      def render(scope = Object.new, locals = {})
+        @_template.render(scope, locals)
       end
 
       # Get the path to the template
