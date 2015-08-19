@@ -52,12 +52,12 @@ module Lotus
     def self.included(base)
       conf = self.configuration
       conf.add_mailer(base)
-      base.extend(ClassMethods)
-      base.include(InstanceMethods)
 
       base.class_eval do
         extend Dsl.dup
         extend Rendering.dup
+        extend ClassMethods
+        include InstanceMethods
 
         include Utils::ClassAttribute
         class_attribute :configuration
@@ -160,6 +160,10 @@ module Lotus
           end
         end
 
+        if self.respond_to? ('prepare')
+          self.prepare
+        end
+        
         mail.deliver
       end
     end

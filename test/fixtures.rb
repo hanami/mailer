@@ -66,3 +66,15 @@ class User
 
   attr_reader :name
 end
+
+class SubscriptionMailer
+  include Lotus::Mailer
+
+  from "noreply@sender.com"
+  to "noreply@recipient.com"
+  subject "Prepare test"
+
+  def prepare
+    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+  end
+end
