@@ -124,7 +124,6 @@ module Lotus
       # @since 0.1.0
       #
       # @see Lotus::Mailer.configure
-      # @see Lotus::Mailer.duplicate
       def prepare(&blk)
         if block_given?
           @modules.push(blk)
@@ -152,6 +151,7 @@ module Lotus
           c.namespace  = namespace
           c.root       = root
           c.modules    = modules.dup
+          c.delivery_method = delivery_method
         end
       end
 

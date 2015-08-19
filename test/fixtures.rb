@@ -49,7 +49,11 @@ end
 
 class WelcomeMailer
   include Lotus::Mailer
-
+  
+  from "noreply@sender.com"
+  to "noreply@recipient.com"
+  subject "Welcome"
+  
   def greeting
     "Ahoy"
   end
