@@ -4,6 +4,7 @@ require 'lotus/mailer/version'
 require 'lotus/mailer/configuration'
 require 'lotus/mailer/dsl'
 require 'lotus/mailer/rendering'
+require 'mail'
 
 module Lotus
   module Mailer
@@ -93,6 +94,5 @@ module Lotus
     def self.reset!
       configuration.reset!
     end
-
   end
 end
