@@ -52,6 +52,8 @@ module Lotus
     def self.included(base)
       conf = self.configuration
       conf.add_mailer(base)
+      base.extend(ClassMethods)
+      base.include(InstanceMethods)
 
       base.class_eval do
         extend Dsl.dup
@@ -93,6 +95,73 @@ module Lotus
     # Reset the configuration
     def self.reset!
       configuration.reset!
+    end
+
+    module ClassMethods
+      # Delivers a multipart email. It instantiates a mailer and deliver the email.
+      #
+      # @since 0.1.0
+      #
+      # @example email delivery through smtp via gmail configured with environment variables
+      # class DeliveryMethodMailer
+      #   include Lotus::Mailer
+      #
+      #   from ENV["GMAIL_USER"]
+      #   to "inesopcoelho@gmail.com"
+      #   subject "This is the subject"
+      #
+      # end
+      #
+      # MyCustomDeliveryMethod = {
+      #   :address              => "smtp.gmail.com",
+      #   :port                 => 587,
+      #   :domain               => "localhost:8000",
+      #   :user_name            => ENV["GMAIL_USER"],
+      #   :password             => ENV["GMAIL_PASSWORD"],
+      #   :authentication       => "plain",
+      #   :enable_starttls_auto => true
+      # }
+      # Lotus::Mailer.configure do
+      #   delivery_method :smtp, MyCustomDeliveryMethod
+      # end
+      #
+      # DeliveryMethodMailer.deliver
+      def deliver(locals = {})
+        new(locals).deliver
+      end
+    end
+
+    module InstanceMethods
+      # Delivers a multipart email, by looking at all the associated templates and render them.
+      #
+      # @since 0.1.0
+      def deliver
+        mail['from'] = self.class.from
+        mail['to'] = self.class.to
+        mail['subject'] = self.class.subject
+        if Lotus::Mailer.configuration.delivery_method
+          mail.delivery_method *Lotus::Mailer.configuration.delivery_method
+        end
+
+        #attach templates
+        self.class.templates.each do |type, content|
+          case type
+          when :html
+            mail_body = Mail::Part.new
+            mail_body.content_type 'text/html; charset=UTF-8'
+            mail_body.body render(:html)
+            mail.html_part = mail_body
+          when :txt
+            mail_body = Mail::Part.new
+            mail_body.body render(:txt)
+            mail.text_part = mail_body
+          else
+            mail.attachments[content.name] = render(type)
+          end
+        end
+
+        mail.deliver
+      end
     end
   end
 end

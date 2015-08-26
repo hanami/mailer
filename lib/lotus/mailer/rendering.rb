@@ -19,6 +19,7 @@ module Lotus
         def initialize(locals = {})
           @locals   = locals
           @scope    = self
+          @mail = Mail.new
         end
 
         # Render a single template with the specified format.
@@ -32,6 +33,8 @@ module Lotus
           self.class.templates
           self.class.templates[format].render @scope, @locals
         end
+
+        attr_accessor :mail
       end
     end
   end
