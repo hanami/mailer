@@ -12,4 +12,3 @@ gem 'tilt'
 
 gem 'simplecov', require: false
 gem 'coveralls', require: false
-gem 'mail'
