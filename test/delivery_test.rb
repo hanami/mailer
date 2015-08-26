@@ -8,15 +8,16 @@ describe Lotus::Mailer do
 
       Mail::TestMailer.deliveries.clear
       WelcomeMailer.deliver
+      SubscriptionMailer.deliver
     end
 
     it 'delivers the mail' do
-      Mail::TestMailer.deliveries.length.must_equal 1
+      Mail::TestMailer.deliveries.length.must_equal 2
     end
 
     it 'sends the correct information' do
-      Mail::TestMailer.deliveries.first.from.must_equal ["noreply@sender.com"]
-      Mail::TestMailer.deliveries.first.to.must_equal ["noreply@recipient.com"]
+      Mail::TestMailer.deliveries.first.from.must_equal ['noreply@sender.com']
+      Mail::TestMailer.deliveries.first.to.must_equal ['noreply@recipient.com']
       Mail::TestMailer.deliveries.first.subject.must_equal "Welcome"
     end
 
@@ -25,6 +26,10 @@ describe Lotus::Mailer do
       Mail::TestMailer.deliveries.first.text_part.to_s.must_include %(template)
       Mail::TestMailer.deliveries.first.attachments[0].to_s.must_include %(welcome_mailer)
       Mail::TestMailer.deliveries.first.attachments[1].to_s.must_include %(welcome_mailer)
+    end
+
+    it 'interprets the prepare statement' do
+      Mail::TestMailer.deliveries[1].attachments[0].to_s.must_include %(pdf)
     end
 
     after do
