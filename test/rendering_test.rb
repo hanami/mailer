@@ -1,25 +1,39 @@
 require 'test_helper'
-require 'lotus/mailer'
 
 describe Lotus::Mailer do
-  describe 'render' do
-    it 'renders a single template with a given format' do
-      InvoiceMailer.new.render(:html).must_include %(<h1>Invoice template</h1>)
-      LazyMailer.new.render(:html).must_include %(Hello World)
-      LazyMailer.new.render(:haml).must_include %(This is a haml template)
-      LazyMailer.new.render(:txt).must_include %(This is a txt template)
+  describe '#render' do
+    describe 'when template is explicitly declared' do
+      let(:mailer) { InvoiceMailer.new }
+
+      it 'renders the given template' do
+        mailer.render(:html).must_include %(<h1>Invoice template</h1>)
+      end
     end
 
-    it 'renders a single template with context' do
-      WelcomeMailer.new.render(:html).must_include %(Ahoy)
-      WelcomeMailer.new.render(:txt).must_include %(Ahoy)
+    describe 'when template is implicitly declared' do
+      let(:mailer) { LazyMailer.new }
+
+      it 'looks for template with same name with inflected classname and render it' do
+        mailer.render(:html).must_include %(Hello World)
+        mailer.render(:haml).must_include %(This is a haml template)
+        mailer.render(:txt).must_include %(This is a txt template)
+      end
     end
 
-    it 'renders a single template with locals' do
-      luca = User.new('Luca')
-      mailer = RenderMailer.new(user: luca)
+    describe 'when mailer defines context' do
+      let(:mailer) { WelcomeMailer.new }
 
-      mailer.render(:html).must_include %(Luca)
+      it 'renders template with defined context' do
+        mailer.render(:txt).must_include %(Ahoy)
+      end
+    end
+
+    describe 'when locals are parsed in' do
+      let(:mailer) { RenderMailer.new(user: User.new('Luca')) }
+
+      it 'renders template with parsed locals' do
+        mailer.render(:html).must_include %(Luca)
+      end
     end
   end
 end

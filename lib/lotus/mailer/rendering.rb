@@ -11,15 +11,19 @@ module Lotus
       end
 
       module InstanceMethods
+        # @private
+        # @since 0.1.0
+        attr_accessor :mail
+
         # Initialize a mailer
         #
         # @param locals [Hash] a set of objects available during the rendering process.
         #
         # @since 0.1.0
         def initialize(locals = {})
-          @locals   = locals
-          @scope    = self
-          @mail = Mail.new
+          @locals = locals
+          @scope  = self
+          @mail   = Mail.new
         end
 
         # Render a single template with the specified format.
@@ -33,8 +37,6 @@ module Lotus
           self.class.templates
           self.class.templates[format].render @scope, @locals
         end
-
-        attr_accessor :mail
       end
     end
   end
