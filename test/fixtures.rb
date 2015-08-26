@@ -46,3 +46,19 @@ class ArrayMailer
 
   to ["noreply1@example.com", "noreply2@example.com"]
 end
+
+class WelcomeMailer
+  include Lotus::Mailer
+
+  def greeting
+    "Ahoy"
+  end
+end
+
+class User
+  def initialize(name)
+    @name = name
+  end
+
+  attr_reader :name
+end
