@@ -61,7 +61,7 @@ class InvoiceMailer
 end
 ```
 
-A mailer with to and from addresses and mailer delivery:
+A mailer with `to` and `from` addresses and mailer delivery:
 
 ```ruby
 require lotus/mailer
@@ -94,7 +94,7 @@ InvoiceMailer.deliver
 
 ### Locals
 
-The objects passed in the deliver call are called locals and are used to render templates that use objects with the same symbol.
+The set of objects passed in the `deliver` call are called `locals` and are used to render templates that use objects with the same symbol.
 
 ```ruby
 require lotus/mailer
@@ -112,7 +112,7 @@ luca = User.new('Luca', 'jodosha')
 InvoiceMailer.deliver(user:luca)
 ```
 
-The corresponding erb file:
+The corresponding `erb` file:
 
 ```erb
 Hello <%= user.name %>!
@@ -203,7 +203,7 @@ Lotus::Maler.configure do
 ```
 
 All those global configurations can be overwritten at a finer grained level:
-mailers. Each mailer has its own copy of the global configuration, so
+`mailers`. Each `mailer` has its own copy of the global configuration, so
 that changes are inherited from the top to the bottom, but not bubbled up in the
 opposite direction.
 
@@ -225,9 +225,9 @@ Show.root                      # => #<Pathname:/another/root>
 
 ### Delivery Details
 
-When a Ruby object includes Lotus::Mailer, a developer can customize delivery details, such as from, to and subject.
+When a Ruby object includes __Lotus::Mailer__, a developer can customize delivery details, such as `from`, `to` and `subject`.
 
-The from field determines the sender of the email. It can accept a string:
+The `from` field determines the sender of the email. It can accept a string:
 
 ```ruby
 class InvoiceMailer
@@ -237,7 +237,7 @@ class InvoiceMailer
 end
 ```
 
-The from field can also accept a Proc to determine its value:
+The `from` field can also accept a `Proc` to determine its value:
 
 ```ruby
 class InvoiceMailer
@@ -251,7 +251,7 @@ class InvoiceMailer
 end
 ```
 
-The to field represents one or more emails that will be the recipients of the mail.
+The `to` field represents one or more emails that will be the recipients of the mail.
 
 It can accept a string:
 
@@ -273,7 +273,7 @@ class InvoiceMailer
 end
 ```
 
-To field can also be configured using a Proc to determine its value:
+`To` field can also be configured using a `Proc` to determine its value:
 
 ```ruby
 class InvoiceMailer
@@ -287,7 +287,7 @@ class InvoiceMailer
 end
 ```
 
-The subject of the message is determined by the field subject. It can accept a string:
+The subject of the message is determined by the field `subject`. It can accept a string:
 
 ```ruby
 class InvoiceMailer
@@ -297,7 +297,7 @@ class InvoiceMailer
 end
 ```
 
-The subject field can also accept a Proc to determine its value:
+The `subject` field can also accept a `Proc` to determine its value:
 
 ```ruby
 class InvoiceMailer
@@ -313,7 +313,7 @@ end
 
 ### Delivery method
 
-The global delivery method is defined through the Lotus::Mailer configuration, as:
+The global delivery method is defined through the __Lotus::Mailer__ configuration, as:
 
 ```ruby
 Lotus::Mailer.configuration do
@@ -345,7 +345,7 @@ Lotus::Mailer.configure do
 end
 ```
 
-The delivery method specified must be compatible with the Mail gem, and all Mail gem delivery methods are available in Lotus::Mailer.
+The delivery method specified must be compatible with the `Mail` gem, and all `Mail` gem delivery methods are available in __Lotus::Mailer__.
 
 ### Multipart mail
 
@@ -355,13 +355,13 @@ Other formats will be added to the object as attachments.
 
 ### Mail Delivery
 
-The `deliver` method is necessary to send the multipart email. It looks at all the associated templates and renders them, as explained above. It instantiates a mailer and delivers the email.
+The `deliver` method is necessary to send the multipart email. It looks at all the associated templates and renders them, as explained above. It instantiates a `mailer` and delivers the email.
 
 ```ruby
 InvoiceMailer.deliver
 ```
 
-To use locals when rendering templates the locals must be used when calling the `deliver` method, like so:
+To use `locals` when rendering templates, the `locals` must be used when calling the `deliver` method, like so:
 
 ```ruby
 InvoiceMailer.deliver(user:user, invoice:invoice)
