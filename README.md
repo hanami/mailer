@@ -74,7 +74,7 @@ class InvoiceMailer
   subject 'Welcome'
 end
 
-CustomDelivery = {
+CUSTOM_DELIVERY = {
   :address              => "smtp.gmail.com",
   :port                 => 587,
   :domain               => "localhost:8000",
@@ -85,7 +85,7 @@ CustomDelivery = {
 }
 
 Lotus::Mailer.configuration do
-  delivery_method CustomDelivery
+  delivery_method CUSTOM_DELIVERY
 end
 
 Lotus::Mailer.load!
@@ -120,7 +120,7 @@ Hello <%= user.name %>!
 
 ### Scope
 
-All the methods defined in the mailer are accessible from the template:
+All methods defined in the mailer are accessible from the template:
 
 ```ruby
 require lotus/mailer
@@ -143,10 +143,11 @@ end
 ```
 
 ### Template
-The template file must be located under the relevant `root` and must match the class name in camel case:
+
+The template file must be located under the relevant `root` and must match the inflected snake case of the mailer class name.
 
 ```ruby
-puts Lotus::Mailer.configuration.root # => #<Pathname:app/templates>
+Lotus::Mailer.configuration.root      # => #<Pathname:app/templates>
 InvoiceMailer.templates               # => "{:html => templateObject1; :txt => templateObject2}"
 templateObject1.file                  # => "root/invoice_mailer.html.erb"
 templateObject2.file                  # => "root/invoice_mailer.txt.erb"
@@ -170,17 +171,6 @@ InvoiceMailer.templates[:haml].file  # => "root/invoice.haml.erb"
 
 The builtin rendering engine is [ERb](http://en.wikipedia.org/wiki/ERuby).
 
-### Root
-
-Template lookup is performed under the `Lotus::Mailer.configuration.root` directory. You can specify a different path on a per mailer basis:
-
-```ruby
-class MailerWithDifferentRoot
-  include Lotus::Mailer
-
-  root 'path/to/root'
-end
-```
 
 ### Configuration
 
@@ -202,10 +192,12 @@ Lotus::Maler.configure do
   namespace 'MyApp::Mailer'
 ```
 
-All those global configurations can be overwritten at a finer grained level:
+All global configurations can be overwritten at a finer grained level:
 `mailers`. Each `mailer` has its own copy of the global configuration, so
 that changes are inherited from the top to the bottom, but not bubbled up in the
 opposite direction.
+
+Template lookup is performed under the `Lotus::Mailer.configuration.root` directory. You can specify a different path on a per mailer basis:
 
 ```ruby
 require 'lotus/mailer'
@@ -214,13 +206,14 @@ Lotus::Mailer.configure do
   root '/path/to/root'
 end
 
-class Show
+class MyMailer
   include Lotus::Mailer
+  
   root '/another/root'
 end
 
-Lotus::Mailer.configuration.root # => #<Pathname:/path/to/root>
-Show.root                      # => #<Pathname:/another/root>
+Lotus::Mailer.configuration.root   # => #<Pathname:/path/to/root>
+MyMailer.root                      # => #<Pathname:/another/root>
 ```
 
 ### Delivery Details
@@ -269,7 +262,7 @@ The to field also accept an array of strings:
 class InvoiceMailer
   include Lotus::Mailer
 
-  to "[noreply1@example.com, noreply2@example.com]"
+  to %w(noreply1@example.com noreply2@example.com)
 end
 ```
 
@@ -311,7 +304,7 @@ class InvoiceMailer
 end
 ```
 
-### Delivery method
+### Delivery method Configuration
 
 The global delivery method is defined through the __Lotus::Mailer__ configuration, as:
 
@@ -338,22 +331,21 @@ end
 It is also possible to configure a custom delivery method with a variable:
 
 ```ruby
-MyCustomDeliveryMethod = :smtp
+CUSTOM_DELIVERY = :smtp.freeze
 
 Lotus::Mailer.configure do
-  delivery MyCustomDeliveryMethod, foo:'bar'
+  delivery CUSTOM_DELIVERY, foo:'bar'
 end
 ```
 
 The delivery method specified must be compatible with the `Mail` gem, and all `Mail` gem delivery methods are available in __Lotus::Mailer__.
+See https://github.com/mikel/mail
 
 ### Multipart mail
 
 Each template associated with the mailer will be used as a part of the email. 
 The `.txt` template will be the `text_part` of the Mail object and the `.html` will correspond to the `html_part`.
 Other formats will be added to the object as attachments.
-
-### Mail Delivery
 
 The `deliver` method is necessary to send the multipart email. It looks at all the associated templates and renders them, as explained above. It instantiates a `mailer` and delivers the email.
 
@@ -370,6 +362,8 @@ InvoiceMailer.deliver(user:user, invoice:invoice)
 ### Prepare
 
 The `prepare` method can be used by developers to customize the mail message at the low level.
+
+It gives access to the object `mail` of type `Mail`
 
 It can be used to support attachments, such as in:
 
