@@ -164,8 +164,8 @@ module Lotus
       # Reset the configuration
       def reset!
         root(DEFAULT_ROOT)
-        @mailers      = Set.new
-        @modules    = []
+        @mailers = Set.new
+        @modules = []
       end
 
       # Copy the configuration for the given action

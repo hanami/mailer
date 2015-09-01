@@ -34,7 +34,6 @@ module Lotus
         #
         # @since 0.1.0
         def render(format)
-          self.class.templates
           self.class.templates[format].render @scope, @locals
         end
       end

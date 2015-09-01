@@ -2,11 +2,19 @@ require 'test_helper'
 require 'lotus/mailer'
 
 describe Lotus::Mailer do
-  before do
-    Lotus::Mailer.reset!
-  end
+   before do
+     Lotus::Mailer.load!
+   end
+
+   before do
+     Lotus::Mailer.reset!
+   end
 
   describe '#root' do
+    before do
+     Lotus::Mailer.reset!
+    end
+   
     describe 'when a value is given' do
       it 'sets it as a Pathname' do
         RenderMailer.root 'test'

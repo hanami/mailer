@@ -1,4 +1,5 @@
 require 'tilt'
+require 'erb'
 
 module Lotus
   module Mailer
@@ -7,7 +8,8 @@ module Lotus
     # @since 0.1.0
     class Template
       def initialize(template)
-        @_template = Tilt.new(template)
+        engine = template.split('.')[-1]
+        @_template = Tilt[engine].new(template)
       end
 
       # Render the template within the context of the given scope.

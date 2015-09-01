@@ -94,6 +94,7 @@ module Lotus
 
     # Reset the configuration
     def self.reset!
+      self.configuration = configuration.duplicate
       configuration.reset!
     end
 
@@ -126,8 +127,8 @@ module Lotus
       # end
       #
       # DeliveryMethodMailer.deliver
-      def deliver(locals = {})
-        new(locals).deliver
+      def deliver(locals = {}, template: :text)
+        new(locals).deliver(template)
       end
     end
 
@@ -135,7 +136,7 @@ module Lotus
       # Delivers a multipart email, by looking at all the associated templates and render them.
       #
       # @since 0.1.0
-      def deliver
+      def deliver (template)
         mail['from'] = self.class.from
         mail['to'] = self.class.to
         mail['subject'] = self.class.subject
@@ -156,6 +157,7 @@ module Lotus
             mail_body.body render(:txt)
             mail.text_part = mail_body
           else
+            #puts render(type)
             mail.attachments[content.name] = render(type)
           end
         end
@@ -163,7 +165,7 @@ module Lotus
         if self.respond_to? ('prepare')
           self.prepare
         end
-        
+
         mail.deliver
       end
     end

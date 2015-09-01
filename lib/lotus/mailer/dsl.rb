@@ -8,7 +8,7 @@ module Lotus
     # @since 0.1.0
     module Dsl
       attr_reader :mail
-    
+
       # When a value is given, specify a templates root path for the mailer.
       # Otherwise, it returns templates root path.
       #
@@ -221,13 +221,11 @@ module Lotus
       #
       # @see Lotus::Mailer.load!
       def load!
-        super
-        mailers.each do |m|
-          m.root.freeze
-          m.format.freeze
-          m.templates.freeze
-          m.configuration.freeze
-        end
+        templates
+        #super
+        root.freeze
+        templates.freeze
+        configuration.freeze
       end
 
       attr_writer :mail
