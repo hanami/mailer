@@ -2,28 +2,14 @@ require 'test_helper'
 require 'lotus/mailer'
 
 describe Lotus::Mailer do
-  before do
-    Lotus::Mailer.reset!
-  end
+  # describe '.load!' do
+  #   describe 'when custom template is set' do
+  #     it 'will look up template' do
+  #       # your old DSL test goes in here
+  #     end
+  #
+  #   end
+  #
+  # end
 
-  describe '.reset!' do
-    before do
-      Lotus::Mailer.configure do
-        root 'test'
-        namespace InvoiceMailer
-      end
-      Lotus::Mailer.load!
-      Lotus::Mailer.reset!
-    end
-  
-    it 'resets root' do
-      root = Pathname.new('.').realpath
-      Lotus::Mailer.configuration.root.must_equal root
-    end
-
-    it "doesn't reset namespace" do
-      Lotus::Mailer.configuration.namespace.must_equal(InvoiceMailer)
-    end
-
-  end
 end

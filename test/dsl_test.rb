@@ -2,87 +2,156 @@ require 'test_helper'
 require 'lotus/mailer'
 
 describe Lotus::Mailer do
-   before do
-     Lotus::Mailer.load!
-   end
 
-   before do
-     Lotus::Mailer.reset!
-   end
+  before do
+    Lotus::Mailer.reset!
+  end
 
-  describe '#root' do
-    before do
-     Lotus::Mailer.reset!
-    end
-   
-    describe 'when a value is given' do
+  describe '.root' do
+    describe 'when a path is given' do
       it 'sets it as a Pathname' do
         RenderMailer.root 'test'
-        RenderMailer.configuration.root.must_equal(RenderMailer.root)
+        RenderMailer.configuration.root.must_equal(Pathname.new('test').realpath)
+      end
+    end
+
+    describe 'when no path is given' do
+      before do
+        RenderMailer.root('lib')
+      end
+
+      it 'returns root value' do
+        RenderMailer.root.must_equal(Pathname.new('lib').realpath)
       end
     end
   end
 
-  describe '#template' do
-    describe 'set the correct templates' do
-      it 'has the template in the hash' do
-        template_test = InvoiceMailer.templates[:html]
-        template_test.file.must_equal("#{ InvoiceMailer.root }/invoice.html.erb")
-      end
-    end
-  end
+  # describe '.template' do
+  #   describe 'when given a template format and path' do
+  #     it 'sets the template in the templates hash' do
+  #       InvoiceMailer.template(:csv, 'welcome_mailer.csv.erb')
+  #       template_test = InvoiceMailer.templates[:csv]
+  #       template_test.must_be_kind_of(Lotus::Mailer::Template)
+  #     end
+  #   end
+  #
+  #   describe 'when given only template format' do
+  #     describe 'when the given template is already defined' do
+  #       before do
+  #         InvoiceMailer.template(:html, 'invoice.html.erb')
+  #       end
+  #       it 'returns the template' do
+  #         template = InvoiceMailer.template(:html)
+  #         template.must_be_kind_of(Lotus::Mailer::Template)
+  #       end
+  #     end
+  #   end
+  # end
 
-  describe '#templates' do
-    describe 'finds all the templates with the same name' do
-      it 'has the template in the hash' do
+  describe '.templates' do
+    describe 'returns mailer templates hash' do
+      it 'returns a templates hash' do
+        LazyMailer.templates.keys.must_equal([:txt, :html, :haml])
         template_test = LazyMailer.templates[:html]
-        template_test.file.must_equal("#{ LazyMailer.root }/lazy_mailer.html.erb")
-        template_test = LazyMailer.templates[:haml]
-        template_test.file.must_equal("#{ LazyMailer.root }/lazy_mailer.haml.erb")
+        template_test.must_be_kind_of(Lotus::Mailer::Template)
       end
     end
   end
 
-  describe '#from' do
-    describe 'sets the correct sender address given a string' do
+  describe '.from' do
+    describe 'when given a string' do
+      it 'sets the address in the variable' do
+        StringMailer.from 'rosa@example.com'
+        StringMailer.from.must_equal 'rosa@example.com'
+      end
+    end
+    describe 'when given a proc' do
+      it 'sets the address in the variable' do
+        StringMailer.from -> { 'user_sender@example.com' }
+        StringMailer.from.must_equal 'user_sender@example.com'
+      end
+    end
+
+    describe 'when given a proc that references a method' do
+      before do
+        StringMailer.class_eval do
+          from -> { customized_sender }
+
+          def customized_sender
+            "sender@example.com"
+          end
+        end
+      end
+
+      it 'sets the sender address to the return value of the method' do
+        StringMailer.from.must_equal 'sender@example.com'
+      end
+    end
+  end
+
+  describe '.to' do
+    describe 'when given a string' do
+      it 'sets the recipients in the variable' do
+        StringMailer.to 'ines@example.com'
+        StringMailer.to.must_equal 'ines@example.com'
+      end
+    end
+    describe 'when given an array' do
+      it 'sets the recipients in the variable' do
+        StringMailer.to ["noreply1@example.com", "noreply2@example.com"]
+        StringMailer.to.must_equal 'noreply1@example.com,noreply2@example.com'
+      end
+    end
+    describe 'when given a proc' do
       it 'has the address in the variable' do
-        StringMailer.from.must_equal 'noreply@example.com'
+        StringMailer.to -> { 'user_recipient@example.com' }
+        StringMailer.to.must_equal 'user_recipient@example.com'
       end
     end
-    describe 'sets the correct sender address given a proc' do
-      it 'has the address in the variable' do
-        ProcMailer.from.must_equal 'user_sender@example.com'
+
+    describe 'when given a proc that references a method' do
+      before do
+        StringMailer.class_eval do
+          to -> { customized_recipient }
+
+          def customized_recipient
+            "recipient@example.com"
+          end
+        end
+      end
+      it 'sets the correct recipient address' do
+        StringMailer.to.must_equal 'recipient@example.com'
       end
     end
   end
 
-  describe '#to' do
-    describe 'sets the correct recipients given a string' do
-      it 'has the recipients in the variable' do
-        StringMailer.to.must_equal 'noreply1@example.com'
+  describe '.subject' do
+    describe 'when given a string' do
+      it 'sets the subject in the variable' do
+        StringMailer.subject 'Team DEIGirls'
+        StringMailer.subject.must_equal 'Team DEIGirls'
       end
     end
-    describe 'sets the correct recipients given an array' do
-      it 'has the recipients in the variable' do
-        ArrayMailer.to.must_equal 'noreply1@example.com,noreply2@example.com'
+    describe 'when given a proc' do
+      it 'sets the subject in the variable' do
+        StringMailer.subject -> { 'Trung is awesome' }
+        StringMailer.subject.must_equal 'Trung is awesome'
       end
     end
-    describe 'sets the correct recipients given a proc' do
-      it 'has the recipients in the variable' do
-        ProcMailer.to.must_equal 'user_receiver@example.com'
-      end
-    end
-  end
 
-  describe '#subject' do
-    describe 'sets the correct subject given a string' do
-      it 'has the subject in the variable' do
-        StringMailer.subject.must_equal 'This is the subject'
+    describe 'when given a Proc that references to a method' do
+      before do
+        StringMailer.class_eval do
+          subject -> { custom_subject }
+
+          def custom_subject
+            "Lotus rocks!"
+          end
+        end
       end
-    end
-    describe 'sets the correct subject given a proc' do
-      it 'has the subject in the variable' do
-        ProcMailer.subject.must_equal 'This is the subject'
+
+      it 'sets the subject to the return value of the method' do
+        StringMailer.subject.must_equal 'Lotus rocks!'
       end
     end
   end

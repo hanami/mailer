@@ -74,9 +74,7 @@ module Lotus
       #   Articles::Show.template(:json)      # 'articles'
       def template(format = nil, value = nil)
         if value.nil?
-          if !@templates.has_key?(format)
-            @templates[format] = Rendering::TemplateName.new(name, configuration.namespace).to_s
-          end
+          @templates[format] ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
         else
           @templates[format] = Mailer::Template.new("#{ [root, value].join('/') }")
         end
@@ -221,7 +219,6 @@ module Lotus
       #
       # @see Lotus::Mailer.load!
       def load!
-        templates
         #super
         root.freeze
         templates.freeze
