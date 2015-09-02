@@ -24,4 +24,11 @@ Lotus::Mailer.configure do
   root Pathname.new __dir__ + '/fixtures/templates'
 end
 
+Lotus::Mailer.class_eval do
+  def self.reset!
+    self.configuration = configuration.duplicate
+    configuration.reset!
+  end
+end
+
 require 'fixtures'

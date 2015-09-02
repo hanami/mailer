@@ -3,7 +3,6 @@ require 'lotus/mailer/configuration'
 
 describe Lotus::Mailer::Configuration do
   before do
-    Lotus::Mailer.reset!
     @configuration = Lotus::Mailer::Configuration.new
   end
 
@@ -186,13 +185,11 @@ describe Lotus::Mailer::Configuration do
   describe '#delivery_method' do
     before do
       MyCustomDeliveryMethod = :smtp
-      Lotus::Mailer.configure do
-        delivery_method MyCustomDeliveryMethod, foo: 'bar'
-      end
+      @configuration.delivery_method MyCustomDeliveryMethod, foo: 'bar'
     end
-  
+
     it 'saves the delivery method in the configuration' do
-      Lotus::Mailer.configuration.delivery_method.must_equal [:smtp, { foo: 'bar' }]
+      @configuration.delivery_method.must_equal [:smtp, { foo: 'bar' }]
     end
   end
 end

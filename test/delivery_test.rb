@@ -1,10 +1,10 @@
 describe Lotus::Mailer do
   describe '#deliver' do
     before do
+      Lotus::Mailer.reset!
       Lotus::Mailer.configure do
         delivery_method :test
-      end
-      Lotus::Mailer.load!
+      end.load!
       Mail::TestMailer.deliveries.clear
       WelcomeMailer.deliver
       SubscriptionMailer.deliver
@@ -33,9 +33,9 @@ describe Lotus::Mailer do
 
     after do
       Lotus::Mailer.reset!
-      Lotus::Mailer.configure do
-        delivery_method :smtp
-      end
+      # Lotus::Mailer.configure do
+      #   delivery_method :smtp
+      # end
     end
   end
 end

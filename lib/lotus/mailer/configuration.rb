@@ -168,6 +168,8 @@ module Lotus
         @modules = []
       end
 
+      alias_method :unload!, :reset!
+
       # Copy the configuration for the given action
       #
       # @param base [Class] the target action
@@ -220,7 +222,6 @@ module Lotus
         end
       end
 
-      alias_method :unload!, :reset!
       alias_method :delivery, :delivery_method
 
       protected

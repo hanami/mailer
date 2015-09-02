@@ -30,6 +30,7 @@ module Lotus
     #   end
     def self.configure(&blk)
       configuration.instance_eval(&blk)
+      self
     end
 
     # Override Ruby's hook for modules.
@@ -90,12 +91,6 @@ module Lotus
     # @api private
     def self.load!
       configuration.load!
-    end
-
-    # Reset the configuration
-    def self.reset!
-      self.configuration = configuration.duplicate
-      configuration.reset!
     end
 
     module ClassMethods
