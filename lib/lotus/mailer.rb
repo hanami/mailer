@@ -8,6 +8,8 @@ require 'mail'
 
 module Lotus
   module Mailer
+    DEFAULT_TEMPLATE = :txt.freeze
+
     include Utils::ClassAttribute
 
     class_attribute :configuration
@@ -30,6 +32,7 @@ module Lotus
     #   end
     def self.configure(&blk)
       configuration.instance_eval(&blk)
+      self
     end
 
     # Override Ruby's hook for modules.
@@ -92,11 +95,6 @@ module Lotus
       configuration.load!
     end
 
-    # Reset the configuration
-    def self.reset!
-      configuration.reset!
-    end
-
     module ClassMethods
       # Delivers a multipart email. It instantiates a mailer and deliver the email.
       #
@@ -126,8 +124,8 @@ module Lotus
       # end
       #
       # DeliveryMethodMailer.deliver
-      def deliver(locals = {})
-        new(locals).deliver
+      def deliver(locals = {}, template: DEFAULT_TEMPLATE)
+        new(locals).deliver(template)
       end
     end
 
@@ -135,7 +133,7 @@ module Lotus
       # Delivers a multipart email, by looking at all the associated templates and render them.
       #
       # @since 0.1.0
-      def deliver
+      def deliver(template)
         mail['from'] = self.class.from
         mail['to'] = self.class.to
         mail['subject'] = self.class.subject
@@ -156,6 +154,7 @@ module Lotus
             mail_body.body render(:txt)
             mail.text_part = mail_body
           else
+            #puts render(type)
             mail.attachments[content.name] = render(type)
           end
         end
@@ -163,7 +162,7 @@ module Lotus
         if self.respond_to? ('prepare')
           self.prepare
         end
-        
+
         mail.deliver
       end
     end

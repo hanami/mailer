@@ -149,7 +149,7 @@ module Lotus
       def duplicate
         Configuration.new.tap do |c|
           c.namespace  = namespace
-          c.root       = root
+          c.root       = root.dup
           c.modules    = modules.dup
           c.delivery_method = delivery_method
         end
@@ -164,9 +164,11 @@ module Lotus
       # Reset the configuration
       def reset!
         root(DEFAULT_ROOT)
-        @mailers      = Set.new
-        @modules    = []
+        @mailers = Set.new
+        @modules = []
       end
+
+      alias_method :unload!, :reset!
 
       # Copy the configuration for the given action
       #
@@ -220,7 +222,6 @@ module Lotus
         end
       end
 
-      alias_method :unload!, :reset!
       alias_method :delivery, :delivery_method
 
       protected
