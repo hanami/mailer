@@ -168,17 +168,16 @@ module Lotus
       end
 
       protected
-      # NOT USED - REMOVE?
-      # # Loading mechanism hook.
-      # #
-      # # @api private
-      # # @since 0.1.0
-      # #
-      # # @see Lotus::Mailer.load!
-      # def load!
-      #   templates.freeze
-      #   configuration.freeze
-      # end
+      # Loading mechanism hook.
+      #
+      # @api private
+      # @since 0.1.0
+      #
+      # @see Lotus::Mailer.load!
+      def load!
+        templates.freeze
+        configuration.freeze
+      end
 
       attr_writer :mail
 

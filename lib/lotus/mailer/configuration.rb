@@ -170,6 +170,20 @@ module Lotus
 
       alias_method :unload!, :reset!
 
+      # Copy the configuration for the given action
+      #
+      # @param base [Class] the target action
+      #
+      # @return void
+      #
+      # @since 0.1.0
+      # @api private
+      def copy!(base)
+        modules.each do |mod|
+          base.class_eval(&mod)
+        end
+      end
+
       # Specify a global delivery method
       #
       # @param method [Symbol] delivery method

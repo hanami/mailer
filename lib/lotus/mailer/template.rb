@@ -25,6 +25,15 @@ module Lotus
         @_template.render(scope, locals)
       end
 
+      # Get the path to the template
+      #
+      # @return [String] the pathname
+      #
+      # @since 0.1.0
+      def file
+        @_template.file
+      end
+
       # Get the template's name
       #
       # @return [String] template's name
