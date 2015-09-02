@@ -95,7 +95,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def root
-          @mailer.root
+          @mailer.configuration.root
         end
 
         # @api private

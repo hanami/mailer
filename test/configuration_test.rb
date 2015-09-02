@@ -92,17 +92,6 @@ describe Lotus::Mailer::Configuration do
       Object.__send__(:remove_const, :PrepareMailer)
     end
 
-    it 'allows to set a code block to be yielded when Lotus::Mailer is included' do
-      Lotus::Mailer.configure do
-        prepare do
-          include FooRendering
-        end
-      end
-
-      PrepareMailer.__send__(:include, Lotus::Mailer)
-      # PrepareMailer.render({format: :html}).must_equal 'foo'
-    end
-
     it 'raises error in case of missing block' do
       exception = -> { @configuration.prepare }.must_raise(ArgumentError)
       exception.message.must_equal('Please provide a block')

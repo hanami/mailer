@@ -149,7 +149,7 @@ module Lotus
       def duplicate
         Configuration.new.tap do |c|
           c.namespace  = namespace
-          c.root       = root
+          c.root       = root.dup
           c.modules    = modules.dup
           c.delivery_method = delivery_method
         end

@@ -8,6 +8,8 @@ require 'mail'
 
 module Lotus
   module Mailer
+    DEFAULT_TEMPLATE = :txt.freeze
+
     include Utils::ClassAttribute
 
     class_attribute :configuration
@@ -122,7 +124,7 @@ module Lotus
       # end
       #
       # DeliveryMethodMailer.deliver
-      def deliver(locals = {}, template: :text)
+      def deliver(locals = {}, template: DEFAULT_TEMPLATE)
         new(locals).deliver(template)
       end
     end

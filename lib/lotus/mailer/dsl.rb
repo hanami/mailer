@@ -9,49 +9,6 @@ module Lotus
     module Dsl
       attr_reader :mail
 
-      # When a value is given, specify a templates root path for the mailer.
-      # Otherwise, it returns templates root path.
-      #
-      # When not initialized, it will return the global value from `Lotus::Mailer.root`.
-      #
-      # @param value [String] the templates root for this mailer
-      #
-      # @return [Pathname] the specified root for this mailer or the global value
-      #
-      # @since 0.1.0
-      #
-      # @example Default usage
-      #   require 'lotus/mailer'
-      #
-      #   module Articles
-      #     class Show
-      #       include Lotus::Mailer
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.configuration.root # => 'app/templates'
-      #   Articles::Show.root            # => 'app/templates'
-      #
-      # @example Custom root
-      #   require 'lotus/mailer'
-      #
-      #   module Articles
-      #     class Show
-      #       include Lotus::Mailer
-      #       root 'path/to/articles/templates'
-      #     end
-      #   end
-      #
-      #   Lotus::Mailer.configuration.root # => 'app/templates'
-      #   Articles::Show.root            # => 'path/to/articles/templates'
-      def root(value = nil)
-        if value.nil?
-          configuration.root
-        else
-          configuration.root(value)
-        end
-      end
-
       # When a value is given, specify the relative path to the template.
       # Otherwise, it returns the name that follows Lotus::Mailer conventions.
       #
@@ -76,7 +33,7 @@ module Lotus
         if value.nil?
           @templates[format] ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
         else
-          @templates[format] = Mailer::Template.new("#{ [root, value].join('/') }")
+          @templates[format] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
         end
       end
 
@@ -219,8 +176,6 @@ module Lotus
       #
       # @see Lotus::Mailer.load!
       def load!
-        #super
-        root.freeze
         templates.freeze
         configuration.freeze
       end

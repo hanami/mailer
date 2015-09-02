@@ -4,7 +4,7 @@ describe Lotus::Mailer do
    before do
      Lotus::Mailer.load!
    end
-  
+
    after do
      Lotus::Mailer.reset!
    end

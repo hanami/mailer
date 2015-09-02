@@ -6,12 +6,28 @@ describe Lotus::Mailer do
         delivery_method :test
       end.load!
       Mail::TestMailer.deliveries.clear
+
+      class WelcomeMailer
+        include Lotus::Mailer
+
+        from "noreply@sender.com"
+        to "noreply@recipient.com"
+        subject "Welcome"
+
+        def greeting
+          "Ahoy"
+        end
+
+        def prepare
+          mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+        end
+      end
+
       WelcomeMailer.deliver
-      SubscriptionMailer.deliver
     end
 
     it 'delivers the mail' do
-      Mail::TestMailer.deliveries.length.must_equal 2
+      Mail::TestMailer.deliveries.length.must_equal 1
     end
 
     it 'sends the correct information' do
@@ -28,14 +44,11 @@ describe Lotus::Mailer do
     end
 
     it 'interprets the prepare statement' do
-      Mail::TestMailer.deliveries[1].attachments[0].to_s.must_include %(pdf)
+      Mail::TestMailer.deliveries.first.attachments[2].to_s.must_include %(pdf)
     end
 
     after do
       Lotus::Mailer.reset!
-      # Lotus::Mailer.configure do
-      #   delivery_method :smtp
-      # end
     end
   end
 end
