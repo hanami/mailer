@@ -133,7 +133,7 @@ module Lotus
       # Delivers a multipart email, by looking at all the associated templates and render them.
       #
       # @since 0.1.0
-      def deliver (template)
+      def deliver(template)
         mail['from'] = self.class.from
         mail['to'] = self.class.to
         mail['subject'] = self.class.subject
