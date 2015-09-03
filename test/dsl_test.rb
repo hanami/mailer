@@ -4,7 +4,6 @@ require 'lotus/mailer'
 describe Lotus::Mailer do
 
   before do
-    LazyMailer.reset!
     Lotus::Mailer.reset!
   end
 
