@@ -124,7 +124,7 @@ module Lotus
       # end
       #
       # DeliveryMethodMailer.deliver
-      def deliver(locals = {}, template: DEFAULT_TEMPLATE)
+      def deliver(locals: {}, template: DEFAULT_TEMPLATE)
         new(locals).deliver(template)
       end
     end

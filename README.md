@@ -109,6 +109,7 @@ class User
 end
 
 luca = User.new('Luca', 'jodosha')
+Lotus::Mailer.load!
 InvoiceMailer.deliver(user:luca)
 ```
 

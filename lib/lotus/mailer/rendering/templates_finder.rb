@@ -89,7 +89,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def template_name
-          @mailer.template
+          Rendering::TemplateName.new(@mailer.name, @mailer.configuration.namespace).to_s
         end
 
         # @api private
