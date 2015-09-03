@@ -154,7 +154,6 @@ module Lotus
             mail_body.body render(:txt)
             mail.text_part = mail_body
           else
-            #puts render(type)
             mail.attachments[content.name] = render(type)
           end
         end
