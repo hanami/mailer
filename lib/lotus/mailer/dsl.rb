@@ -8,6 +8,7 @@ module Lotus
     # @since 0.1.0
     module Dsl
       attr_reader :mail
+      attr_reader :attachments
 
       # When a value is given, specify the relative path to the template.
       # Otherwise, it returns the name that follows Lotus::Mailer conventions.
@@ -162,6 +163,23 @@ module Lotus
         end
       end
 
+      # Add an attachment to the mail, given the path to file
+      #
+      # @param path [String] Path File
+      #
+      # @since 0.1.0
+      #
+      # @example
+      # class InvoiceMailer
+      #   include Lotus::Mailer
+      #
+      #   attachment 'path/to/file/attachment.pdf'
+      # end
+      def attachment(path)
+        name = path.split('/')[-1]
+        @attachments[name] = path
+      end
+
       protected
       # Loading mechanism hook.
       #
@@ -175,6 +193,7 @@ module Lotus
       end
 
       attr_writer :mail
+      attr_writer :attachments
 
     end
   end

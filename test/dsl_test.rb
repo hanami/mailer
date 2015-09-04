@@ -15,18 +15,6 @@ describe Lotus::Mailer do
   #       template_test.must_be_kind_of(Lotus::Mailer::Template)
   #     end
   #   end
-  #
-  #   describe 'when given only template format' do
-  #     describe 'when the given template is already defined' do
-  #       before do
-  #         InvoiceMailer.template(:html, 'invoice.html.erb')
-  #       end
-  #       it 'returns the template' do
-  #         template = InvoiceMailer.template(:html)
-  #         template.must_be_kind_of(Lotus::Mailer::Template)
-  #       end
-  #     end
-  #   end
   # end
 
   describe '.templates' do
@@ -137,6 +125,15 @@ describe Lotus::Mailer do
 
       it 'sets the subject to the return value of the method' do
         LazyMailer.subject.must_equal 'Lotus rocks!'
+      end
+    end
+  end
+
+  describe '.attachment' do
+    describe 'when given a string with the path' do
+      it 'adds the attachment to the mail object' do
+        LazyMailer.attachment 'path/to/file/attachment1.pdf'
+        LazyMailer.attachments['attachment1.pdf'].must_equal 'path/to/file/attachment1.pdf'
       end
     end
   end
