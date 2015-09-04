@@ -209,10 +209,10 @@ module Lotus
       # end
       #
       # @example With Custom Method
-      # MyCustomDeliveryMethod = :smtp
+      # CUSTOM_DELIVERY = :smtp.freeze
       #
       # Lotus::Mailer.configure do
-      #   delivery_method MyCustomDeliveryMethod, foo: 'bar'
+      #   delivery_method CUSTOM_DELIVERY, foo: 'bar'
       # end
       def delivery_method(method = nil, options = {})
         if method.nil?

@@ -22,19 +22,14 @@ module Lotus
       # @example Custom template
       #   require 'lotus/mailer'
       #
-      #   module Articles
-      #     class Show
-      #       include Lotus::Mailer
-      #       template :json, 'articles/single_article'
-      #     end
+      #   class MyMailer
+      #     include Lotus::Mailer
+      #     template :json, 'mailer.json.erb'
+      #   end
       #
-      #   Articles::Show.template(:json)      # 'articles'
-      def template(format = nil, value = nil)
-        if value.nil?
-          @templates[format] ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
-        else
-          @templates[format] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
-        end
+      #   MyMailer.templates[:json].file  # => 'root/mailer.json.erb'
+      def template(format, value)
+        @templates[format] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
       end
 
       # Returns the Hash with all the templates of the mailer
