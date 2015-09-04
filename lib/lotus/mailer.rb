@@ -124,6 +124,19 @@ module Lotus
       # end
       #
       # DeliveryMethodMailer.deliver
+      #
+      # @example Delivery with locals
+      # class User
+      #   def initialize(name)
+      #     @name = name
+      #   end
+      #
+      #   attr_reader :name
+      # end
+      #
+      # luca = User.new('Luca')
+      # Lotus::Mailer.load!
+      # InvoiceMailer.deliver(locals: {user:luca})
       def deliver(locals: {}, template: DEFAULT_TEMPLATE)
         new(locals).deliver(template)
       end

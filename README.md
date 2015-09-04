@@ -68,7 +68,7 @@ require lotus/mailer
 
 class InvoiceMailer
   include Lotus::Mailer
-  
+
   from 'noreply@sender.com'
   to 'noreply@recipient.com'
   subject 'Welcome'
@@ -110,7 +110,7 @@ end
 
 luca = User.new('Luca', 'jodosha')
 Lotus::Mailer.load!
-InvoiceMailer.deliver(user:luca)
+InvoiceMailer.deliver(locals: {user:luca})
 ```
 
 The corresponding `erb` file:
@@ -128,11 +128,11 @@ require lotus/mailer
 
 class InvoiceMailer
   include Lotus::Mailer
-  
+
   from 'noreply@sender.com'
   to 'noreply@recipient.com'
   subject 'Welcome'
-  
+
   def greeting
     'Ahoy'
   end
@@ -207,14 +207,7 @@ Lotus::Mailer.configure do
   root '/path/to/root'
 end
 
-class MyMailer
-  include Lotus::Mailer
-  
-  root '/another/root'
-end
-
 Lotus::Mailer.configuration.root   # => #<Pathname:/path/to/root>
-MyMailer.root                      # => #<Pathname:/another/root>
 ```
 
 ### Delivery Details
@@ -344,7 +337,7 @@ See https://github.com/mikel/mail
 
 ### Multipart mail
 
-Each template associated with the mailer will be used as a part of the email. 
+Each template associated with the mailer will be used as a part of the email.
 The `.txt` template will be the `text_part` of the Mail object and the `.html` will correspond to the `html_part`.
 Other formats will be added to the object as attachments.
 
@@ -399,5 +392,3 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Copyright
 
 Copyright © 2015 Luca Guidi – Released under MIT License
-
-
