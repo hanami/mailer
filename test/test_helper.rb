@@ -31,4 +31,10 @@ Lotus::Mailer.class_eval do
   end
 end
 
+Lotus::Mailer::Dsl.class_eval do
+  def reset!
+    @templates = Hash.new
+  end
+end
+
 require 'fixtures'
