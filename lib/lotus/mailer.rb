@@ -142,7 +142,7 @@ module Lotus
     #   MyApi::Mailer.configuration.root # => #<Pathname:/another/root>
     def self.dupe
       dup.tap do |duplicated|
-        duplicated.configuration = configuration.duplicate
+        duplicated.configuration = Configuration.new
       end
     end
 
