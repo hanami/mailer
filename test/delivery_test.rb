@@ -13,7 +13,6 @@ describe Lotus::Mailer do
         from "noreply@sender.com"
         to "noreply@recipient.com"
         subject "Welcome"
-        attach "render_mailer.html.erb"
 
         def greeting
           "Ahoy"
@@ -46,10 +45,6 @@ describe Lotus::Mailer do
 
     it 'interprets the prepare statement' do
       refute_nil(Mail::TestMailer.deliveries.first.attachments["invoice.pdf"])
-    end
-
-    it 'adds the attachment to the mail object' do
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["render_mailer.html.erb"])
     end
 
     after do
