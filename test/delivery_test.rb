@@ -13,7 +13,7 @@ describe Lotus::Mailer do
         from "noreply@sender.com"
         to "noreply@recipient.com"
         subject "Welcome"
-        attachment "render_mailer.html.erb"
+        attach "render_mailer.html.erb"
 
         def greeting
           "Ahoy"

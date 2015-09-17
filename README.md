@@ -212,7 +212,7 @@ Lotus::Mailer.configuration.root   # => #<Pathname:/path/to/root>
 
 ### Delivery Details
 
-When a Ruby object includes __Lotus::Mailer__, a developer can customize delivery details, such as `from`, `to`, `subject` and `attachments`.
+When a Ruby object includes __Lotus::Mailer__, a developer can customize delivery details, such as `from`, `to`, `subject` and the attachments through the `attach` method.
 
 The `from` field determines the sender of the email. It can accept a string:
 
@@ -298,13 +298,23 @@ class InvoiceMailer
 end
 ```
 
-The `attachment` field is used to add an attachment to the mail, given the path to file:
+The `attach` method is used to add an attachment to the mail, given the path to file:
 
 ```ruby
 class InvoiceMailer
   include Lotus::Mailer
 
-  attachment 'path/to/file/attachment.pdf'
+  attach 'path/to/file/attachment.pdf'
+end
+```
+
+It also accepts an array of paths to several attachments:
+
+```ruby
+class InvoiceMailer
+  include Lotus::Mailer
+
+  attach ['path/to/file/attachment1.pdf', 'path/to/file/attachment2.pdf']
 end
 ```
 

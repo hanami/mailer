@@ -165,19 +165,33 @@ module Lotus
 
       # Add an attachment to the mail, given the path to file
       #
-      # @param path [String] Path File
+      # @param path [String or Array of Strings] Filepath(s)
       #
       # @since 0.1.0
       #
-      # @example
+      # @example When there is only one attachment
       # class InvoiceMailer
       #   include Lotus::Mailer
       #
-      #   attachment 'path/to/file/attachment.pdf'
+      #   attach 'path/to/file/attachment.pdf'
       # end
-      def attachment(path)
-        name = path.split('/')[-1]
-        @attachments[name] = path
+      #
+      # @example When there is an array of paths to attachments
+      # class InvoiceMailer
+      #   include Lotus::Mailer
+      #
+      #   attach ['path/to/file/attachment1.pdf','path/to/file/attachment2.pdf']
+      # end
+      def attach(path)
+        if path.is_a? Array
+          path.each do |pa|
+            name = pa.split('/')[-1]
+            @attachments[name] = pa
+          end
+        else
+          name = path.split('/')[-1]
+          @attachments[name] = path
+        end
       end
 
       protected
