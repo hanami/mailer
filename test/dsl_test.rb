@@ -7,16 +7,27 @@ describe Lotus::Mailer do
     Lotus::Mailer.reset!
   end
 
-  describe '.template' do
-    describe 'when given a template format and path' do
-      it 'sets the template in the templates hash' do
-        InvoiceMailer.reset!
-        InvoiceMailer.template(:csv, 'welcome_mailer.csv.erb')
-        template_test = InvoiceMailer.templates(:csv)
-        template_test.must_be_kind_of(Lotus::Mailer::Template)
-      end
-    end
-  end
+  # describe '.template' do
+  #   describe 'when given a template format and path' do
+  #     it 'sets the template in the templates hash' do
+  #       InvoiceMailer.template(:csv, 'welcome_mailer.csv.erb')
+  #       template_test = InvoiceMailer.templates[:csv]
+  #       template_test.must_be_kind_of(Lotus::Mailer::Template)
+  #     end
+  #   end
+  #
+  #   describe 'when given only template format' do
+  #     describe 'when the given template is already defined' do
+  #       before do
+  #         InvoiceMailer.template(:html, 'invoice.html.erb')
+  #       end
+  #       it 'returns the template' do
+  #         template = InvoiceMailer.template(:html)
+  #         template.must_be_kind_of(Lotus::Mailer::Template)
+  #       end
+  #     end
+  #   end
+  # end
 
   describe '.templates' do
     describe 'returns mailer templates hash' do

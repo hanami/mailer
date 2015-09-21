@@ -11,13 +11,6 @@ describe Lotus::Mailer do
 
   describe '#render' do
     describe 'when template is explicitly declared' do
-      before do
-        InvoiceMailer.reset!
-        InvoiceMailer.class_eval do
-          template :html, 'invoice.html.erb'
-        end
-      end
-      
       let(:mailer) { InvoiceMailer.new }
 
       it 'renders the given template' do
