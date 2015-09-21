@@ -175,7 +175,8 @@ module Lotus
       end
 
       attr_writer :mail
-
+      attr_writer :templates
+      attr_writer :attachments
     end
   end
 end
