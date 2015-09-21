@@ -66,7 +66,7 @@ module Lotus
         class_attribute :configuration
 
         self.configuration = conf.duplicate
-        self.templates(Hash.new)
+        self.templates = Hash.new
       end
 
       conf.copy!(base)

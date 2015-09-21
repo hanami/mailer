@@ -46,7 +46,7 @@ module Lotus
             @templates
           end
         else
-          @templates = value
+          @templates[value]
         end
       end
 
@@ -176,7 +176,7 @@ module Lotus
 
       attr_writer :mail
       attr_writer :templates
-      attr_writer :attachments
+
     end
   end
 end
