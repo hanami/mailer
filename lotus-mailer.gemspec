@@ -5,7 +5,7 @@ require 'lotus/mailer/version'
 Gem::Specification.new do |spec|
   spec.name          = 'lotus-mailer'
   spec.version       = Lotus::Mailer::VERSION
-  spec.authors       = ['Luca Guidi', 'Ines Opcoelho', 'Rosa Faria']
+  spec.authors       = ['Luca Guidi', 'Ines Coelho', 'Rosa Faria']
   spec.email         = ['me@lucaguidi.com', 'ines.opcoelho@gmail.com', 'rosa1853@live.com']
 
   spec.summary       = %q{Mail for Ruby applications.}
