@@ -250,7 +250,7 @@ class InvoiceMailer
 end
 ```
 
-The `to` field also accept an array of strings:
+The to field also accept an array of strings:
 
 ```ruby
 class InvoiceMailer

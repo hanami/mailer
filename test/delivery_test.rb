@@ -39,12 +39,12 @@ describe Lotus::Mailer do
     it 'has the correct templates' do
       Mail::TestMailer.deliveries.first.html_part.to_s.must_include %(template)
       Mail::TestMailer.deliveries.first.text_part.to_s.must_include %(template)
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["welcome_mailer.haml"])
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["welcome_mailer.csv"])
+      Mail::TestMailer.deliveries.first.attachments[0].to_s.must_include %(welcome_mailer)
+      Mail::TestMailer.deliveries.first.attachments[1].to_s.must_include %(welcome_mailer)
     end
 
     it 'interprets the prepare statement' do
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["invoice.pdf"])
+      Mail::TestMailer.deliveries.first.attachments[2].to_s.must_include %(pdf)
     end
 
     after do
