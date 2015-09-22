@@ -13,7 +13,6 @@ module Lotus
       # When a value is given, specify the relative path to the template.
       # Otherwise, it returns the name that follows Lotus::Mailer conventions.
       #
-      # @param format [Symbol] template format
       # @param value [String] relative template path
       #
       # @return [Template] the template with the correspondent format for the mailer
@@ -25,12 +24,13 @@ module Lotus
       #
       #   class MyMailer
       #     include Lotus::Mailer
-      #     template :json, 'mailer.json.erb'
+      #     template 'mailer.json.erb'
       #   end
       #
       #   MyMailer.templates[:json].file  # => 'root/mailer.json.erb'
-      def template(format, value)
-        @templates[format] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
+      def template(value)
+        format = value.split(".")[-2]
+        @templates[format.to_sym] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
       end
 
       # Returns the Hash with all the templates of the mailer

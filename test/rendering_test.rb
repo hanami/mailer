@@ -14,10 +14,10 @@ describe Lotus::Mailer do
       before do
         InvoiceMailer.reset!
         InvoiceMailer.class_eval do
-          template :html, 'invoice.html.erb'
+          template 'invoice.html.erb'
         end
       end
-      
+
       let(:mailer) { InvoiceMailer.new }
 
       it 'renders the given template' do
@@ -30,7 +30,6 @@ describe Lotus::Mailer do
 
       it 'looks for template with same name with inflected classname and render it' do
         mailer.render(:html).must_include %(Hello World)
-        mailer.render(:haml).must_include %(This is a haml template)
         mailer.render(:txt).must_include %(This is a txt template)
       end
     end
