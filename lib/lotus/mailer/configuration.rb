@@ -13,8 +13,20 @@ module Lotus
       # @api private
       DEFAULT_ROOT = '.'.freeze
 
+      # Default delivery method
+      #
+      # @since 0.1.0
+      # @api private
+      DEFAULT_DELIVERY_METHOD = :smtp
+
+      # @since 0.1.0
+      # @api private
       attr_reader :mailers
+
+      # @since 0.1.0
+      # @api private
       attr_reader :modules
+
       # Initialize a configuration instance
       #
       # @return [Lotus::Mailer::Configuration] a new configuration's instance
@@ -45,6 +57,7 @@ module Lotus
       #   Gets the value
       #   @return [Class, Module, String]
       #
+      # @api private
       # @since 0.1.0
       #
       # @example Getting the value
@@ -84,7 +97,7 @@ module Lotus
       #
       # @since 0.1.0
       #
-      # @see http://www.ruby-doc.org/stdlib-2.1.2/libdoc/pathname/rdoc/Pathname.html
+      # @see http://www.ruby-doc.org/stdlib/libdoc/pathname/rdoc/Pathname.html
       # @see http://rdoc.info/gems/lotus-utils/Lotus/Utils/Kernel#Pathname-class_method
       #
       # @example Getting the value
@@ -164,6 +177,8 @@ module Lotus
       # Reset the configuration
       def reset!
         root(DEFAULT_ROOT)
+        delivery_method(DEFAULT_DELIVERY_METHOD)
+
         @mailers = Set.new
         @modules = []
       end
@@ -184,36 +199,64 @@ module Lotus
         end
       end
 
-      # Specify a global delivery method
+      # Specify a global delivery method for the mail gateway.
       #
-      # @param method [Symbol] delivery method
+      # It supports the following delivery methods:
+      #
+      #   * Exim (<tt>:exim</tt>)
+      #   * Sendmail (<tt>:sendmail</tt>)
+      #   * SMTP (<tt>:smtp</tt>, for local installations)
+      #   * SMTP Connection (<tt>:smtp_connection</tt>,
+      #     via <tt>Net::SMTP</tt> - for remote installations)
+      #   * Test (<tt>:test</tt>, for testing purposes)
+      #
+      # The default delivery method is SMTP (<tt>:smtp</tt>).
+      #
+      # Custom delivery methods can be specified by passing the class policy and
+      # a set of optional configurations. This class MUST respond to:
+      #
+      #   * <tt>initialize(options = {})</tt>
+      #   * <tt>deliver!(mail)<tt>
+      #
+      # @param method [Symbol, #initialize, deliver!] delivery method
       # @param options [Hash] optional settings
       #
       # @return [Array] an array containing the delivery method and the optional settings as an Hash
       #
       # @since 0.1.0
       #
-      # @example With Method only
-      # Lotus::Mailer.configure do
-      #   delivery_method :sendmail
-      # end
+      # @example Setup delivery method with supported symbol
+      #   require 'lotus/mailer'
       #
-      # @example With Method and Options
-      # Lotus::Mailer.configure do
-      #   delivery_method :smtp, address: "localhost", port: 1025
-      # end
+      #   Lotus::Mailer.configure do
+      #     delivery_method :sendmail
+      #   end
       #
-      # @example Using a Method Alias
-      # Lotus::Mailer.configure do
-      #   delivery :test
-      # end
+      # @example Setup delivery method with supported symbol and options
+      #   require 'lotus/mailer'
       #
-      # @example With Custom Method
-      # CUSTOM_DELIVERY = :smtp.freeze
+      #   Lotus::Mailer.configure do
+      #     delivery_method :smtp, address: "localhost", port: 1025
+      #   end
       #
-      # Lotus::Mailer.configure do
-      #   delivery_method CUSTOM_DELIVERY, foo: 'bar'
-      # end
+      # @example Setup custom delivery method with options
+      #   require 'lotus/mailer'
+      #
+      #   class MandrillDeliveryMethod
+      #     def initialize(options)
+      #       @options = options
+      #     end
+      #
+      #     def deliver!(mail)
+      #       # ...
+      #     end
+      #   end
+      #
+      #   Lotus::Mailer.configure do
+      #     delivery_method MandrillDeliveryMethod,
+      #       username: ENV['MANDRILL_USERNAME'],
+      #       password: ENV['MANDRILL_API_KEY']
+      #   end
       def delivery_method(method = nil, options = {})
         if method.nil?
           @delivery_method
@@ -222,12 +265,25 @@ module Lotus
         end
       end
 
+      # @api private
+      # @since 0.1.0
       alias_method :delivery, :delivery_method
 
       protected
+      # @api private
+      # @since 0.1.0
       attr_writer :root
+
+      # @api private
+      # @since 0.1.0
       attr_writer :delivery_method
+
+      # @api private
+      # @since 0.1.0
       attr_writer :namespace
+
+      # @api private
+      # @since 0.1.0
       attr_writer :modules
     end
   end

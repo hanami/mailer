@@ -44,14 +44,7 @@ module Lotus
     # @since 0.1.0
     # @api private
     #
-    # @see http://www.ruby-doc.org/core-2.1.2/Module.html#method-i-included
-    #
-    # @example
-    #   require 'lotus/mailer'
-    #
-    #   class IndexMailer
-    #     include Lotus::Mailer
-    #   end
+    # @see http://www.ruby-doc.org/core/Module.html#method-i-included
     def self.included(base)
       conf = self.configuration
       conf.add_mailer(base)

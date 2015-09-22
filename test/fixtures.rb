@@ -20,3 +20,13 @@ class WelcomeMailer
     "Ahoy"
   end
 end
+
+class MandrillDeliveryMethod
+  def initialize(options)
+    @options = options
+  end
+
+  def deliver!(mail)
+    # ...
+  end
+end

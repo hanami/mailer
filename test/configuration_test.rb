@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'lotus/mailer/configuration'
 
 describe Lotus::Mailer::Configuration do
   before do
@@ -172,13 +171,70 @@ describe Lotus::Mailer::Configuration do
   end
 
   describe '#delivery_method' do
-    before do
-      MyCustomDeliveryMethod = :smtp
-      @configuration.delivery_method MyCustomDeliveryMethod, foo: 'bar'
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to SMTP' do
+        @configuration.delivery_method.must_equal [:smtp, {}]
+      end
     end
 
-    it 'saves the delivery method in the configuration' do
-      @configuration.delivery_method.must_equal [:smtp, { foo: 'bar' }]
+    describe 'set with a symbol' do
+      before do
+        @configuration.delivery_method :exim, location: '/path/to/exim'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery_method.must_equal [:exim, { location: '/path/to/exim' }]
+      end
+    end
+
+    describe 'set with a class' do
+      before do
+        @configuration.delivery_method MandrillDeliveryMethod,
+          username: 'mandrill-username', password: 'mandrill-api-key'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery_method.must_equal [MandrillDeliveryMethod,
+                                                   username: 'mandrill-username', password: 'mandrill-api-key']
+      end
+    end
+  end
+
+  describe '#delivery' do
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to SMTP' do
+        @configuration.delivery.must_equal [:smtp, {}]
+      end
+    end
+
+    describe 'set with a symbol' do
+      before do
+        @configuration.delivery :exim, location: '/path/to/exim'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery.must_equal [:exim, { location: '/path/to/exim' }]
+      end
+    end
+
+    describe 'set with a class' do
+      before do
+        @configuration.delivery MandrillDeliveryMethod,
+          username: 'mandrill-username', password: 'mandrill-api-key'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery.must_equal [MandrillDeliveryMethod,
+                                            username: 'mandrill-username', password: 'mandrill-api-key']
+      end
     end
   end
 end
