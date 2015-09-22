@@ -40,7 +40,6 @@ describe Lotus::Mailer do
     it 'has the correct templates' do
       Mail::TestMailer.deliveries.first.html_part.to_s.must_include %(template)
       Mail::TestMailer.deliveries.first.text_part.to_s.must_include %(template)
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["welcome_mailer.haml"])
       refute_nil(Mail::TestMailer.deliveries.first.attachments["welcome_mailer.csv"])
     end
 

@@ -7,11 +7,11 @@ describe Lotus::Mailer do
       before do
         InvoiceMailer.reset!
         Lotus::Mailer.reset!
-        InvoiceMailer.template(:csv, 'welcome_mailer.csv.erb')
+        InvoiceMailer.template('welcome_mailer.csv.erb')
         Lotus::Mailer.load!
       end
       it 'will look up template' do
-        template_test = InvoiceMailer.templates[:csv]
+        template_test = InvoiceMailer.templates(:csv)
         template_test.must_be_kind_of(Lotus::Mailer::Template)
       end
       after do
@@ -19,7 +19,7 @@ describe Lotus::Mailer do
       end
     end
   end
-  
+
   describe '.duplicate' do
     before do
       Lotus::Mailer.configure do

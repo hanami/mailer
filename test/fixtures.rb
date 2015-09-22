@@ -1,6 +1,6 @@
 class InvoiceMailer
   include Lotus::Mailer
-  template :html, 'invoice.html.erb'
+  template 'invoice.html.erb'
 end
 
 class RenderMailer

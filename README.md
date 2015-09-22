@@ -161,11 +161,11 @@ module Articles
   class Create
     include Lotus::View
 
-    template :haml, 'invoice.haml.erb'
+    template 'invoice.html.erb'
   end
 end
 
-InvoiceMailer.templates[:haml].file  # => "root/invoice.haml.erb"
+InvoiceMailer.templates[:html].file  # => "root/invoice.html.erb"
 ```
 
 ### Engines

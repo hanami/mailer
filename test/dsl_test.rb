@@ -11,7 +11,7 @@ describe Lotus::Mailer do
     describe 'when given a template format and path' do
       it 'sets the template in the templates hash' do
         InvoiceMailer.reset!
-        InvoiceMailer.template(:csv, 'welcome_mailer.csv.erb')
+        InvoiceMailer.template('welcome_mailer.csv.erb')
         template_test = InvoiceMailer.templates(:csv)
         template_test.must_be_kind_of(Lotus::Mailer::Template)
       end
@@ -22,10 +22,9 @@ describe Lotus::Mailer do
     describe 'returns mailer templates hash' do
       it 'returns a templates hash' do
         formats = LazyMailer.templates.keys
-        formats.count.must_equal(3)
+        formats.count.must_equal(2)
         formats.must_include(:txt)
         formats.must_include(:html)
-        formats.must_include(:haml)
         template_test = LazyMailer.templates[:html]
         template_test.must_be_kind_of(Lotus::Mailer::Template)
       end
