@@ -2,20 +2,46 @@ require 'test_helper'
 require 'lotus/mailer'
 
 describe Lotus::Mailer do
+  describe '.configure' do
+    before do
+      Lotus::Mailer.reset!
+    end
+
+    after do
+      Lotus::Mailer.reset!
+    end
+
+    it 'configures the framework' do
+      Lotus::Mailer.configure do
+        root __dir__
+      end
+
+      Lotus::Mailer.configuration.root.must_equal Pathname.new(__dir__)
+    end
+
+    it 'allows chained calls' do
+      Lotus::Mailer.configure do
+      end.load!
+    end
+  end
+
   describe '.load!' do
     describe 'when custom template is set' do
       before do
         InvoiceMailer.reset!
         Lotus::Mailer.reset!
         InvoiceMailer.template('welcome_mailer.csv.erb')
+
         Lotus::Mailer.load!
       end
+
+      after do
+        Lotus::Mailer.reset!
+      end
+
       it 'will look up template' do
         template_test = InvoiceMailer.templates(:csv)
         template_test.must_be_kind_of(Lotus::Mailer::Template)
-      end
-      after do
-        Lotus::Mailer.reset!
       end
     end
   end
