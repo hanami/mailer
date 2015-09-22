@@ -66,6 +66,10 @@ module Lotus
       conf.copy!(base)
     end
 
+    def self.deliveries
+      Mail::TestMailer.deliveries
+    end
+
     # Evaluate Proc
     # It evaluates an object, and if it is a Proc executes it
     #

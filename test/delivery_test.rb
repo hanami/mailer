@@ -1,58 +1,91 @@
+require 'test_helper'
+
 describe Lotus::Mailer do
-  describe '#deliver' do
-    before do
-      Lotus::Mailer.reset!
-      Lotus::Mailer.configure do
-        delivery_method :test
-      end.load!
-      Mail::TestMailer.deliveries.clear
+  describe '.deliver' do
+    describe 'test delivery' do
+      before do
+        Lotus::Mailer.reset!
+        Lotus::Mailer.configure do
+          delivery_method :test
+        end.load!
 
-      class WelcomeMailer
-        include Lotus::Mailer
+        Lotus::Mailer.deliveries.clear
+        WelcomeMailer.deliver
 
-        from "noreply@sender.com"
-        to "noreply@recipient.com"
-        subject "Welcome"
-        attach "render_mailer.html.erb"
-
-        def greeting
-          "Ahoy"
-        end
-
-        def prepare
-          mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
-        end
+        @mail = Lotus::Mailer.deliveries.first
       end
 
-      WelcomeMailer.deliver
+      after do
+        Lotus::Mailer.deliveries.clear
+        Lotus::Mailer.reset!
+      end
+
+      it 'delivers the mail' do
+        Lotus::Mailer.deliveries.length.must_equal 1
+      end
+
+      it 'sends the correct information' do
+        @mail.from.must_equal ['noreply@sender.com']
+        @mail.to.must_equal ['noreply@recipient.com']
+        @mail.subject.must_equal "Welcome"
+      end
+
+      it 'has the correct templates' do
+        @mail.html_part.to_s.must_include %(template)
+        @mail.text_part.to_s.must_include %(template)
+        @mail.attachments['welcome_mailer.csv'].wont_be_nil
+      end
+
+      it 'interprets the prepare statement' do
+        @mail.attachments['invoice.pdf'].wont_be_nil
+      end
+
+      it 'adds the attachment to the mail object' do
+        @mail.attachments['render_mailer.html.erb'].wont_be_nil
+      end
     end
 
-    it 'delivers the mail' do
-      Mail::TestMailer.deliveries.length.must_equal 1
-    end
+    describe 'custom delivery' do
+      before do
+        @options = options = { deliveries: [] }
 
-    it 'sends the correct information' do
-      Mail::TestMailer.deliveries.first.from.must_equal ['noreply@sender.com']
-      Mail::TestMailer.deliveries.first.to.must_equal ['noreply@recipient.com']
-      Mail::TestMailer.deliveries.first.subject.must_equal "Welcome"
-    end
+        Lotus::Mailer.reset!
+        Lotus::Mailer.configure do
+          delivery_method MandrillDeliveryMethod, options
+        end.load!
 
-    it 'has the correct templates' do
-      Mail::TestMailer.deliveries.first.html_part.to_s.must_include %(template)
-      Mail::TestMailer.deliveries.first.text_part.to_s.must_include %(template)
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["welcome_mailer.csv"])
-    end
+        WelcomeMailer.deliver
 
-    it 'interprets the prepare statement' do
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["invoice.pdf"])
-    end
+        @mail = options.fetch(:deliveries).first
+      end
 
-    it 'adds the attachment to the mail object' do
-      refute_nil(Mail::TestMailer.deliveries.first.attachments["render_mailer.html.erb"])
-    end
+      after do
+        Lotus::Mailer.reset!
+      end
 
-    after do
-      Lotus::Mailer.reset!
+      it 'delivers the mail' do
+        @options.fetch(:deliveries).length.must_equal 1
+      end
+
+      it 'sends the correct information' do
+        @mail.from.must_equal ['noreply@sender.com']
+        @mail.to.must_equal ['noreply@recipient.com']
+        @mail.subject.must_equal "Welcome"
+      end
+
+      it 'has the correct templates' do
+        @mail.html_part.to_s.must_include %(template)
+        @mail.text_part.to_s.must_include %(template)
+        @mail.attachments['welcome_mailer.csv'].wont_be_nil
+      end
+
+      it 'interprets the prepare statement' do
+        @mail.attachments['invoice.pdf'].wont_be_nil
+      end
+
+      it 'adds the attachment to the mail object' do
+        @mail.attachments['render_mailer.html.erb'].wont_be_nil
+      end
     end
   end
 end
