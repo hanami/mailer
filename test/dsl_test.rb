@@ -6,6 +6,10 @@ describe Lotus::Mailer do
       it 'returns the convention name' do
         RenderMailer.template.must_equal 'render_mailer'
       end
+
+      it 'returns correct namespaced value' do
+        Users::Welcome.template.must_equal 'users/welcome'
+      end
     end
 
     describe 'when a value is set' do

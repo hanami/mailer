@@ -88,3 +88,9 @@ class MandrillDeliveryMethod
     @options.fetch(:deliveries).push(mail)
   end
 end
+
+module Users
+  class Welcome
+    include Lotus::Mailer
+  end
+end
