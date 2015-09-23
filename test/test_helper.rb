@@ -42,4 +42,8 @@ require 'fixtures'
 Lotus::Mailer.configure do
   root __dir__ + '/fixtures'
   delivery_method :test
+
+  prepare do
+    include DefaultSubject
+  end
 end.load!

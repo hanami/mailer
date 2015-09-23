@@ -222,4 +222,11 @@ describe Lotus::Mailer::Configuration do
       end
     end
   end
+
+  describe '#prepare' do
+    it 'injects code in each mailer'
+    # it 'injects code in each mailer' do
+    #   InvoiceMailer.subject.must_equal 'default subject'
+    # end
+  end
 end

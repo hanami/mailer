@@ -94,3 +94,9 @@ module Users
     include Lotus::Mailer
   end
 end
+
+module DefaultSubject
+  def self.included(mailer)
+    mailer.subject 'default subject'
+  end
+end
