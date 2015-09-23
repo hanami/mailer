@@ -18,6 +18,7 @@ module Lotus
         # @since 0.1.0
         def initialize(locals = {})
           @locals = locals
+          @format = locals.fetch(:format, nil)
           @mail   = Mail.new.tap do |m|
             m.from    = __dsl(:from)
             m.to      = __dsl(:to)

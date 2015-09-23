@@ -338,7 +338,8 @@ module Lotus
     end
 
     def __part?(format)
-      !self.class.templates(format).nil?
+      @format == format ||
+        (!@format && !self.class.templates(format).nil?)
     end
   end
 end

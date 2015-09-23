@@ -64,26 +64,39 @@ describe Lotus::Mailer do
       end
     end
 
-    describe 'test delivery with methods' do
-      before do
-        @user = User.new('Ines', 'ines@deigirls.com')
-        MethodMailer.deliver(user: @user)
-
-        @mail = Lotus::Mailer.deliveries.first
-      end
-
+    describe 'multipart' do
       after do
         Lotus::Mailer.deliveries.clear
       end
 
-      it 'delivers the mail' do
-        Lotus::Mailer.deliveries.length.must_equal 1
+      it 'delivers all the parts by default' do
+        WelcomeMailer.deliver
+
+        mail = Lotus::Mailer.deliveries.first
+        body = mail.body.encoded
+
+        body.must_include %(<h1>Hello World!</h1>)
+        body.must_include %(This is a txt template)
       end
 
-      it 'sends the correct information' do
-        @mail.from.must_equal    ["hello-#{ @user.name.downcase }@example.com"]
-        @mail.to.must_equal      [@user.email]
-        @mail.subject.must_equal "Hello, #{ @user.name }"
+      it 'can deliver only the text part' do
+        WelcomeMailer.deliver(format: :txt)
+
+        mail = Lotus::Mailer.deliveries.first
+        body = mail.body.encoded
+
+        body.wont_include %(<h1>Hello World!</h1>)
+        body.must_include %(This is a txt template)
+      end
+
+      it 'can deliver only the html part' do
+        WelcomeMailer.deliver(format: :html)
+
+        mail = Lotus::Mailer.deliveries.first
+        body = mail.body.encoded
+
+        body.must_include %(<h1>Hello World!</h1>)
+        body.wont_include %(This is a txt template)
       end
     end
 
