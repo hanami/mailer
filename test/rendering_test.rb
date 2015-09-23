@@ -1,23 +1,8 @@
 require 'test_helper'
 
 describe Lotus::Mailer do
-   before do
-     Lotus::Mailer.load!
-   end
-
-   after do
-     Lotus::Mailer.reset!
-   end
-
   describe '#render' do
     describe 'when template is explicitly declared' do
-      before do
-        InvoiceMailer.reset!
-        InvoiceMailer.class_eval do
-          template 'invoice.html.erb'
-        end
-      end
-
       let(:mailer) { InvoiceMailer.new }
 
       it 'renders the given template' do
@@ -47,6 +32,14 @@ describe Lotus::Mailer do
 
       it 'renders template with parsed locals' do
         mailer.render(:html).must_include %(Luca)
+      end
+    end
+
+    describe 'with HAML template engine' do
+      let(:mailer) { TemplateEngineMailer.new(user: User.new('Luca')) }
+
+      it 'renders template with parsed locals' do
+        mailer.render(:html).must_include %(<h1>\n  Luca\n</h1>\n)
       end
     end
   end

@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'lotus/mailer/configuration'
 
 describe Lotus::Mailer::Configuration do
   before do
@@ -98,66 +97,29 @@ describe Lotus::Mailer::Configuration do
     end
   end
 
-  describe '#duplicate' do
-    before do
-      @configuration.root 'test'
-      @configuration.add_mailer( InvoiceMailer )
-      @configuration.prepare { include Kernel }
+  # describe '#reset!' do
+  #   before do
+  #     @configuration.root 'test'
+  #     @configuration.add_mailer(InvoiceMailer)
 
-      @config = @configuration.duplicate
-    end
+  #     @configuration.reset!
+  #   end
 
-    it 'returns a copy of the configuration' do
-      @config.root.must_equal       @configuration.root
-      @config.modules.must_equal    @configuration.modules
-      @config.mailers.must_be_empty
-    end
+  #   it 'resets root' do
+  #     root = Pathname.new('.').realpath
 
-    it "doesn't affect the original configuration" do
-      @config.root '.'
-      @config.add_mailer(RenderMailer)
-      @config.prepare { include Comparable }
+  #     @configuration.root.must_equal root
+  #     @configuration.mailers.must_be_empty
+  #   end
 
-      @config.root.must_equal         Pathname.new('.').realpath
-      @config.mailers.must_include      RenderMailer
-      @config.modules.size.must_equal 2
+  #   it "doesn't reset namespace" do
+  #     @configuration.namespace(InvoiceMailer)
+  #     @configuration.reset!
 
-      @configuration.root.must_equal       Pathname.new('test').realpath
-      @configuration.mailers.must_include    InvoiceMailer
-      @configuration.mailers.wont_include    RenderMailer
-    end
+  #     @configuration.namespace.must_equal(InvoiceMailer)
+  #   end
 
-    it 'duplicates namespace' do
-      @configuration.namespace(InvoiceMailer)
-      conf = @configuration.duplicate
-
-      conf.namespace.must_equal(InvoiceMailer)
-    end
-  end
-
-  describe '#reset!' do
-    before do
-      @configuration.root 'test'
-      @configuration.add_mailer(InvoiceMailer)
-
-      @configuration.reset!
-    end
-
-    it 'resets root' do
-      root = Pathname.new('.').realpath
-
-      @configuration.root.must_equal root
-      @configuration.mailers.must_be_empty
-    end
-
-    it "doesn't reset namespace" do
-      @configuration.namespace(InvoiceMailer)
-      @configuration.reset!
-
-      @configuration.namespace.must_equal(InvoiceMailer)
-    end
-
-  end
+  # end
 
   describe '#load!' do
     before do
@@ -172,13 +134,99 @@ describe Lotus::Mailer::Configuration do
   end
 
   describe '#delivery_method' do
-    before do
-      MyCustomDeliveryMethod = :smtp
-      @configuration.delivery_method MyCustomDeliveryMethod, foo: 'bar'
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to SMTP' do
+        @configuration.delivery_method.must_equal [:smtp, {}]
+      end
     end
 
-    it 'saves the delivery method in the configuration' do
-      @configuration.delivery_method.must_equal [:smtp, { foo: 'bar' }]
+    describe 'set with a symbol' do
+      before do
+        @configuration.delivery_method :exim, location: '/path/to/exim'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery_method.must_equal [:exim, { location: '/path/to/exim' }]
+      end
     end
+
+    describe 'set with a class' do
+      before do
+        @configuration.delivery_method MandrillDeliveryMethod,
+          username: 'mandrill-username', password: 'mandrill-api-key'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery_method.must_equal [MandrillDeliveryMethod,
+                                                   username: 'mandrill-username', password: 'mandrill-api-key']
+      end
+    end
+  end
+
+  describe '#delivery' do
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to SMTP' do
+        @configuration.delivery.must_equal [:smtp, {}]
+      end
+    end
+
+    describe 'set with a symbol' do
+      before do
+        @configuration.delivery :exim, location: '/path/to/exim'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery.must_equal [:exim, { location: '/path/to/exim' }]
+      end
+    end
+
+    describe 'set with a class' do
+      before do
+        @configuration.delivery MandrillDeliveryMethod,
+          username: 'mandrill-username', password: 'mandrill-api-key'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.delivery.must_equal [MandrillDeliveryMethod,
+                                            username: 'mandrill-username', password: 'mandrill-api-key']
+      end
+    end
+  end
+
+  describe '#default_charset' do
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to UTF-8' do
+        @configuration.default_charset.must_equal 'UTF-8'
+      end
+    end
+
+    describe 'when set' do
+      before do
+        @configuration.default_charset 'iso-8859-1'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.default_charset.must_equal 'iso-8859-1'
+      end
+    end
+  end
+
+  describe '#prepare' do
+    it 'injects code in each mailer'
+    # it 'injects code in each mailer' do
+    #   InvoiceMailer.subject.must_equal 'default subject'
+    # end
   end
 end

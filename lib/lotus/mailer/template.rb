@@ -1,15 +1,16 @@
 require 'tilt'
-require 'erb'
 
 module Lotus
   module Mailer
     # A logic-less template.
     #
+    # @api private
     # @since 0.1.0
+    #
+    # TODO this is identical to Lotus::View, consider to move into Lotus::Utils
     class Template
       def initialize(template)
-        engine = template.split('.')[-1]
-        @_template = Tilt[engine].new(template)
+        @_template = Tilt.new(template)
       end
 
       # Render the template within the context of the given scope.
@@ -29,19 +30,10 @@ module Lotus
       #
       # @return [String] the pathname
       #
+      # @api private
       # @since 0.1.0
       def file
         @_template.file
-      end
-
-      # Get the template's name
-      #
-      # @return [String] template's name
-      #
-      # @since 0.1.0
-      def name
-        name = @_template.file.split('/')[-1]
-        name.split('.')[0] + "." + name.split('.')[1]
       end
     end
   end

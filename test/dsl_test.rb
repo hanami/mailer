@@ -1,148 +1,49 @@
 require 'test_helper'
-require 'lotus/mailer'
 
 describe Lotus::Mailer do
-
-  before do
-    Lotus::Mailer.reset!
-  end
-
   describe '.template' do
-    describe 'when given a template format and path' do
-      it 'sets the template in the templates hash' do
-        InvoiceMailer.reset!
-        InvoiceMailer.template('welcome_mailer.csv.erb')
-        template_test = InvoiceMailer.templates(:csv)
-        template_test.must_be_kind_of(Lotus::Mailer::Template)
+    describe 'when no value is set' do
+      it 'returns the convention name' do
+        RenderMailer.template.must_equal 'render_mailer'
+      end
+
+      it 'returns correct namespaced value' do
+        Users::Welcome.template.must_equal 'users/welcome'
+      end
+    end
+
+    describe 'when a value is set' do
+      it 'returns that name' do
+        InvoiceMailer.template.must_equal 'invoice'
       end
     end
   end
 
   describe '.templates' do
-    describe 'returns mailer templates hash' do
-      it 'returns a templates hash' do
-        formats = LazyMailer.templates.keys
-        formats.count.must_equal(2)
-        formats.must_include(:txt)
-        formats.must_include(:html)
-        template_test = LazyMailer.templates[:html]
-        template_test.must_be_kind_of(Lotus::Mailer::Template)
+    describe 'when no value is set' do
+      it 'returns a set of templates' do
+        template_formats = LazyMailer.templates.keys
+        template_formats.must_equal [:html, :txt]
+      end
+
+      it 'returns only the template for the given format' do
+        template = LazyMailer.templates(:txt)
+        template.must_be_kind_of(Lotus::Mailer::Template)
+        template.file.must_match %r{test/fixtures/templates/lazy_mailer.txt.erb\z}
+      end
+    end
+
+    describe 'when a value is set' do
+      it 'returns a set of templates' do
+        template_formats = InvoiceMailer.templates.keys
+        template_formats.must_equal [:html]
+      end
+
+      it 'returns only the template for the given format' do
+        template = InvoiceMailer.templates(:html)
+        template.must_be_kind_of(Lotus::Mailer::Template)
+        template.file.must_match %r{test/fixtures/templates/invoice.html.erb\z}
       end
     end
   end
-
-  describe '.from' do
-    describe 'when given a string' do
-      it 'sets the address in the variable' do
-        LazyMailer.from 'rosa@example.com'
-        LazyMailer.from.must_equal 'rosa@example.com'
-      end
-    end
-    describe 'when given a proc' do
-      it 'sets the address in the variable' do
-        LazyMailer.from -> { 'user_sender@example.com' }
-        LazyMailer.from.must_equal 'user_sender@example.com'
-      end
-    end
-
-    describe 'when given a proc that references a method' do
-      before do
-        LazyMailer.class_eval do
-          from -> { customized_sender }
-
-          def customized_sender
-            "sender@example.com"
-          end
-        end
-      end
-
-      it 'sets the sender address to the return value of the method' do
-        LazyMailer.from.must_equal 'sender@example.com'
-      end
-    end
-  end
-
-  describe '.to' do
-    describe 'when given a string' do
-      it 'sets the recipients in the variable' do
-        LazyMailer.to 'ines@example.com'
-        LazyMailer.to.must_equal 'ines@example.com'
-      end
-    end
-    describe 'when given an array' do
-      it 'sets the recipients in the variable' do
-        LazyMailer.to ["noreply1@example.com", "noreply2@example.com"]
-        LazyMailer.to.must_equal 'noreply1@example.com,noreply2@example.com'
-      end
-    end
-    describe 'when given a proc' do
-      it 'has the address in the variable' do
-        LazyMailer.to -> { 'user_recipient@example.com' }
-        LazyMailer.to.must_equal 'user_recipient@example.com'
-      end
-    end
-
-    describe 'when given a proc that references a method' do
-      before do
-        LazyMailer.class_eval do
-          to -> { customized_recipient }
-
-          def customized_recipient
-            "recipient@example.com"
-          end
-        end
-      end
-      it 'sets the correct recipient address' do
-        LazyMailer.to.must_equal 'recipient@example.com'
-      end
-    end
-  end
-
-  describe '.subject' do
-    describe 'when given a string' do
-      it 'sets the subject in the variable' do
-        LazyMailer.subject 'Team DEIGirls'
-        LazyMailer.subject.must_equal 'Team DEIGirls'
-      end
-    end
-    describe 'when given a proc' do
-      it 'sets the subject in the variable' do
-        LazyMailer.subject -> { 'Trung is awesome' }
-        LazyMailer.subject.must_equal 'Trung is awesome'
-      end
-    end
-
-    describe 'when given a Proc that references to a method' do
-      before do
-        LazyMailer.class_eval do
-          subject -> { custom_subject }
-
-          def custom_subject
-            "Lotus rocks!"
-          end
-        end
-      end
-
-      it 'sets the subject to the return value of the method' do
-        LazyMailer.subject.must_equal 'Lotus rocks!'
-      end
-    end
-  end
-
-  describe '.attach' do
-    describe 'when given a string with the path' do
-      it 'adds the attachment to the mail object' do
-        LazyMailer.attach 'path/to/file/attachment1.pdf'
-        LazyMailer.attachments['attachment1.pdf'].must_equal 'path/to/file/attachment1.pdf'
-      end
-    end
-    describe 'when given an array of strings with the paths' do
-      it 'adds the attachments to the mail object' do
-        LazyMailer.attach ['path/to/file/attachment2.pdf', 'path/to/file/attachment3.pdf']
-        LazyMailer.attachments['attachment2.pdf'].must_equal 'path/to/file/attachment2.pdf'
-        LazyMailer.attachments['attachment3.pdf'].must_equal 'path/to/file/attachment3.pdf'
-      end
-    end
-  end
-
 end

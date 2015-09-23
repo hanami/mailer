@@ -30,7 +30,7 @@ module Lotus
 
         # Initialize a finder
         #
-        # @param view [Class] the mailer
+        # @param mailer [Class] the mailer class
         #
         # @api private
         # @since 0.1.0
@@ -89,7 +89,7 @@ module Lotus
         # @api private
         # @since 0.1.0
         def template_name
-          Rendering::TemplateName.new(@mailer.name, @mailer.configuration.namespace).to_s
+          Rendering::TemplateName.new(@mailer.template, @mailer.configuration.namespace).to_s
         end
 
         # @api private
