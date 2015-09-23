@@ -8,6 +8,12 @@ require 'mail'
 
 module Lotus
   module Mailer
+    class MissingDeliveryDataError < ::StandardError
+      def initialize
+        super("Missing delivery data, please check 'from', 'to' and 'subject'")
+      end
+    end
+
     DEFAULT_TEMPLATE = :txt.freeze
 
     CONTENT_TYPES = {
@@ -134,6 +140,8 @@ module Lotus
       # @since 0.1.0
       def deliver
         mail.deliver
+      rescue ArgumentError
+        raise MissingDeliveryDataError
       end
     end
 

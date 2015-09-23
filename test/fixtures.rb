@@ -19,6 +19,22 @@ class CharsetMailer
   subject 'こんにちは'
 end
 
+class MissingFromMailer
+  include Lotus::Mailer
+  template 'missing'
+
+  to      "recipient@example.com"
+  subject "Hello"
+end
+
+class MissingToMailer
+  include Lotus::Mailer
+  template 'missing'
+
+  from    "sender@example.com"
+  subject "Hello"
+end
+
 class User < Struct.new(:name, :email); end
 
 class LazyMailer

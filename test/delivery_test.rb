@@ -6,6 +6,22 @@ describe Lotus::Mailer do
       Lotus::Mailer.deliveries.clear
     end
 
+    it 'can deliver with specified charset' do
+      CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
+
+      mail = Lotus::Mailer.deliveries.first
+      mail.charset.must_equal             charset
+      mail.parts.first.charset.must_equal charset
+    end
+
+    it "raises error when 'from' isn't specified" do
+      -> { MissingFromMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
+    end
+
+    it "raises error when 'to' isn't specified" do
+      -> { MissingToMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
+    end
+
     describe 'test delivery with hardcoded values' do
       before do
         WelcomeMailer.deliver
@@ -101,14 +117,6 @@ describe Lotus::Mailer do
 
         body.must_include %(<h1>Hello World!</h1>)
         body.wont_include %(This is a txt template)
-      end
-
-      it 'can deliver with specified charset' do
-        CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
-
-        mail = Lotus::Mailer.deliveries.first
-        mail.charset.must_equal             charset
-        mail.parts.first.charset.must_equal charset
       end
     end
 
