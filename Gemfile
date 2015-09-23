@@ -7,8 +7,7 @@ if !ENV['TRAVIS']
 end
 
 gem 'lotus-utils', '~> 0.5', require: false, github: 'lotus/utils', branch: '0.5.x'
-
-gem 'tilt'
+gem 'haml'
 
 gem 'simplecov', require: false
 gem 'coveralls', require: false

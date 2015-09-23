@@ -7,6 +7,10 @@ class RenderMailer
   include Lotus::Mailer
 end
 
+class TemplateEngineMailer
+  include Lotus::Mailer
+end
+
 class User < Struct.new(:name, :email); end
 
 class LazyMailer
