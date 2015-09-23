@@ -29,15 +29,19 @@ describe Lotus::Mailer do
       it 'has the correct templates' do
         @mail.html_part.to_s.must_include %(template)
         @mail.text_part.to_s.must_include %(template)
-        @mail.attachments['welcome_mailer.csv'].wont_be_nil
       end
 
       it 'interprets the prepare statement' do
-        @mail.attachments['invoice.pdf'].wont_be_nil
-      end
+        attachment = @mail.attachments['invoice.pdf']
 
-      it 'adds the attachment to the mail object' do
-        @mail.attachments['render_mailer.html.erb'].wont_be_nil
+        attachment.must_be_kind_of(Mail::Part)
+
+        attachment.must_be :attachment?
+        attachment.wont_be :inline?
+        attachment.wont_be :multipart?
+
+        attachment.filename.must_equal     'invoice.pdf'
+        attachment.content_type.must_equal 'application/pdf; charset=UTF-8; filename=invoice.pdf'
       end
     end
 

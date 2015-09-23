@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'lotus/mailer'
 
 describe Lotus::Mailer do
   describe '.template' do
@@ -43,21 +42,4 @@ describe Lotus::Mailer do
       end
     end
   end
-
-  describe '.attach' do
-    describe 'when given a string with the path' do
-      it 'adds the attachment to the mail object' do
-        LazyMailer.attach 'path/to/file/attachment1.pdf'
-        LazyMailer.attachments['attachment1.pdf'].must_equal 'path/to/file/attachment1.pdf'
-      end
-    end
-    describe 'when given an array of strings with the paths' do
-      it 'adds the attachments to the mail object' do
-        LazyMailer.attach ['path/to/file/attachment2.pdf', 'path/to/file/attachment3.pdf']
-        LazyMailer.attachments['attachment2.pdf'].must_equal 'path/to/file/attachment2.pdf'
-        LazyMailer.attachments['attachment3.pdf'].must_equal 'path/to/file/attachment3.pdf'
-      end
-    end
-  end
-
 end

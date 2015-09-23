@@ -31,18 +31,6 @@ module Lotus
       def file
         @_template.file
       end
-
-      # FIXME remove this when fix attachments
-      #
-      # Get the template's name
-      #
-      # @return [String] template's name
-      #
-      # @since 0.1.0
-      def name
-        name = @_template.file.split('/')[-1]
-        name.split('.')[0] + "." + name.split('.')[1]
-      end
     end
   end
 end

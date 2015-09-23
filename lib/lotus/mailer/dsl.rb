@@ -7,8 +7,6 @@ module Lotus
     #
     # @since 0.1.0
     module Dsl
-      attr_reader :attachments
-
       # Set the template name IF it differs from the convention.
       #
       # For a given mailer named <tt>Signup::Welcome</tt> it will look for
@@ -273,38 +271,8 @@ module Lotus
         end
       end
 
-      # Add an attachment to the mail, given the path to file
-      #
-      # @param path [String or Array of Strings] Filepath(s)
-      #
-      # @since 0.1.0
-      #
-      # @example When there is only one attachment
-      # class InvoiceMailer
-      #   include Lotus::Mailer
-      #
-      #   attach 'path/to/file/attachment.pdf'
-      # end
-      #
-      # @example When there is an array of paths to attachments
-      # class InvoiceMailer
-      #   include Lotus::Mailer
-      #
-      #   attach ['path/to/file/attachment1.pdf','path/to/file/attachment2.pdf']
-      # end
-      def attach(path)
-        if path.is_a? Array
-          path.each do |pa|
-            name = pa.split('/')[-1]
-            @attachments[name] = pa
-          end
-        else
-          name = path.split('/')[-1]
-          @attachments[name] = path
-        end
-      end
-
       protected
+
       # Loading mechanism hook.
       #
       # @api private
@@ -317,7 +285,6 @@ module Lotus
       end
 
       attr_writer :templates
-      attr_writer :attachments
     end
   end
 end

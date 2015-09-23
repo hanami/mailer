@@ -45,7 +45,6 @@ class WelcomeMailer
   from "noreply@sender.com"
   to ["noreply@recipient.com", "cc@recipient.com"]
   subject "Welcome"
-  attach "render_mailer.html.erb"
 
   def greeting
     "Ahoy"

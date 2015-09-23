@@ -65,7 +65,6 @@ module Lotus
 
         self.configuration = conf.duplicate
         self.templates = Hash.new
-        self.attachments = Hash.new
       end
 
       conf.copy!(base)
@@ -292,19 +291,6 @@ module Lotus
       #
       # @since 0.1.0
       def deliver
-        #attach templates
-        self.class.templates.each do |type, content|
-          case type
-          when :html, :txt
-          else
-            mail.attachments[content.name] = render(type)
-          end
-        end
-
-        self.class.attachments.each do |name, path|
-          mail.attachments[name] = path
-        end
-
         if self.respond_to? ('prepare')
           self.prepare
         end
