@@ -191,7 +191,7 @@ module Lotus
       #   end
       #
       #   user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(locals: {user: user})
+      #   WelcomeMailer.deliver(user: user)
       #
       # @example Method that returns a collection of recipients
       #   require 'lotus/mailer'
@@ -208,7 +208,7 @@ module Lotus
       #   end
       #
       #   users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(locals: {users: users})
+      #   WelcomeMailer.deliver(users: users)
       def to(value = nil)
         if value.nil?
           @to
@@ -264,7 +264,7 @@ module Lotus
       #   end
       #
       #   user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(locals: {user: user})
+      #   WelcomeMailer.deliver(user: user)
       def subject(value = nil)
         if value.nil?
           @subject

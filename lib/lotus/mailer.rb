@@ -281,8 +281,8 @@ module Lotus
       #
       # luca = User.new('Luca')
       # Lotus::Mailer.load!
-      # InvoiceMailer.deliver(locals: {user:luca})
-      def deliver(locals: {}, template: DEFAULT_TEMPLATE)
+      # InvoiceMailer.deliver(user: luca)
+      def deliver(locals = {})
         new(locals).deliver
       end
     end

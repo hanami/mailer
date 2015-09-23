@@ -44,7 +44,7 @@ describe Lotus::Mailer do
     describe 'test delivery with methods' do
       before do
         @user = User.new('Name', 'student@deigirls.com')
-        MethodMailer.deliver(locals: {user: @user})
+        MethodMailer.deliver(user: @user)
 
         @mail = Lotus::Mailer.deliveries.first
       end
@@ -67,7 +67,7 @@ describe Lotus::Mailer do
     describe 'test delivery with methods' do
       before do
         @user = User.new('Ines', 'ines@deigirls.com')
-        MethodMailer.deliver(locals: {user: @user})
+        MethodMailer.deliver(user: @user)
 
         @mail = Lotus::Mailer.deliveries.first
       end
