@@ -28,11 +28,6 @@ describe Lotus::Mailer do
         template.must_be_kind_of(Lotus::Mailer::Template)
         template.file.must_match %r{test/fixtures/templates/lazy_mailer.txt.erb\z}
       end
-
-      it "raises an error if the given format isn't associated with any template" do
-        exception = -> { LazyMailer.templates(:rtf) }.must_raise Lotus::Mailer::MissingTemplateError
-        exception.message.must_equal "Can't find template 'lazy_mailer' for 'rtf' format."
-      end
     end
 
     describe 'when a value is set' do
@@ -45,11 +40,6 @@ describe Lotus::Mailer do
         template = InvoiceMailer.templates(:html)
         template.must_be_kind_of(Lotus::Mailer::Template)
         template.file.must_match %r{test/fixtures/templates/invoice.html.erb\z}
-      end
-
-      it "raises an error if the given format isn't associated with any template" do
-        exception = -> { InvoiceMailer.templates(:txt) }.must_raise Lotus::Mailer::MissingTemplateError
-        exception.message.must_equal "Can't find template 'invoice' for 'txt' format."
       end
     end
   end

@@ -8,19 +8,12 @@ require 'mail'
 
 module Lotus
   module Mailer
-    # Missing template error
-    #
-    # This is raised at the runtime when Lotus::Mailer cannot find a template for
-    # the requested format.
-    #
-    # @since 0.1.0
-    class MissingTemplateError < ::StandardError
-      def initialize(template, format)
-        super("Can't find template '#{ template }' for '#{ format }' format.")
-      end
-    end
-
     DEFAULT_TEMPLATE = :txt.freeze
+
+    CONTENT_TYPES = {
+      html: 'text/html',
+      txt:  'text/plain'
+    }.freeze
 
     include Utils::ClassAttribute
 
@@ -290,7 +283,7 @@ module Lotus
       # Lotus::Mailer.load!
       # InvoiceMailer.deliver(locals: {user:luca})
       def deliver(locals: {}, template: DEFAULT_TEMPLATE)
-        new(locals).deliver(template)
+        new(locals).deliver
       end
     end
 
@@ -298,26 +291,11 @@ module Lotus
       # Delivers a multipart email, by looking at all the associated templates and render them.
       #
       # @since 0.1.0
-      def deliver(template)
-        mail['from'] = __dsl(:from)
-        mail['to'] = __dsl(:to)
-        mail['subject'] = __dsl(:subject)
-        if Lotus::Mailer.configuration.delivery_method
-          mail.delivery_method *Lotus::Mailer.configuration.delivery_method
-        end
-
+      def deliver
         #attach templates
         self.class.templates.each do |type, content|
           case type
-          when :html
-            mail_body = Mail::Part.new
-            mail_body.content_type 'text/html; charset=UTF-8'
-            mail_body.body render(:html)
-            mail.html_part = mail_body
-          when :txt
-            mail_body = Mail::Part.new
-            mail_body.body render(:txt)
-            mail.text_part = mail_body
+          when :html, :txt
           else
             mail.attachments[content.name] = render(type)
           end
@@ -341,6 +319,8 @@ module Lotus
       @locals.fetch(m) { super }
     end
 
+    private
+
     def __dsl(method_name)
       case result = self.class.__send__(method_name)
       when Symbol
@@ -348,6 +328,17 @@ module Lotus
       else
         result
       end
+    end
+
+    def __part(format)
+      Mail::Part.new.tap do |part|
+        part.content_type = "#{ CONTENT_TYPES.fetch(format) }; charset=UTF-8"
+        part.body         = render(format)
+      end if __part?(format)
+    end
+
+    def __part?(format)
+      !self.class.templates(format).nil?
     end
   end
 end

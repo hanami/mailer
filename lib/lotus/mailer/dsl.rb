@@ -7,7 +7,6 @@ module Lotus
     #
     # @since 0.1.0
     module Dsl
-      attr_reader :mail
       attr_reader :attachments
 
       # Set the template name IF it differs from the convention.
@@ -60,8 +59,6 @@ module Lotus
       #   Returns the template associated with the given format
       #   @param value [Symbol] the format
       #   @return [Hash]
-      #   @raise [Lotus::Mailer::MissingTemplateError] if cannot find a template
-      #     for the given format
       #
       # @overload templates
       #   Returns all the associated templates
@@ -74,9 +71,7 @@ module Lotus
         if format.nil?
           @templates = Mailer::Rendering::TemplatesFinder.new(self).find
         else
-          @templates.fetch(format) do
-            raise Mailer::MissingTemplateError.new(template, format)
-          end
+          @templates.fetch(format) { nil }
         end
       end
 
@@ -321,7 +316,6 @@ module Lotus
         configuration.freeze
       end
 
-      attr_writer :mail
       attr_writer :templates
       attr_writer :attachments
     end

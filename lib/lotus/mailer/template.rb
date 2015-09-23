@@ -1,5 +1,4 @@
 require 'tilt'
-require 'erb' # FIXME this isn't necessary true
 
 module Lotus
   module Mailer
@@ -8,8 +7,7 @@ module Lotus
     # @since 0.1.0
     class Template
       def initialize(template)
-        engine = template.split('.')[-1]
-        @_template = Tilt[engine].new(template)
+        @_template = Tilt.new(template)
       end
 
       # Render the template within the context of the given scope.
@@ -34,6 +32,8 @@ module Lotus
         @_template.file
       end
 
+      # FIXME remove this when fix attachments
+      #
       # Get the template's name
       #
       # @return [String] template's name
