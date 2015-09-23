@@ -97,43 +97,6 @@ describe Lotus::Mailer::Configuration do
     end
   end
 
-  describe '#duplicate' do
-    before do
-      @configuration.root 'test'
-      @configuration.add_mailer( InvoiceMailer )
-      @configuration.prepare { include Kernel }
-
-      @config = @configuration.duplicate
-    end
-
-    it 'returns a copy of the configuration' do
-      @config.root.must_equal       @configuration.root
-      @config.modules.must_equal    @configuration.modules
-      @config.mailers.must_be_empty
-    end
-
-    it "doesn't affect the original configuration" do
-      @config.root '.'
-      @config.add_mailer(RenderMailer)
-      @config.prepare { include Comparable }
-
-      @config.root.must_equal         Pathname.new('.').realpath
-      @config.mailers.must_include      RenderMailer
-      @config.modules.size.must_equal 2
-
-      @configuration.root.must_equal       Pathname.new('test').realpath
-      @configuration.mailers.must_include    InvoiceMailer
-      @configuration.mailers.wont_include    RenderMailer
-    end
-
-    it 'duplicates namespace' do
-      @configuration.namespace(InvoiceMailer)
-      conf = @configuration.duplicate
-
-      conf.namespace.must_equal(InvoiceMailer)
-    end
-  end
-
   # describe '#reset!' do
   #   before do
   #     @configuration.root 'test'
