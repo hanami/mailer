@@ -10,154 +10,269 @@ module Lotus
       attr_reader :mail
       attr_reader :attachments
 
-      # When a value is given, specify the relative path to the template.
-      # Otherwise, it returns the name that follows Lotus::Mailer conventions.
+      # Set the template name IF it differs from the convention.
       #
-      # @param value [String] relative template path
+      # For a given mailer named <tt>Signup::Welcome</tt> it will look for
+      # <tt>signup/welcome.*.*</tt> templates under the root directory.
       #
-      # @return [Template] the template with the correspondent format for the mailer
+      # If for some reason, we need to specify a different template name, we can
+      # use this method.
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload template(value)
+      #   Sets the given value
+      #   @param value [String, #to_s] relative template path, under root
+      #   @return [NilClass]
+      #
+      # @overload template
+      #   Gets the template name
+      #   @return [String]
       #
       # @since 0.1.0
       #
-      # @example Custom template
+      # @see Lotus::Mailers::Configuration.root
+      #
+      # @example Custom template name
       #   require 'lotus/mailer'
       #
       #   class MyMailer
       #     include Lotus::Mailer
-      #     template 'mailer.json.erb'
+      #     template 'mailer'
       #   end
-      #
-      #   MyMailer.templates[:json].file  # => 'root/mailer.json.erb'
-      def template(value)
-        format = value.split(".")[-2]
-        @templates[format.to_sym] = Mailer::Template.new("#{ [configuration.root, value].join('/') }")
-      end
-
-      # Returns the Hash with all the templates of the mailer
-      #
-      # @return [Hash] the Hash with the templates
-      #
-      # @since 0.1.0
-      def templates(value = nil)
+      def template(value = nil)
         if value.nil?
-          # If no templates are given, use the default templates instead
-          if @templates.empty?
-            @templates = Mailer::Rendering::TemplatesFinder.new(self).find
-          else
-            @templates
-          end
+          @template ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
         else
-          @templates[value]
+          @template = value
         end
       end
 
+      # Returns a set of associated templates or only one for the given format
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload templates(format)
+      #   Returns the template associated with the given format
+      #   @param value [Symbol] the format
+      #   @return [Hash]
+      #   @raise [Lotus::Mailer::MissingTemplateError] if cannot find a template
+      #     for the given format
+      #
+      # @overload templates
+      #   Returns all the associated templates
+      #   Gets the template name
+      #   @return [Hash] a set of templates
+      #
+      # @since 0.1.0
+      # @api private
+      def templates(format = nil)
+        if format.nil?
+          @templates = Mailer::Rendering::TemplatesFinder.new(self).find
+        else
+          @templates.fetch(format) do
+            raise Mailer::MissingTemplateError.new(template, format)
+          end
+        end
+      end
+
+      # Sets the sender for mail messages
+      #
+      # It accepts a hardcoded value as a string, or a symbol that represents
+      # an instance method for more complex logic.
+      #
+      # This value MUST be set, otherwise an exception is raised at the delivery
+      # time.
+      #
       # When a value is given, specify the sender of the email
       # Otherwise, it returns the sender of the email
       #
-      # @param value [Object] String or Proc to be evaluated containing the sender of the email
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
       #
-      # @return [String] the sender of the email
+      # @overload from(value)
+      #   Sets the sender
+      #   @param value [String, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload from
+      #   Returns the sender
+      #   @return [String, Symbol] the sender
       #
       # @since 0.1.0
       #
-      # @example With String
-      # class StringMailer
-      #   include Lotus::Mailer
+      # @example Hardcoded value (String)
+      #   require 'lotus/mailer'
       #
-      #   from "noreply@example.com"
-      # end
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
       #
-      # @example With Procs
-      # class ProcMailer
-      #   include Lotus::Mailer
-      #
-      #   from -> { customized_sender }
-      #
-      #   def customized_sender
-      #     "user_sender@example.com"
+      #     from "noreply@example.com"
       #   end
-      # end
+      #
+      # @example Method (Symbol)
+      #   require 'lotus/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
+      #     from :sender
+      #
+      #     private
+      #
+      #     def sender
+      #       "noreply@example.com"
+      #     end
+      #   end
       def from(value = nil)
         if value.nil?
-          new.eval_proc(@from)
+          @from
         else
           @from = value
         end
       end
 
-      # When a value is given, specify the email addresses that will be the recipients of the email
-      # Otherwise, it returns the email addresses that will be the recipients of the email
+      # Sets the recipient for mail messages
       #
-      # @param value [Object] String, Array of Strings or Proc to be evaluated containing the email addresses that will be the recipients of the email
+      # It accepts a hardcoded value as a string or array of strings.
+      # For dynamic values, you can specify a symbol that represents an instance
+      # method.
       #
-      # @return [String] the email addresses that will be the recipients of the email
+      # This value MUST be set, otherwise an exception is raised at the delivery
+      # time.
+      #
+      # When a value is given, specify the recipient of the email
+      # Otherwise, it returns the recipient of the email
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload to(value)
+      #   Sets the recipient
+      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload to
+      #   Returns the recipient
+      #   @return [String, Array, Symbol] the recipient
       #
       # @since 0.1.0
       #
-      # @example With String
-      # class StringMailer
-      #   include Lotus::Mailer
+      # @example Hardcoded value (String)
+      #   require 'lotus/mailer'
       #
-      #   to "noreply@example.com"
-      # end
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
       #
-      # @example With Array of Strings
-      # class ArrayMailer
-      #   include Lotus::Mailer
-      #
-      #   to ["noreply1@example.com", "noreply2@example.com"]
-      # end
-      #
-      # @example With Procs
-      # class ProcMailer
-      #   include Lotus::Mailer
-      #
-      #   to -> { customized_receiver }
-      #
-      #   def customized_receiver
-      #     "user_receiver@example.com"
+      #     to "user@example.com"
       #   end
-      # end
+      #
+      # @example Hardcoded value (Array)
+      #   require 'lotus/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
+      #
+      #     to ["user-1@example.com", "user-2@example.com"]
+      #   end
+      #
+      # @example Method (Symbol)
+      #   require 'lotus/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
+      #     to :email_address
+      #
+      #     private
+      #
+      #     def email_address
+      #       user.email
+      #     end
+      #   end
+      #
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.deliver(locals: {user: user})
+      #
+      # @example Method that returns a collection of recipients
+      #   require 'lotus/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
+      #     to :recipients
+      #
+      #     private
+      #
+      #     def recipients
+      #       users.map(&:email)
+      #     end
+      #   end
+      #
+      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.deliver(locals: {users: users})
       def to(value = nil)
         if value.nil?
-          return new.eval_proc(@to)
-        end
-        if value.is_a?(Array)
-          @to = value.join(',')
+          @to
         else
           @to = value
         end
       end
 
-      # When a value is given, specify the subject of the email
-      # Otherwise, it returns the subject of the email
+      # Sets the subject for mail messages
       #
-      # @param value [Object] String or Proc to be evaluated containing the subject of the email
+      # It accepts a hardcoded value as a string, or a symbol that represents
+      # an instance method for more complex logic.
       #
-      # @return [String] the subject of the email
+      # This value MUST be set, otherwise an exception is raised at the delivery
+      # time.
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload subject(value)
+      #   Sets the subject
+      #   @param value [String, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload subject
+      #   Returns the subject
+      #   @return [String, Symbol] the subject
       #
       # @since 0.1.0
       #
-      # @example With String
-      # class StringMailer
-      #   include Lotus::Mailer
+      # @example Hardcoded value (String)
+      #   require 'lotus/mailer'
       #
-      #   subject "This is the subject"
-      # end
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
       #
-      # @example With Procs
-      # class ProcMailer
-      #   include Lotus::Mailer
-      #
-      #   subject -> { customized_subject }
-      #
-      #   def customized_subject
-      #     "This is the subject"
+      #     subject "Welcome"
       #   end
-      # end
+      #
+      # @example Method (Symbol)
+      #   require 'lotus/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Lotus::Mailer
+      #     subject :greeting
+      #
+      #     private
+      #
+      #     def greeting
+      #       "Hello, #{ user.name }"
+      #     end
+      #   end
+      #
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.deliver(locals: {user: user})
       def subject(value = nil)
         if value.nil?
-          new.eval_proc(@subject)
+          @subject
         else
           @subject = value
         end

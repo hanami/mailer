@@ -8,6 +8,18 @@ require 'mail'
 
 module Lotus
   module Mailer
+    # Missing template error
+    #
+    # This is raised at the runtime when Lotus::Mailer cannot find a template for
+    # the requested format.
+    #
+    # @since 0.1.0
+    class MissingTemplateError < ::StandardError
+      def initialize(template, format)
+        super("Can't find template '#{ template }' for '#{ format }' format.")
+      end
+    end
+
     DEFAULT_TEMPLATE = :txt.freeze
 
     include Utils::ClassAttribute
@@ -68,21 +80,6 @@ module Lotus
 
     def self.deliveries
       Mail::TestMailer.deliveries
-    end
-
-    # Evaluate Proc
-    # It evaluates an object, and if it is a Proc executes it
-    #
-    # param var [Object] the object to be evaluated
-    #
-    # @since 0.1.0
-    # @api private
-    def eval_proc(var)
-      if var.is_a?(Proc)
-        instance_exec(&var)
-      else
-        var
-      end
     end
 
     # Load the framework
@@ -302,9 +299,9 @@ module Lotus
       #
       # @since 0.1.0
       def deliver(template)
-        mail['from'] = self.class.from
-        mail['to'] = self.class.to
-        mail['subject'] = self.class.subject
+        mail['from'] = __dsl(:from)
+        mail['to'] = __dsl(:to)
+        mail['subject'] = __dsl(:subject)
         if Lotus::Mailer.configuration.delivery_method
           mail.delivery_method *Lotus::Mailer.configuration.delivery_method
         end
@@ -335,6 +332,21 @@ module Lotus
         end
 
         mail.deliver
+      end
+    end
+
+    protected
+
+    def method_missing(m)
+      @locals.fetch(m) { super }
+    end
+
+    def __dsl(method_name)
+      case result = self.class.__send__(method_name)
+      when Symbol
+        __send__(result)
+      else
+        result
       end
     end
   end

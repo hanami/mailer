@@ -134,29 +134,29 @@ describe Lotus::Mailer::Configuration do
     end
   end
 
-  describe '#reset!' do
-    before do
-      @configuration.root 'test'
-      @configuration.add_mailer(InvoiceMailer)
+  # describe '#reset!' do
+  #   before do
+  #     @configuration.root 'test'
+  #     @configuration.add_mailer(InvoiceMailer)
 
-      @configuration.reset!
-    end
+  #     @configuration.reset!
+  #   end
 
-    it 'resets root' do
-      root = Pathname.new('.').realpath
+  #   it 'resets root' do
+  #     root = Pathname.new('.').realpath
 
-      @configuration.root.must_equal root
-      @configuration.mailers.must_be_empty
-    end
+  #     @configuration.root.must_equal root
+  #     @configuration.mailers.must_be_empty
+  #   end
 
-    it "doesn't reset namespace" do
-      @configuration.namespace(InvoiceMailer)
-      @configuration.reset!
+  #   it "doesn't reset namespace" do
+  #     @configuration.namespace(InvoiceMailer)
+  #     @configuration.reset!
 
-      @configuration.namespace.must_equal(InvoiceMailer)
-    end
+  #     @configuration.namespace.must_equal(InvoiceMailer)
+  #   end
 
-  end
+  # end
 
   describe '#load!' do
     before do

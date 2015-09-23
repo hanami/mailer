@@ -1,5 +1,5 @@
 require 'tilt'
-require 'erb'
+require 'erb' # FIXME this isn't necessary true
 
 module Lotus
   module Mailer

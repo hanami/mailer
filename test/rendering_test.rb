@@ -1,23 +1,8 @@
 require 'test_helper'
 
 describe Lotus::Mailer do
-   before do
-     Lotus::Mailer.load!
-   end
-
-   after do
-     Lotus::Mailer.reset!
-   end
-
   describe '#render' do
     describe 'when template is explicitly declared' do
-      before do
-        InvoiceMailer.reset!
-        InvoiceMailer.class_eval do
-          template 'invoice.html.erb'
-        end
-      end
-
       let(:mailer) { InvoiceMailer.new }
 
       it 'renders the given template' do
