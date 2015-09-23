@@ -41,7 +41,7 @@ module Lotus
       #   end
       def template(value = nil)
         if value.nil?
-          @template ||= Rendering::TemplateName.new(name, configuration.namespace).to_s
+          @template ||= ::Lotus::Mailer::Rendering::TemplateName.new(name, configuration.namespace).to_s
         else
           @template = value
         end
@@ -67,9 +67,9 @@ module Lotus
       # @api private
       def templates(format = nil)
         if format.nil?
-          @templates = Mailer::Rendering::TemplatesFinder.new(self).find
+          @templates = ::Lotus::Mailer::Rendering::TemplatesFinder.new(self).find
         else
-          @templates.fetch(format) { nil }
+          @templates.fetch(format, nil)
         end
       end
 
@@ -283,8 +283,6 @@ module Lotus
         templates.freeze
         configuration.freeze
       end
-
-      attr_writer :templates
     end
   end
 end

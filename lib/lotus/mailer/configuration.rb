@@ -1,11 +1,11 @@
-require 'pathname'
-require 'lotus/utils/class'
+require 'set'
 require 'lotus/utils/kernel'
-require 'lotus/utils/string'
-require 'lotus/utils/load_paths'
 
 module Lotus
   module Mailer
+    # Framework configuration
+    #
+    # @since 0.1.0
     class Configuration
       # Default root
       #

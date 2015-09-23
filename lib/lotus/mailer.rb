@@ -1,21 +1,35 @@
-require 'pathname'
 require 'lotus/utils/class_attribute'
 require 'lotus/mailer/version'
 require 'lotus/mailer/configuration'
 require 'lotus/mailer/dsl'
-require 'lotus/mailer/rendering'
 require 'mail'
 
 module Lotus
+  # Lotus::Mailer
+  #
+  # @since 0.1.0
   module Mailer
-    class MissingDeliveryDataError < ::StandardError
+    # Base error for Lotus::Mailer
+    #
+    # @since 0.1.0
+    class Error < ::StandardError
+    end
+
+    # Missing delivery data error
+    #
+    # It's raised when a mailer doesn't specify <tt>from</tt> or <tt>to</tt>.
+    #
+    # @since 0.1.0
+    class MissingDeliveryDataError < Error
       def initialize
-        super("Missing delivery data, please check 'from', 'to' and 'subject'")
+        super("Missing delivery data, please check 'from', or 'to'")
       end
     end
 
-    DEFAULT_TEMPLATE = :txt.freeze
-
+    # Content types mapping
+    #
+    # @since 0.1.0
+    # @api private
     CONTENT_TYPES = {
       html: 'text/html',
       txt:  'text/plain'
@@ -23,6 +37,8 @@ module Lotus
 
     include Utils::ClassAttribute
 
+    # @since 0.1.0
+    # @api private
     class_attribute :configuration
     self.configuration = Configuration.new
 
@@ -61,10 +77,8 @@ module Lotus
       conf.add_mailer(base)
 
       base.class_eval do
-        extend Dsl.dup
-        extend Rendering.dup
+        extend Dsl
         extend ClassMethods
-        include InstanceMethods
 
         include Utils::ClassAttribute
         class_attribute :configuration
@@ -75,6 +89,27 @@ module Lotus
       conf.copy!(base)
     end
 
+    # Test deliveries
+    #
+    # This is a collection of delivered messages, used when <tt>delivery_method</tt>
+    # is set on <tt>:test</tt>
+    #
+    # @return [Array] a collection of delivered messages
+    #
+    # @since 0.1.0
+    #
+    # @see Lotus::Mailer::Configuration#delivery_mode
+    #
+    # @example
+    #   require 'lotus/mailer'
+    #
+    #   Lotus::Mailer.configure do
+    #     delivery_method :test
+    #   end.load!
+    #
+    #   # In testing code
+    #   Signup::Welcome.deliver
+    #   Lotus::Mailer.deliveries.count # => 1
     def self.deliveries
       Mail::TestMailer.deliveries
     end
@@ -88,76 +123,171 @@ module Lotus
       configuration.load!
     end
 
+    # @since 0.1.0
     module ClassMethods
-      # Delivers a multipart email. It instantiates a mailer and deliver the email.
+      # Delivers a multipart email message.
+      #
+      # When a mailer defines a <tt>html</tt> and <tt>txt</tt> template, they are
+      # both delivered.
+      #
+      # In order to selectively deliver only one of the two templates, use
+      # <tt>Signup::Welcome.deliver(format: :txt)</tt>
+      #
+      # All the given locals, excepted the reserved ones (<tt>:format</tt> and
+      # <tt>charset</tt>), are avaliable as rendering context for the templates.
+      #
+      # @param locals [Hash] a set of objects that acts as context for the rendering
+      # @option :format [Symbol] specify format to deliver
+      # @option :charset [String] charset
       #
       # @since 0.1.0
       #
-      # @example email delivery through smtp via gmail configured with environment variables
-      # class DeliveryMethodMailer
-      #   include Lotus::Mailer
+      # @see Lotus::Mailer::Configuration#default_charset
       #
-      #   from ENV["GMAIL_USER"]
-      #   to "inesopcoelho@gmail.com"
-      #   subject "This is the subject"
+      # @example
+      #   require 'lotus/mailer'
       #
-      # end
+      #   Lotus::Mailer.configure do
+      #     delivery_method :smtp
+      #   end.load!
       #
-      # MyCustomDeliveryMethod = {
-      #   :address              => "smtp.gmail.com",
-      #   :port                 => 587,
-      #   :domain               => "localhost:8000",
-      #   :user_name            => ENV["GMAIL_USER"],
-      #   :password             => ENV["GMAIL_PASSWORD"],
-      #   :authentication       => "plain",
-      #   :enable_starttls_auto => true
-      # }
-      # Lotus::Mailer.configure do
-      #   delivery_method :smtp, MyCustomDeliveryMethod
-      # end
+      #   module Billing
+      #     class Invoice
+      #       include Lotus::Mailer
       #
-      # DeliveryMethodMailer.deliver
+      #       from    'noreply@example.com'
+      #       to      :recipient
+      #       subject :subject_line
       #
-      # @example Delivery with locals
-      # class User
-      #   def initialize(name)
-      #     @name = name
+      #       def prepare
+      #         mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
+      #       end
+      #
+      #       private
+      #
+      #       def recipient
+      #         user.email
+      #       end
+      #
+      #       def subject_line
+      #         "Invoice - #{ invoice.number }"
+      #       end
+      #     end
       #   end
       #
-      #   attr_reader :name
-      # end
+      #   invoice = Invoice.new
+      #   user    = User.new(name: 'L', email: 'user@example.com')
       #
-      # luca = User.new('Luca')
-      # Lotus::Mailer.load!
-      # InvoiceMailer.deliver(user: luca)
+      #   Signup::Welcome.deliver(invoice: invoice, user: user)                      # Deliver both text, HTML parts and the attachment
+      #   Signup::Welcome.deliver(invoice: invoice, user: user, format: :txt)        # Deliver only the text part and the attachment
+      #   Signup::Welcome.deliver(invoice: invoice, user: user, format: :html)       # Deliver only the text part and the attachment
+      #   Signup::Welcome.deliver(invoice: invoice, user: user, charset: 'iso-8859') # Deliver both the parts with "iso-8859"
       def deliver(locals = {})
         new(locals).deliver
       end
     end
 
-    module InstanceMethods
-      # Delivers a multipart email, by looking at all the associated templates and render them.
-      #
-      # @since 0.1.0
-      def deliver
-        mail.deliver
-      rescue ArgumentError
-        raise MissingDeliveryDataError
+    # Initialize a mailer
+    #
+    # @param locals [Hash] a set of objects that acts as context for the rendering
+    # @option :format [Symbol] specify format to deliver
+    # @option :charset [String] charset
+    #
+    # @since 0.1.0
+    def initialize(locals = {})
+      @locals  = locals
+      @format  = locals.fetch(:format, nil)
+      @charset = charset = locals.fetch(:charset, self.class.configuration.default_charset)
+      @mail    = Mail.new.tap do |m|
+        m.from    = __dsl(:from)
+        m.to      = __dsl(:to)
+        m.subject = __dsl(:subject)
+
+        m.charset   = charset
+        m.html_part = __part(:html)
+        m.text_part = __part(:txt)
+
+        m.delivery_method(*Lotus::Mailer.configuration.delivery_method)
       end
+
+      prepare
+    end
+
+    # Render a single template with the specified format.
+    #
+    # @param format [Symbol] format
+    #
+    # @return [String] the output of the rendering process.
+    #
+    # @since 0.1.0
+    # @api private
+    def render(format)
+      self.class.templates(format).render(self, @locals)
+    end
+
+    # Delivers a multipart email, by looking at all the associated templates and render them.
+    #
+    # @since 0.1.0
+    # @api private
+    def deliver
+      mail.deliver
+    rescue ArgumentError
+      raise MissingDeliveryDataError
     end
 
     protected
 
+    # Prepare the email message when a new mailer is initialized.
+    #
+    # This is a hook that can be overwritten by mailers.
+    #
+    # @since 0.1.0
+    #
+    # @example
+    #   require 'lotus/mailer'
+    #
+    #   module Billing
+    #     class Invoice
+    #       include Lotus::Mailer
+    #
+    #       subject 'Invoice'
+    #       from    'noreply@example.com'
+    #       to      :recipient
+    #
+    #       def prepare
+    #         mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
+    #       end
+    #
+    #       private
+    #
+    #       def recipient
+    #         user.email
+    #       end
+    #     end
+    #   end
+    #
+    #   invoice = Invoice.new
+    #   user    = User.new(name: 'L', email: 'user@example.com')
+    def prepare
+    end
+
+    # @private
+    # @since 0.1.0
     def method_missing(m)
       @locals.fetch(m) { super }
     end
 
-    protected
+    # @since 0.1.0
+    attr_reader :mail
 
+    # @private
+    # @since 0.1.0
     attr_reader :charset
 
     private
 
+    # @private
+    # @since 0.1.0
     def __dsl(method_name)
       case result = self.class.__send__(method_name)
       when Symbol
@@ -167,6 +297,8 @@ module Lotus
       end
     end
 
+    # @private
+    # @since 0.1.0
     def __part(format)
       Mail::Part.new.tap do |part|
         part.content_type = "#{ CONTENT_TYPES.fetch(format) }; charset=#{ charset }"
@@ -174,6 +306,8 @@ module Lotus
       end if __part?(format)
     end
 
+    # @private
+    # @since 0.1.0
     def __part?(format)
       @format == format ||
         (!@format && !self.class.templates(format).nil?)

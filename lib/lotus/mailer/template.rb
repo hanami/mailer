@@ -4,7 +4,10 @@ module Lotus
   module Mailer
     # A logic-less template.
     #
+    # @api private
     # @since 0.1.0
+    #
+    # TODO this is identical to Lotus::View, consider to move into Lotus::Utils
     class Template
       def initialize(template)
         @_template = Tilt.new(template)
@@ -27,6 +30,7 @@ module Lotus
       #
       # @return [String] the pathname
       #
+      # @api private
       # @since 0.1.0
       def file
         @_template.file
