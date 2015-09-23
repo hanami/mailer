@@ -11,6 +11,14 @@ class TemplateEngineMailer
   include Lotus::Mailer
 end
 
+class CharsetMailer
+  include Lotus::Mailer
+
+  from    'noreply@example.com'
+  to      'user@example.com'
+  subject 'こんにちは'
+end
+
 class User < Struct.new(:name, :email); end
 
 class LazyMailer

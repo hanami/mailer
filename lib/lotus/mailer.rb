@@ -301,6 +301,10 @@ module Lotus
       @locals.fetch(m) { super }
     end
 
+    protected
+
+    attr_reader :charset
+
     private
 
     def __dsl(method_name)
@@ -314,7 +318,7 @@ module Lotus
 
     def __part(format)
       Mail::Part.new.tap do |part|
-        part.content_type = "#{ CONTENT_TYPES.fetch(format) }; charset=UTF-8"
+        part.content_type = "#{ CONTENT_TYPES.fetch(format) }; charset=#{ charset }"
         part.body         = render(format)
       end if __part?(format)
     end

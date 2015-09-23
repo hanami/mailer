@@ -19,6 +19,12 @@ module Lotus
       # @api private
       DEFAULT_DELIVERY_METHOD = :smtp
 
+      # Default charset
+      #
+      # @since 0.1.0
+      # @api private
+      DEFAULT_CHARSET = 'UTF-8'.freeze
+
       # @since 0.1.0
       # @api private
       attr_reader :mailers
@@ -165,6 +171,7 @@ module Lotus
           c.root       = root.dup
           c.modules    = modules.dup
           c.delivery_method = delivery_method
+          c.default_charset = default_charset
         end
       end
 
@@ -178,6 +185,7 @@ module Lotus
       def reset!
         root(DEFAULT_ROOT)
         delivery_method(DEFAULT_DELIVERY_METHOD)
+        default_charset(DEFAULT_CHARSET)
 
         @mailers = Set.new
         @modules = []
@@ -265,6 +273,14 @@ module Lotus
         end
       end
 
+      def default_charset(value = nil)
+        if value.nil?
+          @default_charset
+        else
+          @default_charset = value
+        end
+      end
+
       # @api private
       # @since 0.1.0
       alias_method :delivery, :delivery_method
@@ -277,6 +293,10 @@ module Lotus
       # @api private
       # @since 0.1.0
       attr_writer :delivery_method
+
+      # @api private
+      # @since 0.1.0
+      attr_writer :default_charset
 
       # @api private
       # @since 0.1.0

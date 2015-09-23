@@ -17,13 +17,15 @@ module Lotus
         #
         # @since 0.1.0
         def initialize(locals = {})
-          @locals = locals
-          @format = locals.fetch(:format, nil)
-          @mail   = Mail.new.tap do |m|
+          @locals  = locals
+          @format  = locals.fetch(:format, nil)
+          @charset = charset = locals.fetch(:charset, self.class.configuration.default_charset)
+          @mail    = Mail.new.tap do |m|
             m.from    = __dsl(:from)
             m.to      = __dsl(:to)
             m.subject = __dsl(:subject)
 
+            m.charset   = charset
             m.html_part = __part(:html)
             m.text_part = __part(:txt)
 

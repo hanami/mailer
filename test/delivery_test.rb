@@ -102,6 +102,14 @@ describe Lotus::Mailer do
         body.must_include %(<h1>Hello World!</h1>)
         body.wont_include %(This is a txt template)
       end
+
+      it 'can deliver with specified charset' do
+        CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
+
+        mail = Lotus::Mailer.deliveries.first
+        mail.charset.must_equal             charset
+        mail.parts.first.charset.must_equal charset
+      end
     end
 
     # describe 'custom delivery' do

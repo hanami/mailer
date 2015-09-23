@@ -237,4 +237,26 @@ describe Lotus::Mailer::Configuration do
       end
     end
   end
+
+  describe '#default_charset' do
+    describe 'when not previously set' do
+      before do
+        @configuration.reset!
+      end
+
+      it 'defaults to UTF-8' do
+        @configuration.default_charset.must_equal 'UTF-8'
+      end
+    end
+
+    describe 'when set' do
+      before do
+        @configuration.default_charset 'iso-8859-1'
+      end
+
+      it 'saves the delivery method in the configuration' do
+        @configuration.default_charset.must_equal 'iso-8859-1'
+      end
+    end
+  end
 end
