@@ -61,56 +61,60 @@ class InvoiceMailer
 end
 ```
 
-A mailer with `to` and `from` addresses and mailer delivery:
+A mailer with `.to` and `.from` addresses and mailer delivery:
 
 ```ruby
 require lotus/mailer
 
-class InvoiceMailer
+Lotus::Mailer.configuration do
+  delivery_method :smtp,
+    address:              "smtp.gmail.com",
+    port:                 587,
+    domain:               "example.com",
+    user_name:            ENV['SMTP_USERNAME'],
+    password:             ENV['SMTP_PASSWORD'],
+    authentication:       "plain",
+    enable_starttls_auto: true
+end.load!
+
+class WelcomeMailer
   include Lotus::Mailer
 
-  from 'noreply@sender.com'
-  to 'noreply@recipient.com'
+  from    'noreply@sender.com'
+  to      'noreply@recipient.com'
   subject 'Welcome'
 end
 
-CUSTOM_DELIVERY = {
-  :address              => "smtp.gmail.com",
-  :port                 => 587,
-  :domain               => "localhost:8000",
-  :user_name            => "noreply@sender.com",
-  :password             => "password",
-  :authentication       => "plain",
-  :enable_starttls_auto => true
-}
-
-Lotus::Mailer.configuration do
-  delivery_method CUSTOM_DELIVERY
-end
-
-Lotus::Mailer.load!
-InvoiceMailer.deliver
+WelcomeMailer.deliver
 ```
 
 ### Locals
 
-The set of objects passed in the `deliver` call are called `locals` and are used to render templates that use objects with the same symbol.
+The set of objects passed in the `deliver` call are called `locals` and are avaliable inside the mailer and the template.
 
 ```ruby
 require lotus/mailer
 
-class User
-  def initialize(name, username)
-    @name = name
-    @username = username
-  end
+User = Struct.new(:name, :username)
+user = User.new('Luca', 'jodosha')
 
-  attr_reader :name, :username
+Lotus::Mailer.load!
+
+class WelcomeMailer
+  include Lotus::Mailer
+
+  from    'noreply@sender.com'
+  subject 'Welcome'
+  to      :recipient
+
+  private
+
+  def recipient
+    user.email
+  end
 end
 
-luca = User.new('Luca', 'jodosha')
-Lotus::Mailer.load!
-InvoiceMailer.deliver(locals: {user:luca})
+InvoiceMailer.deliver(user: luca)
 ```
 
 The corresponding `erb` file:
@@ -121,16 +125,16 @@ Hello <%= user.name %>!
 
 ### Scope
 
-All methods defined in the mailer are accessible from the template:
+All public methods defined in the mailer are accessible from the template:
 
 ```ruby
 require lotus/mailer
 
-class InvoiceMailer
+class WelcomeMailer
   include Lotus::Mailer
 
-  from 'noreply@sender.com'
-  to 'noreply@recipient.com'
+  from    'noreply@sender.com'
+  to      'noreply@recipient.com'
   subject 'Welcome'
 
   def greeting
@@ -148,29 +152,154 @@ end
 The template file must be located under the relevant `root` and must match the inflected snake case of the mailer class name.
 
 ```ruby
+# Given this root
 Lotus::Mailer.configuration.root      # => #<Pathname:app/templates>
-InvoiceMailer.templates               # => "{:html => templateObject1; :txt => templateObject2}"
-templateObject1.file                  # => "root/invoice_mailer.html.erb"
-templateObject2.file                  # => "root/invoice_mailer.txt.erb"
+
+# For InvoiceMailer, it looks for:
+#  * app/templates/invoice_mailer.html.erb
+#  * app/templates/invoice_mailer.txt.erb
 ```
 
-Each mailer can specify a different template for a specific format:
+If we want to specify a different template, we can do:
 
 ```ruby
-module Articles
-  class Create
-    include Lotus::View
+class InvoiceMailer
+  include Lotus::View
 
-    template 'invoice.html.erb'
-  end
+  template 'invoice'
 end
 
-InvoiceMailer.templates[:html].file  # => "root/invoice.html.erb"
+# It will look for:
+#  * app/templates/invoice.html.erb
+#  * app/templates/invoice.txt.erb
 ```
 
 ### Engines
 
 The builtin rendering engine is [ERb](http://en.wikipedia.org/wiki/ERuby).
+
+This is the list of the supported engines.
+They are listed in order of **higher precedence**, for a given extension.
+For instance, if [ERubis](http://www.kuwata-lab.com/erubis/) is loaded, it will be preferred over ERb to render `.erb` templates.
+
+<table>
+  <tr>
+    <th>Engine</th>
+    <th>Extensions</th>
+  </tr>
+  <tr>
+    <td>Erubis</td>
+    <td>erb, rhtml, erubis</td>
+  </tr>
+  <tr>
+    <td>ERb</td>
+    <td>erb, rhtml</td>
+  </tr>
+  <tr>
+    <td>Redcarpet</td>
+    <td>markdown, mkd, md</td>
+  </tr>
+  <tr>
+    <td>RDiscount</td>
+    <td>markdown, mkd, md</td>
+  </tr>
+  <tr>
+    <td>Kramdown</td>
+    <td>markdown, mkd, md</td>
+  </tr>
+  <tr>
+    <td>Maruku</td>
+    <td>markdown, mkd, md</td>
+  </tr>
+  <tr>
+    <td>BlueCloth</td>
+    <td>markdown, mkd, md</td>
+  </tr>
+  <tr>
+    <td>Asciidoctor</td>
+    <td>ad, adoc, asciidoc</td>
+  </tr>
+  <tr>
+    <td>Builder</td>
+    <td>builder</td>
+  </tr>
+  <tr>
+    <td>CSV</td>
+    <td>rcsv</td>
+  </tr>
+  <tr>
+    <td>CoffeeScript</td>
+    <td>coffee</td>
+  </tr>
+  <tr>
+    <td>WikiCloth</td>
+    <td>wiki, mediawiki, mw</td>
+  </tr>
+  <tr>
+    <td>Creole</td>
+    <td>wiki, creole</td>
+  </tr>
+  <tr>
+    <td>Etanni</td>
+    <td>etn, etanni</td>
+  </tr>
+  <tr>
+    <td>Haml</td>
+    <td>haml</td>
+  </tr>
+  <tr>
+    <td>Less</td>
+    <td>less</td>
+  </tr>
+  <tr>
+    <td>Liquid</td>
+    <td>liquid</td>
+  </tr>
+  <tr>
+    <td>Markaby</td>
+    <td>mab</td>
+  </tr>
+  <tr>
+    <td>Nokogiri</td>
+    <td>nokogiri</td>
+  </tr>
+  <tr>
+    <td>Plain</td>
+    <td>html</td>
+  </tr>
+  <tr>
+    <td>RDoc</td>
+    <td>rdoc</td>
+  </tr>
+  <tr>
+    <td>Radius</td>
+    <td>radius</td>
+  </tr>
+  <tr>
+    <td>RedCloth</td>
+    <td>textile</td>
+  </tr>
+  <tr>
+    <td>Sass</td>
+    <td>sass</td>
+  </tr>
+  <tr>
+    <td>Scss</td>
+    <td>scss</td>
+  </tr>
+  <tr>
+    <td>Slim</td>
+    <td>slim</td>
+  </tr>
+  <tr>
+    <td>String</td>
+    <td>str</td>
+  </tr>
+  <tr>
+    <td>Yajl</td>
+    <td>yajl</td>
+  </tr>
+</table>
 
 
 ### Configuration
@@ -187,138 +316,35 @@ Lotus::Maler.configure do
   #
   root '/path/to/root'
 
-  # Set the Ruby namespace where to lookup for mailers
-  # Argument: Class, Module, String, defaults to Object
+  # Set the default charset for emails
+  # Argument: String, defaults to "UTF-8"
   #
-  namespace 'MyApp::Mailer'
+  default_charset 'iso-8859'
+
+  # Set the delivery method
+  # Argument: Symbol
+  # Argument: Hash, optional configurations
+  delivery_method :stmp
 ```
 
-All global configurations can be overwritten at a finer grained level:
-`mailers`. Each `mailer` has its own copy of the global configuration, so
-that changes are inherited from the top to the bottom, but not bubbled up in the
-opposite direction.
+### Attachments
 
-Template lookup is performed under the `Lotus::Mailer.configuration.root` directory. You can specify a different path on a per mailer basis:
-
-```ruby
-require 'lotus/mailer'
-
-Lotus::Mailer.configure do
-  root '/path/to/root'
-end
-
-Lotus::Mailer.configuration.root   # => #<Pathname:/path/to/root>
-```
-
-### Delivery Details
-
-When a Ruby object includes __Lotus::Mailer__, a developer can customize delivery details, such as `from`, `to`, `subject` and the attachments through the `attach` method.
-
-The `from` field determines the sender of the email. It can accept a string:
+Attachments can be added with the following API:
 
 ```ruby
 class InvoiceMailer
   include Lotus::Mailer
+  # ...
 
-  from "noreply@example.com"
-end
-```
-
-The `from` field can also accept a `Proc` to determine its value:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  from -> { customized_sender }
-
-  def customized_sender
-    "user-#{ user.id }@example.com"
+  def prepare
+    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+    # or
+    mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
   end
 end
 ```
 
-The `to` field represents one or more emails that will be the recipients of the mail.
-
-It can accept a string:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  to "noreply@example.com"
-end
-```
-
-The `to` field also accept an array of strings:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  to %w(noreply1@example.com noreply2@example.com)
-end
-```
-
-`To` field can also be configured using a `Proc` to determine its value:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  to -> { customized_recipient }
-
-  def customized_recipient
-    "user-#{ user.id }@example.com"
-  end
-end
-```
-
-The subject of the message is determined by the field `subject`. It can accept a string:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  subject "This is the subject"
-end
-```
-
-The `subject` field can also accept a `Proc` to determine its value:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  subject -> { customized_subject }
-
-  def customized_subject
-    "This is the subject"
-  end
-end
-```
-
-The `attach` method is used to add an attachment to the mail, given the path to file:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  attach 'path/to/file/attachment.pdf'
-end
-```
-
-It also accepts an array of paths to several attachments:
-
-```ruby
-class InvoiceMailer
-  include Lotus::Mailer
-
-  attach ['path/to/file/attachment1.pdf', 'path/to/file/attachment2.pdf']
-end
-```
-
-### Delivery method Configuration
+### Delivery Method
 
 The global delivery method is defined through the __Lotus::Mailer__ configuration, as:
 
@@ -330,84 +356,60 @@ end
 
 ```ruby
 Lotus::Mailer.configuration do
-  delivery_method :smtp, address: "localhost", port:1025
+  delivery_method :smtp, address: "localhost", port: 1025
 end
 ```
 
-or using the `delivery` alias:
+Builtin options are:
+
+  * Exim (`:exim`)
+  * Sendmail (`:sendmail`)
+  * SMTP (`:smtp`, for local installations)
+  * SMTP Connection (`:smtp_connection`, via `Net::SMTP` - for remote installations)
+  * Test (`:test`, for testing purposes)
+
+### Custom Delivery Method
+
+Developers can specify their own custom delivery policy:
 
 ```ruby
-Lotus::Mailer.configuration do
-  delivery :smtp
-end
-```
+require 'lotus/mailer'
 
-It is also possible to configure a custom delivery method with a variable:
+class MandrillDeliveryMethod
+  def initialize(options)
+    @options = options
+  end
 
-```ruby
-CUSTOM_DELIVERY = :smtp.freeze
-
-Lotus::Mailer.configure do
-  delivery CUSTOM_DELIVERY, foo:'bar'
-end
-```
-
-The delivery method specified must be compatible with the `Mail` gem, and all `Mail` gem delivery methods are available in __Lotus::Mailer__.
-See https://github.com/mikel/mail
-
-### Multipart mail
-
-Each template associated with the mailer will be used as a part of the email.
-The `.txt` template will be the `text_part` of the Mail object and the `.html` will correspond to the `html_part`.
-Other formats will be added to the object as attachments.
-
-The `deliver` method is necessary to send the multipart email. It looks at all the associated templates and renders them, as explained above. It instantiates a `mailer` and delivers the email.
-
-```ruby
-InvoiceMailer.deliver
-```
-
-To use `locals` when rendering templates, the `locals` must be used when calling the `deliver` method, like so:
-
-```ruby
-InvoiceMailer.deliver(user:user, invoice:invoice)
-```
-
-### Prepare
-
-The `prepare` method can be used by developers to customize the mail message at the low level.
-
-It gives access to the object `mail` of type `Mail`
-
-It can be used to support attachments, such as in:
-
-```ruby
-class SubscriptionMailer
-  include Lotus::Mailer
-
-  def prepare
-    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+  def deliver!(mail)
+    # ...
   end
 end
+
+Lotus::Mailer.configure do
+  delivery_method MandrillDeliveryMethod,
+    username: ENV['MANDRILL_USERNAME'],
+    password: ENV['MANDRILL_API_KEY']
+end.load!
 ```
+
+The class passed to `.delivery_method` must accept an optional set of options
+with the constructor (`#initialize`) and respond to `#deliver!`.
+
+### Multipart Delivery
+
+All the email are sent as multipart messages by default.
+For a given mailer, the framework looks up for associated text (`.txt`) and `HTML` (`.html`) templates and render them.
+
+```ruby
+InvoiceMailer.deliver               # delivers both text and html templates
+InvoiceMailer.deliver(format: :txt) # delivers only text template
+```
+
+Please note that **they aren't both mandatory, but at least one of them MUST** be present.
 
 ## Versioning
 
 __Lotus::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake false` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
----
-**This project is part of the [Rails Girls Summer of Code 2015](https://teams.railsgirlssummerofcode.org/teams/66) program.**
-
-**Until the end of September 2015 we only accept contributions made by the students.**
----
 
 ## Copyright
 
