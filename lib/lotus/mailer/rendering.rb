@@ -29,6 +29,8 @@ module Lotus
 
             m.delivery_method(*Lotus::Mailer.configuration.delivery_method)
           end
+
+          prepare
         end
 
         # Render a single template with the specified format.
@@ -43,6 +45,11 @@ module Lotus
         # @since 0.1.0
         def render(format)
           self.class.templates(format).render(self, @locals)
+        end
+
+        protected
+
+        def prepare
         end
 
         private

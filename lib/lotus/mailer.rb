@@ -291,10 +291,6 @@ module Lotus
       #
       # @since 0.1.0
       def deliver
-        if self.respond_to? ('prepare')
-          self.prepare
-        end
-
         mail.deliver
       end
     end
