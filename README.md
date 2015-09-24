@@ -164,7 +164,7 @@ If we want to specify a different template, we can do:
 
 ```ruby
 class InvoiceMailer
-  include Lotus::View
+  include Lotus::Mailer
 
   template 'invoice'
 end
