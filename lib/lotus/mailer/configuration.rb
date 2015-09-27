@@ -46,7 +46,7 @@ module Lotus
       # Set the Ruby namespace where to lookup for mailers.
       #
       # When multiple instances of the framework are used, we want to make sure
-      # that if a `MyApp` wants a `Dashboard::Index` mailer, we are loading the
+      # that if a `MyApp` wants a `Mailers::Signup` mailer, we are loading the
       # right one.
       #
       # If not set, this value defaults to `Object`.
@@ -94,7 +94,7 @@ module Lotus
       #
       # @overload root(value)
       #   Sets the given value
-      #   @param value [String,Pathname,#to_pathname] an object that can be
+      #   @param value [String, Pathname, #to_pathname] an object that can be
       #     coerced to Pathname
       #
       # @overload root
@@ -193,9 +193,9 @@ module Lotus
 
       alias_method :unload!, :reset!
 
-      # Copy the configuration for the given action
+      # Copy the configuration for the given mailer
       #
-      # @param base [Class] the target action
+      # @param base [Class] the target mailer
       #
       # @return void
       #
@@ -273,6 +273,7 @@ module Lotus
         end
       end
 
+      # @since 0.1.0
       def default_charset(value = nil)
         if value.nil?
           @default_charset
