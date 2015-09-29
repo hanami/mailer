@@ -282,10 +282,6 @@ module Lotus
         end
       end
 
-      # @api private
-      # @since 0.1.0
-      alias_method :delivery, :delivery_method
-
       protected
       # @api private
       # @since 0.1.0

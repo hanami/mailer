@@ -167,40 +167,6 @@ describe Lotus::Mailer::Configuration do
     end
   end
 
-  describe '#delivery' do
-    describe 'when not previously set' do
-      before do
-        @configuration.reset!
-      end
-
-      it 'defaults to SMTP' do
-        @configuration.delivery.must_equal [:smtp, {}]
-      end
-    end
-
-    describe 'set with a symbol' do
-      before do
-        @configuration.delivery :exim, location: '/path/to/exim'
-      end
-
-      it 'saves the delivery method in the configuration' do
-        @configuration.delivery.must_equal [:exim, { location: '/path/to/exim' }]
-      end
-    end
-
-    describe 'set with a class' do
-      before do
-        @configuration.delivery MandrillDeliveryMethod,
-          username: 'mandrill-username', password: 'mandrill-api-key'
-      end
-
-      it 'saves the delivery method in the configuration' do
-        @configuration.delivery.must_equal [MandrillDeliveryMethod,
-                                            username: 'mandrill-username', password: 'mandrill-api-key']
-      end
-    end
-  end
-
   describe '#default_charset' do
     describe 'when not previously set' do
       before do
