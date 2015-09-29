@@ -1,7 +1,7 @@
 # Lotus::Router
 Mail for Ruby applications
 
-## v0.1.0 - 2015-09-23
+## v0.1.0 - 2015-09-30
 ### Added
 - [Ines Coelho & Rosa Faria & Luca Guidi] Email delivery
 - [Ines Coelho & Rosa Faria & Luca Guidi] Attachments
