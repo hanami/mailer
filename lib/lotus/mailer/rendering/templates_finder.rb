@@ -25,7 +25,7 @@ module Lotus
         # Recursive pattern
         #
         # @api private
-        # @since 0.2.0
+        # @since 0.1.0
         RECURSIVE = '**'.freeze
 
         # Initialize a finder
@@ -53,21 +53,21 @@ module Lotus
         # @example
         #   require 'lotus/mailer'
         #
-        #   module Articles
-        #     class Show
+        #   module Mailers
+        #     class Welcome
         #       include Lotus::Mailer
         #     end
         #   end
         #
-        #   Articles::Show.root     # => "/path/to/templates"
-        #   Articles::Show.templates # => {[:html] => "articles/show"}
+        #   Mailers::Welcome.root     # => "/path/to/templates"
+        #   Mailers::Welcome.templates # => {[:html] => "welcome"}
         #
         #   # This mailer has a template:
         #   #
-        #   #   "/path/to/templates/articles/show.html.erb"
+        #   #   "/path/to/templates/welcome.html.erb"
         #
-        #   Lotus::Mailer::Rendering::TemplatesFinder.new(Articles::Show).find
-        #     # => [#<Lotus::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/articles/show.html.erb">]
+        #   Lotus::Mailer::Rendering::TemplatesFinder.new(Mailers::Welcome).find
+        #     # => [#<Lotus::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/welcome.html.erb">]
         def find
           templates = Hash.new
           _find.map do |template|
@@ -75,13 +75,13 @@ module Lotus
             format = (( name.split(".") )[-2]).to_sym
             templates[ format ] = Mailer::Template.new(template)
           end
-          return templates
+          templates
         end
 
         protected
 
         # @api private
-        # @since 0.4.3
+        # @since 0.1.0
         def _find(lookup = search_path)
           Dir.glob( "#{ [root, lookup, template_name].join(separator) }.#{ format }.#{ engines }" )
         end
@@ -99,13 +99,13 @@ module Lotus
         end
 
         # @api private
-        # @since 0.4.3
+        # @since 0.1.0
         def search_path
           recursive
         end
 
         # @api private
-        # @since 0.2.0
+        # @since 0.1.0
         def recursive
           RECURSIVE
         end

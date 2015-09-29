@@ -29,7 +29,7 @@ module Lotus
         # @since 0.1.0
         # @api private
         def compile!(namespace)
-          tokens(namespace) {|token| replace!(token) }
+          tokens(namespace) { |token| replace!(token) }
           @name = Utils::String.new(@name).underscore
         end
 

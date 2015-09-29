@@ -178,10 +178,10 @@ module Lotus
       #   invoice = Invoice.new
       #   user    = User.new(name: 'L', email: 'user@example.com')
       #
-      #   Signup::Welcome.deliver(invoice: invoice, user: user)                      # Deliver both text, HTML parts and the attachment
-      #   Signup::Welcome.deliver(invoice: invoice, user: user, format: :txt)        # Deliver only the text part and the attachment
-      #   Signup::Welcome.deliver(invoice: invoice, user: user, format: :html)       # Deliver only the text part and the attachment
-      #   Signup::Welcome.deliver(invoice: invoice, user: user, charset: 'iso-8859') # Deliver both the parts with "iso-8859"
+      #   Billing::Invoice.deliver(invoice: invoice, user: user)                      # Deliver both text, HTML parts and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)        # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)       # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: 'iso-8859') # Deliver both the parts with "iso-8859"
       def deliver(locals = {})
         new(locals).deliver
       end
@@ -252,7 +252,7 @@ module Lotus
     #
     #       subject 'Invoice'
     #       from    'noreply@example.com'
-    #       to      :recipient
+    #       to      ''
     #
     #       def prepare
     #         mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
