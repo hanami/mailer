@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'lotus-utils', '~> 0.5'
+  spec.add_dependency 'lotus-utils', '~> 0.6'
   spec.add_dependency 'tilt',        '~> 2.0', '>= 2.0.1'
   spec.add_dependency 'mail',        '~> 2.5'
 
