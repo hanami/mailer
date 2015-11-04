@@ -54,7 +54,7 @@ Or install it yourself as:
 A simple mailer looks like this:
 
 ```ruby
-require lotus/mailer
+require 'lotus/mailer'
 
 class InvoiceMailer
   include Lotus::Mailer
@@ -64,7 +64,7 @@ end
 A mailer with `.to` and `.from` addresses and mailer delivery:
 
 ```ruby
-require lotus/mailer
+require 'lotus/mailer'
 
 Lotus::Mailer.configuration do
   delivery_method :smtp,
@@ -93,7 +93,7 @@ WelcomeMailer.deliver
 The set of objects passed in the `deliver` call are called `locals` and are avaliable inside the mailer and the template.
 
 ```ruby
-require lotus/mailer
+require 'lotus/mailer'
 
 User = Struct.new(:name, :username)
 user = User.new('Luca', 'jodosha')
@@ -128,7 +128,7 @@ Hello <%= user.name %>!
 All public methods defined in the mailer are accessible from the template:
 
 ```ruby
-require lotus/mailer
+require 'lotus/mailer'
 
 class WelcomeMailer
   include Lotus::Mailer
