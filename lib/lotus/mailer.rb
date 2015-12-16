@@ -21,9 +21,8 @@ module Lotus
     #
     # @since 0.1.0
     class MissingDeliveryDataError < Error
-      def initialize(original_message)
-        super "Missing delivery data, please check 'from', or 'to'. " \
-              "Mail::ArgumentError message => #{original_message}"
+      def initialize
+        super("Missing delivery data, please check 'from', or 'to'")
       end
     end
 
@@ -232,8 +231,8 @@ module Lotus
     # @api private
     def deliver
       mail.deliver
-    rescue ArgumentError => exception
-      raise MissingDeliveryDataError, exception.message
+    rescue ArgumentError
+      raise MissingDeliveryDataError
     end
 
     protected
