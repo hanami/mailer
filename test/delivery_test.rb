@@ -22,6 +22,14 @@ describe Lotus::Mailer do
       -> { MissingToMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
     end
 
+    it "bubbles up the original Mail::ArgumentError message" do
+      exception = -> { BadMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
+      exception.message.must_equal "Missing delivery data, please check " \
+        "'from', or 'to'. Mail::ArgumentError message => An SMTP From " \
+        "address is required to send a message. Set the message " \
+        "smtp_envelope_from, return_path, sender, or from address."
+    end
+
     describe 'test delivery with hardcoded values' do
       before do
         WelcomeMailer.deliver
