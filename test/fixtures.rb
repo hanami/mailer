@@ -35,11 +35,6 @@ class MissingToMailer
   subject "Hello"
 end
 
-class BadMailer
-  include Lotus::Mailer
-  template 'missing'
-end
-
 class User < Struct.new(:name, :email); end
 
 class LazyMailer
