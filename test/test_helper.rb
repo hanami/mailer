@@ -18,20 +18,20 @@ end
 
 require 'minitest/autorun'
 $:.unshift 'lib'
-require 'lotus/mailer'
+require 'hanami/mailer'
 
-Lotus::Mailer.configure do
+Hanami::Mailer.configure do
   root Pathname.new __dir__ + '/fixtures/templates'
 end
 
-Lotus::Mailer.class_eval do
+Hanami::Mailer.class_eval do
   def self.reset!
     self.configuration = configuration.duplicate
     configuration.reset!
   end
 end
 
-Lotus::Mailer::Dsl.class_eval do
+Hanami::Mailer::Dsl.class_eval do
   def reset!
     @templates = Hash.new
   end
@@ -39,7 +39,7 @@ end
 
 require 'fixtures'
 
-Lotus::Mailer.configure do
+Hanami::Mailer.configure do
   root __dir__ + '/fixtures'
   delivery_method :test
 

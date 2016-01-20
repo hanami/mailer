@@ -1,13 +1,13 @@
 require 'tilt'
 
-module Lotus
+module Hanami
   module Mailer
     # A logic-less template.
     #
     # @api private
     # @since 0.1.0
     #
-    # TODO this is identical to Lotus::View, consider to move into Lotus::Utils
+    # TODO this is identical to Hanami::View, consider to move into Hanami::Utils
     class Template
       def initialize(template)
         @_template = Tilt.new(template)

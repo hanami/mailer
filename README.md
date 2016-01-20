@@ -1,35 +1,35 @@
-# Lotus::Mailer
+# Hanami::Mailer
 
 Mail for Ruby applications.
 
 ## Status
 
-[![Gem Version](http://img.shields.io/gem/v/lotus-mailer.svg)](https://badge.fury.io/rb/lotus-mailer)
-[![Build Status](http://img.shields.io/travis/lotus/mailer/master.svg)](https://travis-ci.org/lotus/mailer?branch=master)
-[![Coverage](http://img.shields.io/coveralls/lotus/mailer/master.svg)](https://coveralls.io/r/lotus/mailer)
-[![Code Climate](http://img.shields.io/codeclimate/github/lotus/mailer.svg)](https://codeclimate.com/github/lotus/mailer)
-[![Dependencies](http://img.shields.io/gemnasium/lotus/mailer.svg)](https://gemnasium.com/lotus/mailer)
-[![Inline Docs](http://inch-ci.org/github/lotus/mailer.svg)](http://inch-ci.org/github/lotus/mailer)
+[![Gem Version](http://img.shields.io/gem/v/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
+[![Build Status](http://img.shields.io/travis/hanami/mailer/master.svg)](https://travis-ci.org/hanami/mailer?branch=master)
+[![Coverage](http://img.shields.io/coveralls/hanami/mailer/master.svg)](https://coveralls.io/r/hanami/mailer)
+[![Code Climate](http://img.shields.io/codeclimate/github/hanami/mailer.svg)](https://codeclimate.com/github/hanami/mailer)
+[![Dependencies](http://img.shields.io/gemnasium/hanami/mailer.svg)](https://gemnasium.com/hanami/mailer)
+[![Inline Docs](http://inch-ci.org/github/hanami/mailer.svg)](http://inch-ci.org/github/hanami/mailer)
 
 ## Contact
 
-* Home page: http://lotusrb.org
-* Mailing List: http://lotusrb.org/mailing-list
-* API Doc: http://rdoc.info/gems/lotus-mailer
-* Bugs/Issues: https://github.com/lotus/mailer/issues
-* Support: http://stackoverflow.com/questions/tagged/lotus-ruby
-* Chat: https://gitter.im/lotus/chat
+* Home page: http://hanamirb.org
+* Mailing List: http://hanamirb.org/mailing-list
+* API Doc: http://rdoc.info/gems/hanami-mailer
+* Bugs/Issues: https://github.com/hanami/mailer/issues
+* Support: http://stackoverflow.com/questions/tagged/hanami
+* Chat: http://chat.hanamirb.org
 
 ## Rubies
 
-__Lotus::Mailer__ supports Ruby (MRI) 2+.
+__Hanami::Mailer__ supports Ruby (MRI) 2+.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'lotus-mailer'
+gem 'hanami-mailer'
 ```
 
 And then execute:
@@ -38,35 +38,35 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install lotus-mailer
+    $ gem install hanami-mailer
 
 ## Usage
 
 ### Conventions
 
-  * Templates are searched under `Lotus::Mailer.configuration.root`, set this value according to your app structure (eg. `"app/templates"`).
+  * Templates are searched under `Hanami::Mailer.configuration.root`, set this value according to your app structure (eg. `"app/templates"`).
   * A mailer will look for a template with a file name that is composed by its full class name (eg. `"articles/index"`).
   * A template must have two concatenated extensions: one for the format and one for the engine (eg. `".html.erb"`).
-  * The framework must be loaded before rendering the first time: `Lotus::Mailer.load!`.
+  * The framework must be loaded before rendering the first time: `Hanami::Mailer.load!`.
 
 ### Mailers
 
 A simple mailer looks like this:
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
 class InvoiceMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 end
 ```
 
 A mailer with `.to` and `.from` addresses and mailer delivery:
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
-Lotus::Mailer.configuration do
+Hanami::Mailer.configuration do
   delivery_method :smtp,
     address:              "smtp.gmail.com",
     port:                 587,
@@ -78,7 +78,7 @@ Lotus::Mailer.configuration do
 end.load!
 
 class WelcomeMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from    'noreply@sender.com'
   to      'noreply@recipient.com'
@@ -93,15 +93,15 @@ WelcomeMailer.deliver
 The set of objects passed in the `deliver` call are called `locals` and are avaliable inside the mailer and the template.
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
 User = Struct.new(:name, :username)
 user = User.new('Luca', 'jodosha')
 
-Lotus::Mailer.load!
+Hanami::Mailer.load!
 
 class WelcomeMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from    'noreply@sender.com'
   subject 'Welcome'
@@ -128,10 +128,10 @@ Hello <%= user.name %>!
 All public methods defined in the mailer are accessible from the template:
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
 class WelcomeMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from    'noreply@sender.com'
   to      'noreply@recipient.com'
@@ -153,7 +153,7 @@ The template file must be located under the relevant `root` and must match the i
 
 ```ruby
 # Given this root
-Lotus::Mailer.configuration.root      # => #<Pathname:app/templates>
+Hanami::Mailer.configuration.root      # => #<Pathname:app/templates>
 
 # For InvoiceMailer, it looks for:
 #  * app/templates/invoice_mailer.html.erb
@@ -164,7 +164,7 @@ If we want to specify a different template, we can do:
 
 ```ruby
 class InvoiceMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   template 'invoice'
 end
@@ -304,13 +304,13 @@ For instance, if [ERubis](http://www.kuwata-lab.com/erubis/) is loaded, it will 
 
 ### Configuration
 
-__Lotus::Mailer__ can be configured with a DSL that determines its behavior.
+__Hanami::Mailer__ can be configured with a DSL that determines its behavior.
 It supports a few options:
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
-Lotus::Maler.configure do
+Hanami::Maler.configure do
   # Set the root path where to search for templates
   # Argument: String, Pathname, #to_pathname, defaults to the current directory
   #
@@ -333,7 +333,7 @@ Attachments can be added with the following API:
 
 ```ruby
 class InvoiceMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
   # ...
 
   def prepare
@@ -346,16 +346,16 @@ end
 
 ### Delivery Method
 
-The global delivery method is defined through the __Lotus::Mailer__ configuration, as:
+The global delivery method is defined through the __Hanami::Mailer__ configuration, as:
 
 ```ruby
-Lotus::Mailer.configuration do
+Hanami::Mailer.configuration do
   delivery_method :smtp
 end
 ```
 
 ```ruby
-Lotus::Mailer.configuration do
+Hanami::Mailer.configuration do
   delivery_method :smtp, address: "localhost", port: 1025
 end
 ```
@@ -373,7 +373,7 @@ Builtin options are:
 Developers can specify their own custom delivery policy:
 
 ```ruby
-require 'lotus/mailer'
+require 'hanami/mailer'
 
 class MandrillDeliveryMethod
   def initialize(options)
@@ -385,7 +385,7 @@ class MandrillDeliveryMethod
   end
 end
 
-Lotus::Mailer.configure do
+Hanami::Mailer.configure do
   delivery_method MandrillDeliveryMethod,
     username: ENV['MANDRILL_USERNAME'],
     password: ENV['MANDRILL_API_KEY']
@@ -409,8 +409,9 @@ Please note that **they aren't both mandatory, but at least one of them MUST** b
 
 ## Versioning
 
-__Lotus::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
+__Hanami::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Copyright
 
 Copyright © 2015 Luca Guidi – Released under MIT License
+This project was formerly known as Lotus (`lotus-mailer`).

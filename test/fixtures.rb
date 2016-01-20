@@ -1,18 +1,18 @@
 class InvoiceMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
   template 'invoice'
 end
 
 class RenderMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 end
 
 class TemplateEngineMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 end
 
 class CharsetMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from    'noreply@example.com'
   to      'user@example.com'
@@ -20,7 +20,7 @@ class CharsetMailer
 end
 
 class MissingFromMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
   template 'missing'
 
   to      "recipient@example.com"
@@ -28,7 +28,7 @@ class MissingFromMailer
 end
 
 class MissingToMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
   template 'missing'
 
   from    "sender@example.com"
@@ -38,11 +38,11 @@ end
 class User < Struct.new(:name, :email); end
 
 class LazyMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 end
 
 class MethodMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from    :sender
   to      :recipient
@@ -64,7 +64,7 @@ class MethodMailer
 end
 
 class WelcomeMailer
-  include Lotus::Mailer
+  include Hanami::Mailer
 
   from "noreply@sender.com"
   to ["noreply@recipient.com", "cc@recipient.com"]
@@ -91,7 +91,7 @@ end
 
 module Users
   class Welcome
-    include Lotus::Mailer
+    include Hanami::Mailer
   end
 end
 

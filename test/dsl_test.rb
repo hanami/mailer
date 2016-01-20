@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe Lotus::Mailer do
+describe Hanami::Mailer do
   describe '.template' do
     describe 'when no value is set' do
       it 'returns the convention name' do
@@ -28,7 +28,7 @@ describe Lotus::Mailer do
 
       it 'returns only the template for the given format' do
         template = LazyMailer.templates(:txt)
-        template.must_be_kind_of(Lotus::Mailer::Template)
+        template.must_be_kind_of(Hanami::Mailer::Template)
         template.file.must_match %r{test/fixtures/templates/lazy_mailer.txt.erb\z}
       end
     end
@@ -41,7 +41,7 @@ describe Lotus::Mailer do
 
       it 'returns only the template for the given format' do
         template = InvoiceMailer.templates(:html)
-        template.must_be_kind_of(Lotus::Mailer::Template)
+        template.must_be_kind_of(Hanami::Mailer::Template)
         template.file.must_match %r{test/fixtures/templates/invoice.html.erb\z}
       end
     end

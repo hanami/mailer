@@ -1,16 +1,16 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'lotus/mailer/version'
+require 'hanami/mailer/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'lotus-mailer'
-  spec.version       = Lotus::Mailer::VERSION
+  spec.name          = 'hanami-mailer'
+  spec.version       = Hanami::Mailer::VERSION
   spec.authors       = ['Luca Guidi', 'Ines Coelho', 'Rosa Faria']
   spec.email         = ['me@lucaguidi.com', 'ines.opcoelho@gmail.com', 'rosa1853@live.com']
 
   spec.summary       = %q{Mail for Ruby applications.}
-  spec.description   = %q{Mail for Ruby applications and Lotus mailers}
-  spec.homepage      = 'http://lotusrb.org'
+  spec.description   = %q{Mail for Ruby applications and Hanami mailers}
+  spec.homepage      = 'http://hanamirb.org'
   spec.license       = 'MIT'
 
   if spec.respond_to?(:metadata)
@@ -19,12 +19,12 @@ Gem::Specification.new do |spec|
     raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
   end
 
-  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md lotus-mailer.gemspec`.split($/)
+  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/)
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'lotus-utils', '~> 0.6'
+  spec.add_dependency 'hanami-utils', '~> 0.6'
   spec.add_dependency 'tilt',        '~> 2.0', '>= 2.0.1'
   spec.add_dependency 'mail',        '~> 2.5'
 

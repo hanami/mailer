@@ -1,12 +1,12 @@
-require 'lotus/utils/string'
+require 'hanami/utils/string'
 
-module Lotus
+module Hanami
   module Mailer
     module Rendering
       # @since 0.1.0
       # @api private
       #
-      # TODO this is identical to Lotus::View, consider to move into Lotus::Utils
+      # TODO this is identical to Hanami::View, consider to move into Hanami::Utils
       class TemplateName
         # @since 0.1.0
         # @api private

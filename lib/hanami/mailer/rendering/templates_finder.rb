@@ -1,6 +1,6 @@
-require 'lotus/mailer/template'
+require 'hanami/mailer/template'
 
-module Lotus
+module Hanami
   module Mailer
     module Rendering
       # Find templates for a mailer
@@ -47,15 +47,15 @@ module Lotus
         # @api private
         # @since 0.1.0
         #
-        # @see Lotus::Mailer::Dsl#root
-        # @see Lotus::Mailer::Dsl#templates
+        # @see Hanami::Mailer::Dsl#root
+        # @see Hanami::Mailer::Dsl#templates
         #
         # @example
-        #   require 'lotus/mailer'
+        #   require 'hanami/mailer'
         #
         #   module Mailers
         #     class Welcome
-        #       include Lotus::Mailer
+        #       include Hanami::Mailer
         #     end
         #   end
         #
@@ -66,8 +66,8 @@ module Lotus
         #   #
         #   #   "/path/to/templates/welcome.html.erb"
         #
-        #   Lotus::Mailer::Rendering::TemplatesFinder.new(Mailers::Welcome).find
-        #     # => [#<Lotus::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/welcome.html.erb">]
+        #   Hanami::Mailer::Rendering::TemplatesFinder.new(Mailers::Welcome).find
+        #     # => [#<Hanami::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/welcome.html.erb">]
         def find
           templates = Hash.new
           _find.map do |template|
