@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
-  spec.required_ruby_version = '>= 2.2.0'
+  spec.required_ruby_version = '>= 2.0.0'
 
   spec.add_dependency 'hanami-utils', '~> 0.7'
   spec.add_dependency 'tilt',         '~> 2.0', '>= 2.0.1'
