@@ -13,20 +13,15 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'http://hanamirb.org'
   spec.license       = 'MIT'
 
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
-  else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
-  end
-
   spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/)
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
+  spec.required_ruby_version = '>= 2.2.0'
 
-  spec.add_dependency 'hanami-utils', '~> 0.6'
-  spec.add_dependency 'tilt',        '~> 2.0', '>= 2.0.1'
-  spec.add_dependency 'mail',        '~> 2.5'
+  spec.add_dependency 'hanami-utils', '~> 0.7'
+  spec.add_dependency 'tilt',         '~> 2.0', '>= 2.0.1'
+  spec.add_dependency 'mail',         '~> 2.5'
 
   spec.add_development_dependency 'bundler', '~> 1.10'
   spec.add_development_dependency 'rake',    '~> 10.0'
