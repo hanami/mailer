@@ -1,6 +1,6 @@
 require 'test_helper'
 
-describe Lotus::Mailer do
+describe Hanami::Mailer do
   describe '#render' do
     describe 'when template is explicitly declared' do
       let(:mailer) { InvoiceMailer.new }

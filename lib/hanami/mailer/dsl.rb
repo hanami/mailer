@@ -1,7 +1,7 @@
-require 'lotus/mailer/rendering/template_name'
-require 'lotus/mailer/rendering/templates_finder'
+require 'hanami/mailer/rendering/template_name'
+require 'hanami/mailer/rendering/templates_finder'
 
-module Lotus
+module Hanami
   module Mailer
     # Class level DSL
     #
@@ -30,18 +30,18 @@ module Lotus
       #
       # @since 0.1.0
       #
-      # @see Lotus::Mailers::Configuration.root
+      # @see Hanami::Mailers::Configuration.root
       #
       # @example Custom template name
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class MyMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #     template 'mailer'
       #   end
       def template(value = nil)
         if value.nil?
-          @template ||= ::Lotus::Mailer::Rendering::TemplateName.new(name, configuration.namespace).to_s
+          @template ||= ::Hanami::Mailer::Rendering::TemplateName.new(name, configuration.namespace).to_s
         else
           @template = value
         end
@@ -67,7 +67,7 @@ module Lotus
       # @api private
       def templates(format = nil)
         if format.nil?
-          @templates = ::Lotus::Mailer::Rendering::TemplatesFinder.new(self).find
+          @templates = ::Hanami::Mailer::Rendering::TemplatesFinder.new(self).find
         else
           @templates.fetch(format, nil)
         end
@@ -100,19 +100,19 @@ module Lotus
       # @since 0.1.0
       #
       # @example Hardcoded value (String)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #
       #     from "noreply@example.com"
       #   end
       #
       # @example Method (Symbol)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #     from :sender
       #
       #     private
@@ -157,28 +157,28 @@ module Lotus
       # @since 0.1.0
       #
       # @example Hardcoded value (String)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #
       #     to "user@example.com"
       #   end
       #
       # @example Hardcoded value (Array)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #
       #     to ["user-1@example.com", "user-2@example.com"]
       #   end
       #
       # @example Method (Symbol)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #     to :email_address
       #
       #     private
@@ -192,10 +192,10 @@ module Lotus
       #   WelcomeMailer.deliver(user: user)
       #
       # @example Method that returns a collection of recipients
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #     to :recipients
       #
       #     private
@@ -239,19 +239,19 @@ module Lotus
       # @since 0.1.0
       #
       # @example Hardcoded value (String)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #
       #     subject "Welcome"
       #   end
       #
       # @example Method (Symbol)
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class WelcomeMailer
-      #     include Lotus::Mailer
+      #     include Hanami::Mailer
       #     subject :greeting
       #
       #     private
@@ -278,7 +278,7 @@ module Lotus
       # @api private
       # @since 0.1.0
       #
-      # @see Lotus::Mailer.load!
+      # @see Hanami::Mailer.load!
       def load!
         templates.freeze
         configuration.freeze

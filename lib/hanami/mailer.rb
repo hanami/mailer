@@ -1,15 +1,15 @@
-require 'lotus/utils/class_attribute'
-require 'lotus/mailer/version'
-require 'lotus/mailer/configuration'
-require 'lotus/mailer/dsl'
+require 'hanami/utils/class_attribute'
+require 'hanami/mailer/version'
+require 'hanami/mailer/configuration'
+require 'hanami/mailer/dsl'
 require 'mail'
 
-module Lotus
-  # Lotus::Mailer
+module Hanami
+  # Hanami::Mailer
   #
   # @since 0.1.0
   module Mailer
-    # Base error for Lotus::Mailer
+    # Base error for Hanami::Mailer
     #
     # @since 0.1.0
     class Error < ::StandardError
@@ -49,12 +49,12 @@ module Lotus
     #
     # @since 0.1.0
     #
-    # @see Lotus::Mailer::Configuration
+    # @see Hanami::Mailer::Configuration
     #
     # @example
-    #   require 'lotus/mailer'
+    #   require 'hanami/mailer'
     #
-    #   Lotus::Mailer.configure do
+    #   Hanami::Mailer.configure do
     #     root '/path/to/root'
     #   end
     def self.configure(&blk)
@@ -63,7 +63,7 @@ module Lotus
     end
 
     # Override Ruby's hook for modules.
-    # It includes basic Lotus::Mailer modules to the given Class.
+    # It includes basic Hanami::Mailer modules to the given Class.
     # It sets a copy of the framework configuration
     #
     # @param base [Class] the target mailer
@@ -98,18 +98,18 @@ module Lotus
     #
     # @since 0.1.0
     #
-    # @see Lotus::Mailer::Configuration#delivery_mode
+    # @see Hanami::Mailer::Configuration#delivery_mode
     #
     # @example
-    #   require 'lotus/mailer'
+    #   require 'hanami/mailer'
     #
-    #   Lotus::Mailer.configure do
+    #   Hanami::Mailer.configure do
     #     delivery_method :test
     #   end.load!
     #
     #   # In testing code
     #   Signup::Welcome.deliver
-    #   Lotus::Mailer.deliveries.count # => 1
+    #   Hanami::Mailer.deliveries.count # => 1
     def self.deliveries
       Mail::TestMailer.deliveries
     end
@@ -142,18 +142,18 @@ module Lotus
       #
       # @since 0.1.0
       #
-      # @see Lotus::Mailer::Configuration#default_charset
+      # @see Hanami::Mailer::Configuration#default_charset
       #
       # @example
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     delivery_method :smtp
       #   end.load!
       #
       #   module Billing
       #     class Invoice
-      #       include Lotus::Mailer
+      #       include Hanami::Mailer
       #
       #       from    'noreply@example.com'
       #       to      :recipient
@@ -207,7 +207,7 @@ module Lotus
         m.html_part = __part(:html)
         m.text_part = __part(:txt)
 
-        m.delivery_method(*Lotus::Mailer.configuration.delivery_method)
+        m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
       end
 
       prepare
@@ -244,11 +244,11 @@ module Lotus
     # @since 0.1.0
     #
     # @example
-    #   require 'lotus/mailer'
+    #   require 'hanami/mailer'
     #
     #   module Billing
     #     class Invoice
-    #       include Lotus::Mailer
+    #       include Hanami::Mailer
     #
     #       subject 'Invoice'
     #       from    'noreply@example.com'

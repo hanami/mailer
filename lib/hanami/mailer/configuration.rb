@@ -1,7 +1,7 @@
 require 'set'
-require 'lotus/utils/kernel'
+require 'hanami/utils/kernel'
 
-module Lotus
+module Hanami
   module Mailer
     # Framework configuration
     #
@@ -35,7 +35,7 @@ module Lotus
 
       # Initialize a configuration instance
       #
-      # @return [Lotus::Mailer::Configuration] a new configuration's instance
+      # @return [Hanami::Mailer::Configuration] a new configuration's instance
       #
       # @since 0.1.0
       def initialize
@@ -67,14 +67,14 @@ module Lotus
       # @since 0.1.0
       #
       # @example Getting the value
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configuration.namespace # => Object
+      #   Hanami::Mailer.configuration.namespace # => Object
       #
       # @example Setting the value
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     namespace 'MyApp::Mailers'
       #   end
       def namespace(value = nil)
@@ -104,21 +104,21 @@ module Lotus
       # @since 0.1.0
       #
       # @see http://www.ruby-doc.org/stdlib/libdoc/pathname/rdoc/Pathname.html
-      # @see http://rdoc.info/gems/lotus-utils/Lotus/Utils/Kernel#Pathname-class_method
+      # @see http://rdoc.info/gems/hanami-utils/Hanami/Utils/Kernel#Pathname-class_method
       #
       # @example Getting the value
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configuration.root # => #<Pathname:.>
+      #   Hanami::Mailer.configuration.root # => #<Pathname:.>
       #
       # @example Setting the value
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     root '/path/to/templates'
       #   end
       #
-      #   Lotus::Mailer.configuration.root # => #<Pathname:/path/to/templates>
+      #   Hanami::Mailer.configuration.root # => #<Pathname:/path/to/templates>
       def root(value = nil)
         if value
           @root = Utils::Kernel.Pathname(value).realpath
@@ -129,7 +129,7 @@ module Lotus
 
       # Prepare the mailers.
       #
-      # The given block will be yielded when `Lotus::Mailer` will be included by
+      # The given block will be yielded when `Hanami::Mailer` will be included by
       # a mailer.
       #
       # This method can be called multiple times.
@@ -142,7 +142,7 @@ module Lotus
       #
       # @since 0.1.0
       #
-      # @see Lotus::Mailer.configure
+      # @see Hanami::Mailer.configure
       def prepare(&blk)
         if block_given?
           @modules.push(blk)
@@ -161,7 +161,7 @@ module Lotus
 
       # Duplicate by copying the settings in a new instance.
       #
-      # @return [Lotus::Mailer::Configuration] a copy of the configuration
+      # @return [Hanami::Mailer::Configuration] a copy of the configuration
       #
       # @since 0.1.0
       # @api private
@@ -234,21 +234,21 @@ module Lotus
       # @since 0.1.0
       #
       # @example Setup delivery method with supported symbol
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     delivery_method :sendmail
       #   end
       #
       # @example Setup delivery method with supported symbol and options
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     delivery_method :smtp, address: "localhost", port: 1025
       #   end
       #
       # @example Setup custom delivery method with options
-      #   require 'lotus/mailer'
+      #   require 'hanami/mailer'
       #
       #   class MandrillDeliveryMethod
       #     def initialize(options)
@@ -260,7 +260,7 @@ module Lotus
       #     end
       #   end
       #
-      #   Lotus::Mailer.configure do
+      #   Hanami::Mailer.configure do
       #     delivery_method MandrillDeliveryMethod,
       #       username: ENV['MANDRILL_USERNAME'],
       #       password: ENV['MANDRILL_API_KEY']

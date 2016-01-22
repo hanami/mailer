@@ -1,39 +1,39 @@
 require 'test_helper'
 
-describe Lotus::Mailer do
+describe Hanami::Mailer do
   describe '.deliver' do
     before do
-      Lotus::Mailer.deliveries.clear
+      Hanami::Mailer.deliveries.clear
     end
 
     it 'can deliver with specified charset' do
       CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
 
-      mail = Lotus::Mailer.deliveries.first
+      mail = Hanami::Mailer.deliveries.first
       mail.charset.must_equal             charset
       mail.parts.first.charset.must_equal charset
     end
 
     it "raises error when 'from' isn't specified" do
-      -> { MissingFromMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
+      -> { MissingFromMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
     end
 
     it "raises error when 'to' isn't specified" do
-      -> { MissingToMailer.deliver }.must_raise Lotus::Mailer::MissingDeliveryDataError
+      -> { MissingToMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
     end
 
     describe 'test delivery with hardcoded values' do
       before do
         WelcomeMailer.deliver
-        @mail = Lotus::Mailer.deliveries.first
+        @mail = Hanami::Mailer.deliveries.first
       end
 
       after do
-        Lotus::Mailer.deliveries.clear
+        Hanami::Mailer.deliveries.clear
       end
 
       it 'delivers the mail' do
-        Lotus::Mailer.deliveries.length.must_equal 1
+        Hanami::Mailer.deliveries.length.must_equal 1
       end
 
       it 'sends the correct information' do
@@ -66,15 +66,15 @@ describe Lotus::Mailer do
         @user = User.new('Name', 'student@deigirls.com')
         MethodMailer.deliver(user: @user)
 
-        @mail = Lotus::Mailer.deliveries.first
+        @mail = Hanami::Mailer.deliveries.first
       end
 
       after do
-        Lotus::Mailer.deliveries.clear
+        Hanami::Mailer.deliveries.clear
       end
 
       it 'delivers the mail' do
-        Lotus::Mailer.deliveries.length.must_equal 1
+        Hanami::Mailer.deliveries.length.must_equal 1
       end
 
       it 'sends the correct information' do
@@ -86,13 +86,13 @@ describe Lotus::Mailer do
 
     describe 'multipart' do
       after do
-        Lotus::Mailer.deliveries.clear
+        Hanami::Mailer.deliveries.clear
       end
 
       it 'delivers all the parts by default' do
         WelcomeMailer.deliver
 
-        mail = Lotus::Mailer.deliveries.first
+        mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
         body.must_include %(<h1>Hello World!</h1>)
@@ -102,7 +102,7 @@ describe Lotus::Mailer do
       it 'can deliver only the text part' do
         WelcomeMailer.deliver(format: :txt)
 
-        mail = Lotus::Mailer.deliveries.first
+        mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
         body.wont_include %(<h1>Hello World!</h1>)
@@ -112,7 +112,7 @@ describe Lotus::Mailer do
       it 'can deliver only the html part' do
         WelcomeMailer.deliver(format: :html)
 
-        mail = Lotus::Mailer.deliveries.first
+        mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
         body.must_include %(<h1>Hello World!</h1>)
@@ -124,8 +124,8 @@ describe Lotus::Mailer do
       before do
         @options = options = { deliveries: [] }
 
-        # Lotus::Mailer.reset!
-        # Lotus::Mailer.configure do
+        # Hanami::Mailer.reset!
+        # Hanami::Mailer.configure do
         #   delivery_method MandrillDeliveryMethod, options
         # end.load!
 

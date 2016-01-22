@@ -1,7 +1,7 @@
 require 'test_helper'
 
-describe Lotus::Mailer::VERSION do
+describe Hanami::Mailer::VERSION do
   it 'returns current version' do
-    Lotus::Mailer::VERSION.must_equal '0.1.0'
+    Hanami::Mailer::VERSION.must_equal '0.2.0'
   end
 end

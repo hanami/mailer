@@ -1,8 +1,8 @@
 require 'test_helper'
 
-describe Lotus::Mailer::Configuration do
+describe Hanami::Mailer::Configuration do
   before do
-    @configuration = Lotus::Mailer::Configuration.new
+    @configuration = Hanami::Mailer::Configuration.new
   end
 
   describe '#root' do
