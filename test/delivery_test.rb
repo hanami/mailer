@@ -57,7 +57,9 @@ describe Hanami::Mailer do
         attachment.wont_be :multipart?
 
         attachment.filename.must_equal     'invoice.pdf'
-        attachment.content_type.must_equal 'application/pdf; charset=UTF-8; filename=invoice.pdf'
+
+        attachment.content_type.must_match 'application/pdf'
+        attachment.content_type.must_match 'filename=invoice.pdf'
       end
     end
 
