@@ -96,7 +96,7 @@ The set of objects passed in the `deliver` call are called `locals` and are aval
 require 'hanami/mailer'
 
 User = Struct.new(:name, :username)
-user = User.new('Luca', 'jodosha')
+luca = User.new('Luca', 'jodosha')
 
 Hanami::Mailer.load!
 
@@ -110,7 +110,7 @@ class WelcomeMailer
   private
 
   def recipient
-    user.email
+    luca.email
   end
 end
 
@@ -120,7 +120,7 @@ InvoiceMailer.deliver(user: luca)
 The corresponding `erb` file:
 
 ```erb
-Hello <%= user.name %>!
+Hello <%= luca.name %>!
 ```
 
 ### Scope
