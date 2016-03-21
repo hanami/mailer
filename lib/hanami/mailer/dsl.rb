@@ -7,6 +7,16 @@ module Hanami
     #
     # @since 0.1.0
     module Dsl
+      # @since x.x.x
+      # @api private
+      def self.extended(base)
+        base.class_eval do
+          @from    = nil
+          @to      = nil
+          @subject = nil
+        end
+      end
+
       # Set the template name IF it differs from the convention.
       #
       # For a given mailer named <tt>Signup::Welcome</tt> it will look for
