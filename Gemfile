@@ -9,5 +9,4 @@ end
 gem 'hanami-utils', '~> 0.8', require: false, github: 'hanami/utils', branch: '0.8.x'
 gem 'haml'
 
-gem 'simplecov', require: false
 gem 'coveralls', require: false
