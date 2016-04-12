@@ -134,7 +134,7 @@ module Hanami
       # <tt>Signup::Welcome.deliver(format: :txt)</tt>
       #
       # All the given locals, excepted the reserved ones (<tt>:format</tt> and
-      # <tt>charset</tt>), are avaliable as rendering context for the templates.
+      # <tt>charset</tt>), are available as rendering context for the templates.
       #
       # @param locals [Hash] a set of objects that acts as context for the rendering
       # @option :format [Symbol] specify format to deliver
