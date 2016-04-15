@@ -120,7 +120,7 @@ InvoiceMailer.deliver(user: luca)
 The corresponding `erb` file:
 
 ```erb
-Hello <%= luca.name %>!
+Hello <%= user.name %>!
 ```
 
 ### Scope
