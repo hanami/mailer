@@ -3,6 +3,7 @@ Mail for Ruby applications
 
 ## v0.3.0 - (unreleased)
 ### Changed
+– [Anton Dabydov] Add CC option
 – [Luca Guidi] Drop support for Ruby 2.0 and 2.1
 
 ## v0.2.0 - 2016-01-22
