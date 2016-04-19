@@ -201,6 +201,7 @@ module Hanami
       @mail    = Mail.new.tap do |m|
         m.from    = __dsl(:from)
         m.to      = __dsl(:to)
+        m.cc      = __dsl(:cc)
         m.subject = __dsl(:subject)
 
         m.charset   = charset

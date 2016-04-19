@@ -13,6 +13,7 @@ module Hanami
         base.class_eval do
           @from    = nil
           @to      = nil
+          @cc      = nil
           @subject = nil
         end
       end
