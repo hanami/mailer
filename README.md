@@ -95,8 +95,8 @@ The set of objects passed in the `deliver` call are called `locals` and are aval
 ```ruby
 require 'hanami/mailer'
 
-User = Struct.new(:name, :username)
-luca = User.new('Luca', 'jodosha')
+User = Struct.new(:name, :username, :email)
+luca = User.new('Luca', 'jodosha', 'luca@jodosha.com')
 
 Hanami::Mailer.load!
 
@@ -110,7 +110,7 @@ class WelcomeMailer
   private
 
   def recipient
-    luca.email
+    user.email
   end
 end
 
