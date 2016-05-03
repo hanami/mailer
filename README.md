@@ -114,7 +114,7 @@ class WelcomeMailer
   end
 end
 
-InvoiceMailer.deliver(user: luca)
+WelcomeMailer.deliver(user: luca)
 ```
 
 The corresponding `erb` file:
