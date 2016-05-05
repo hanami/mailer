@@ -40,6 +40,7 @@ describe Hanami::Mailer do
         @mail.from.must_equal ['noreply@sender.com']
         @mail.to.must_equal   ['noreply@recipient.com', 'owner@recipient.com']
         @mail.cc.must_equal   ["cc@recipient.com"]
+        @mail.bcc.must_equal  ["bcc@recipient.com"]
         @mail.subject.must_equal "Welcome"
       end
 

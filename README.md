@@ -83,6 +83,7 @@ class WelcomeMailer
   from 'noreply@sender.com'
   to   'noreply@recipient.com'
   cc   'cc@sender.com'
+  bcc  'alice@example.com'
 
   subject 'Welcome'
 end

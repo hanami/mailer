@@ -202,6 +202,7 @@ module Hanami
         m.from    = __dsl(:from)
         m.to      = __dsl(:to)
         m.cc      = __dsl(:cc)
+        m.bcc     = __dsl(:bcc)
         m.subject = __dsl(:subject)
 
         m.charset   = charset
