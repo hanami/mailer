@@ -149,8 +149,8 @@ module Hanami
       #
       # This value is optional.
       #
-      # When a value is given, specify the cc of the email. Otherwise,
-      # it returns the cc of the email
+      # When a value is given, it specifies the cc for the email. 
+      # When a value is not given, it returns the cc of the email.
       #
       # This is part of a DSL, for this reason when this method is called with
       # an argument, it will set the corresponding class variable. When
@@ -238,8 +238,8 @@ module Hanami
       #
       # This value is optional.
       #
-      # When a value is given, specify the bcc of the email. Otherwise,
-      # it returns the bcc of the email
+      # When a value is given, it specifies the bcc for the email. 
+      # When a value is not given, it returns the bcc of the email.
       #
       # This is part of a DSL, for this reason when this method is called with
       # an argument, it will set the corresponding class variable. When
