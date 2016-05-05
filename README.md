@@ -66,7 +66,7 @@ A mailer with `.to` and `.from` addresses and mailer delivery:
 ```ruby
 require 'hanami/mailer'
 
-Hanami::Mailer.configuration do
+Hanami::Mailer.configure do
   delivery_method :smtp,
     address:              "smtp.gmail.com",
     port:                 587,
@@ -98,8 +98,6 @@ require 'hanami/mailer'
 User = Struct.new(:name, :username)
 luca = User.new('Luca', 'jodosha')
 
-Hanami::Mailer.load!
-
 class WelcomeMailer
   include Hanami::Mailer
 
@@ -110,7 +108,7 @@ class WelcomeMailer
   private
 
   def recipient
-    luca.email
+    user.email
   end
 end
 
@@ -120,7 +118,7 @@ InvoiceMailer.deliver(user: luca)
 The corresponding `erb` file:
 
 ```erb
-Hello <%= luca.name %>!
+Hello <%= user.name %>!
 ```
 
 ### Scope
