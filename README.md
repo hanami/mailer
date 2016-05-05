@@ -80,8 +80,10 @@ end.load!
 class WelcomeMailer
   include Hanami::Mailer
 
-  from    'noreply@sender.com'
-  to      'noreply@recipient.com'
+  from 'noreply@sender.com'
+  to   'noreply@recipient.com'
+  cc   'cc@sender.com'
+
   subject 'Welcome'
 end
 
@@ -90,7 +92,7 @@ WelcomeMailer.deliver
 
 ### Locals
 
-The set of objects passed in the `deliver` call are called `locals` and are avaliable inside the mailer and the template.
+The set of objects passed in the `deliver` call are called `locals` and are available inside the mailer and the template.
 
 ```ruby
 require 'hanami/mailer'

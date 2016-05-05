@@ -13,6 +13,7 @@ module Hanami
         base.class_eval do
           @from    = nil
           @to      = nil
+          @cc      = nil
           @subject = nil
         end
       end
@@ -136,6 +137,95 @@ module Hanami
           @from
         else
           @from = value
+        end
+      end
+
+      # Sets the cc (carbon copy) for mail messages
+      #
+      # It accepts a hardcoded value as a string or array of strings.
+      # For dynamic values, you can specify a symbol that represents an instance
+      # method.
+      #
+      # This value is not required.
+      #
+      # When a value is given, specify the cc of the email Otherwise,
+      # it returns the cc of the email
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload cc(value)
+      #   Sets the cc
+      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload cc
+      #   Returns the cc
+      #   @return [String, Array, Symbol] the recipient
+      #
+      # @since 0.1.0
+      #
+      # @example Hardcoded value (String)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     to "user@example.com"
+      #     cc "other.user@example.com"
+      #   end
+      #
+      # @example Hardcoded value (Array)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     to ["user-1@example.com", "user-2@example.com"]
+      #     cc ["other.user-1@example.com", "other.user-2@example.com"]
+      #   end
+      #
+      # @example Method (Symbol)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     to "user@example.com"
+      #     cc :email_address
+      #
+      #     private
+      #
+      #     def email_address
+      #       user.email
+      #     end
+      #   end
+      #
+      #   other_user = User.new(name: 'L')
+      #   WelcomeMailer.deliver(user: other_user)
+      #
+      # @example Method that returns a collection of recipients
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     to "user@example.com"
+      #     cc :recipients
+      #
+      #     private
+      #
+      #     def recipients
+      #       users.map(&:email)
+      #     end
+      #   end
+      #
+      #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.deliver(users: users)
+      def cc(value = nil)
+        if value.nil?
+          @cc
+        else
+          @cc = value
         end
       end
 
