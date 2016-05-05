@@ -97,8 +97,8 @@ The set of objects passed in the `deliver` call are called `locals` and are avai
 ```ruby
 require 'hanami/mailer'
 
-User = Struct.new(:name, :username)
-luca = User.new('Luca', 'jodosha')
+User = Struct.new(:name, :username, :email)
+luca = User.new('Luca', 'jodosha', 'luca@jodosha.com')
 
 class WelcomeMailer
   include Hanami::Mailer
@@ -114,7 +114,7 @@ class WelcomeMailer
   end
 end
 
-InvoiceMailer.deliver(user: luca)
+WelcomeMailer.deliver(user: luca)
 ```
 
 The corresponding `erb` file:
