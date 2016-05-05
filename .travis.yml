@@ -2,6 +2,9 @@ language: ruby
 sudo: false
 cache: bundler
 script: 'bundle exec rake test:coverage --trace'
+before_install:
+  - gem install bundler
+  - gem update bundler
 rvm:
   - 2.2.5
   - 2.3.1
