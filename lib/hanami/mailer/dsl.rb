@@ -146,9 +146,9 @@ module Hanami
       # For dynamic values, you can specify a symbol that represents an instance
       # method.
       #
-      # This value is not required.
+      # This value is optional.
       #
-      # When a value is given, specify the cc of the email Otherwise,
+      # When a value is given, specify the cc of the email. Otherwise,
       # it returns the cc of the email
       #
       # This is part of a DSL, for this reason when this method is called with
