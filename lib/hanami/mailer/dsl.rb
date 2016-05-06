@@ -165,7 +165,7 @@ module Hanami
       #   Returns the cc
       #   @return [String, Array, Symbol] the recipient
       #
-      # @since 0.1.0
+      # @since x.x.x
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
@@ -254,7 +254,7 @@ module Hanami
       #   Returns the bcc
       #   @return [String, Array, Symbol] the recipient
       #
-      # @since 0.1.0
+      # @since x.x.x
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
