@@ -221,7 +221,7 @@ module Hanami
       #   end
       #
       #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(users: users)
+      #   WelcomeMailer.deliver(users: other_users)
       def cc(value = nil)
         if value.nil?
           @cc
@@ -310,7 +310,7 @@ module Hanami
       #   end
       #
       #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(users: users)
+      #   WelcomeMailer.deliver(users: other_users)
       def bcc(value = nil)
         if value.nil?
           @bcc
