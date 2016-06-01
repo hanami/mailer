@@ -2,6 +2,10 @@
 Mail for Ruby applications
 
 ## v0.3.0 - (unreleased)
+### Added
+– [Anton Dabydov] Blind carbon copy (bcc) option
+– [Anton Dabydov] Carbon copy (cc) option
+
 ### Changed
 – [Luca Guidi] Drop support for Ruby 2.0 and 2.1
 

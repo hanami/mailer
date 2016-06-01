@@ -67,7 +67,10 @@ class WelcomeMailer
   include Hanami::Mailer
 
   from "noreply@sender.com"
-  to ["noreply@recipient.com", "cc@recipient.com"]
+  to   ["noreply@recipient.com", "owner@recipient.com"]
+  cc   "cc@recipient.com"
+  bcc  "bcc@recipient.com"
+
   subject "Welcome"
 
   def greeting

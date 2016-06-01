@@ -38,7 +38,9 @@ describe Hanami::Mailer do
 
       it 'sends the correct information' do
         @mail.from.must_equal ['noreply@sender.com']
-        @mail.to.must_equal   ['noreply@recipient.com', 'cc@recipient.com']
+        @mail.to.must_equal   ['noreply@recipient.com', 'owner@recipient.com']
+        @mail.cc.must_equal   ["cc@recipient.com"]
+        @mail.bcc.must_equal  ["bcc@recipient.com"]
         @mail.subject.must_equal "Welcome"
       end
 

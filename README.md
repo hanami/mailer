@@ -66,7 +66,7 @@ A mailer with `.to` and `.from` addresses and mailer delivery:
 ```ruby
 require 'hanami/mailer'
 
-Hanami::Mailer.configuration do
+Hanami::Mailer.configure do
   delivery_method :smtp,
     address:              "smtp.gmail.com",
     port:                 587,
@@ -80,8 +80,11 @@ end.load!
 class WelcomeMailer
   include Hanami::Mailer
 
-  from    'noreply@sender.com'
-  to      'noreply@recipient.com'
+  from 'noreply@sender.com'
+  to   'noreply@recipient.com'
+  cc   'cc@sender.com'
+  bcc  'alice@example.com'
+
   subject 'Welcome'
 end
 
@@ -90,15 +93,13 @@ WelcomeMailer.deliver
 
 ### Locals
 
-The set of objects passed in the `deliver` call are called `locals` and are avaliable inside the mailer and the template.
+The set of objects passed in the `deliver` call are called `locals` and are available inside the mailer and the template.
 
 ```ruby
 require 'hanami/mailer'
 
-User = Struct.new(:name, :username)
-luca = User.new('Luca', 'jodosha')
-
-Hanami::Mailer.load!
+User = Struct.new(:name, :username, :email)
+luca = User.new('Luca', 'jodosha', 'luca@jodosha.com')
 
 class WelcomeMailer
   include Hanami::Mailer
@@ -110,17 +111,17 @@ class WelcomeMailer
   private
 
   def recipient
-    luca.email
+    user.email
   end
 end
 
-InvoiceMailer.deliver(user: luca)
+WelcomeMailer.deliver(user: luca)
 ```
 
 The corresponding `erb` file:
 
 ```erb
-Hello <%= luca.name %>!
+Hello <%= user.name %>!
 ```
 
 ### Scope
