@@ -69,11 +69,11 @@ module Hanami
         #   Hanami::Mailer::Rendering::TemplatesFinder.new(Mailers::Welcome).find
         #     # => [#<Hanami::Mailer::Template:0x007f8a0a86a970 ... @file="/path/to/templates/welcome.html.erb">]
         def find
-          templates = Hash.new
+          templates = Hash[]
           _find.map do |template|
             name = File.basename(template)
-            format = (( name.split(".") )[-2]).to_sym
-            templates[ format ] = Mailer::Template.new(template)
+            format = (name.split('.')[-2]).to_sym
+            templates[format] = Mailer::Template.new(template)
           end
           templates
         end
@@ -83,7 +83,7 @@ module Hanami
         # @api private
         # @since 0.1.0
         def _find(lookup = search_path)
-          Dir.glob( "#{ [root, lookup, template_name].join(separator) }.#{ format }.#{ engines }" )
+          Dir.glob("#{[root, lookup, template_name].join(separator)}.#{format}.#{engines}")
         end
 
         # @api private

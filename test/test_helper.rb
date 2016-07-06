@@ -7,7 +7,7 @@ if ENV['COVERALL']
 end
 
 require 'minitest/autorun'
-$:.unshift 'lib'
+$LOAD_PATH.unshift 'lib'
 require 'hanami/mailer'
 
 Hanami::Mailer.configure do
@@ -23,7 +23,7 @@ end
 
 Hanami::Mailer::Dsl.class_eval do
   def reset!
-    @templates = Hash.new
+    @templates = {}
   end
 end
 

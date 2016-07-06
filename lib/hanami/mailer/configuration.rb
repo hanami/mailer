@@ -144,7 +144,7 @@ module Hanami
       #
       # @see Hanami::Mailer.configure
       def prepare(&blk)
-        if block_given?
+        if block_given? # rubocop:disable Style/GuardClause
           @modules.push(blk)
         else
           raise ArgumentError.new('Please provide a block')
@@ -191,7 +191,7 @@ module Hanami
         @modules = []
       end
 
-      alias_method :unload!, :reset!
+      alias unload! reset!
 
       # Copy the configuration for the given mailer
       #
@@ -283,6 +283,7 @@ module Hanami
       end
 
       protected
+
       # @api private
       # @since 0.1.0
       attr_writer :root

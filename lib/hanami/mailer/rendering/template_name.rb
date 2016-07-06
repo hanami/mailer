@@ -26,6 +26,7 @@ module Hanami
         end
 
         private
+
         # @since 0.1.0
         # @api private
         def compile!(namespace)
@@ -44,7 +45,7 @@ module Hanami
         # @since 0.1.0
         # @api private
         def replace!(token)
-          @name.gsub!(%r{\A#{ token }#{ NAMESPACE_SEPARATOR }}, '')
+          @name.gsub!(/\A#{token}#{NAMESPACE_SEPARATOR}/, '')
         end
       end
     end
