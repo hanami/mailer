@@ -73,7 +73,7 @@ module Hanami
     #
     # @see http://www.ruby-doc.org/core/Module.html#method-i-included
     def self.included(base)
-      conf = self.configuration
+      conf = configuration
       conf.add_mailer(base)
 
       base.class_eval do
@@ -197,21 +197,8 @@ module Hanami
     def initialize(locals = {})
       @locals  = locals
       @format  = locals.fetch(:format, nil)
-      @charset = charset = locals.fetch(:charset, self.class.configuration.default_charset)
-      @mail    = Mail.new.tap do |m|
-        m.from    = __dsl(:from)
-        m.to      = __dsl(:to)
-        m.cc      = __dsl(:cc)
-        m.bcc     = __dsl(:bcc)
-        m.subject = __dsl(:subject)
-
-        m.charset   = charset
-        m.html_part = __part(:html)
-        m.text_part = __part(:txt)
-
-        m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
-      end
-
+      @charset = locals.fetch(:charset, self.class.configuration.default_charset)
+      @mail    = build
       prepare
     end
 
@@ -288,6 +275,26 @@ module Hanami
 
     private
 
+    # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
+    def build
+      Mail.new.tap do |m|
+        m.from    = __dsl(:from)
+        m.to      = __dsl(:to)
+        m.cc      = __dsl(:cc)
+        m.bcc     = __dsl(:bcc)
+        m.subject = __dsl(:subject)
+
+        m.charset   = charset
+        m.html_part = __part(:html)
+        m.text_part = __part(:txt)
+
+        m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
+      end
+    end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
+
     # @private
     # @since 0.1.0
     def __dsl(method_name)
@@ -303,7 +310,7 @@ module Hanami
     # @since 0.1.0
     def __part(format)
       Mail::Part.new.tap do |part|
-        part.content_type = "#{ CONTENT_TYPES.fetch(format) }; charset=#{ charset }"
+        part.content_type = "#{CONTENT_TYPES.fetch(format)}; charset=#{charset}"
         part.body         = render(format)
       end if __part?(format)
     end

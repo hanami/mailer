@@ -23,19 +23,19 @@ class MissingFromMailer
   include Hanami::Mailer
   template 'missing'
 
-  to      "recipient@example.com"
-  subject "Hello"
+  to      'recipient@example.com'
+  subject 'Hello'
 end
 
 class MissingToMailer
   include Hanami::Mailer
   template 'missing'
 
-  from    "sender@example.com"
-  subject "Hello"
+  from    'sender@example.com'
+  subject 'Hello'
 end
 
-class User < Struct.new(:name, :email); end
+User = Struct.new(:name, :email)
 
 class LazyMailer
   include Hanami::Mailer
@@ -49,13 +49,13 @@ class MethodMailer
   subject :greeting
 
   def greeting
-    "Hello, #{ user.name }"
+    "Hello, #{user.name}"
   end
 
   private
 
   def sender
-    "hello-#{ user.name.downcase }@example.com"
+    "hello-#{user.name.downcase}@example.com"
   end
 
   def recipient
@@ -66,15 +66,15 @@ end
 class WelcomeMailer
   include Hanami::Mailer
 
-  from "noreply@sender.com"
-  to   ["noreply@recipient.com", "owner@recipient.com"]
-  cc   "cc@recipient.com"
-  bcc  "bcc@recipient.com"
+  from 'noreply@sender.com'
+  to   ['noreply@recipient.com', 'owner@recipient.com']
+  cc   'cc@recipient.com'
+  bcc  'bcc@recipient.com'
 
-  subject "Welcome"
+  subject 'Welcome'
 
   def greeting
-    "Ahoy"
+    'Ahoy'
   end
 
   def prepare

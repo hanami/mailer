@@ -42,9 +42,9 @@ describe Hanami::Mailer::Configuration do
 
       describe 'and it is an unexisting path' do
         it 'raises an error' do
-          -> {
+          lambda do
             @configuration.root '/path/to/unknown'
-          }.must_raise(Errno::ENOENT)
+          end.must_raise(Errno::ENOENT)
         end
       end
     end
@@ -157,7 +157,7 @@ describe Hanami::Mailer::Configuration do
     describe 'set with a class' do
       before do
         @configuration.delivery_method MandrillDeliveryMethod,
-          username: 'mandrill-username', password: 'mandrill-api-key'
+                                       username: 'mandrill-username', password: 'mandrill-api-key'
       end
 
       it 'saves the delivery method in the configuration' do

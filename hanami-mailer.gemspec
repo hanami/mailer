@@ -8,12 +8,12 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Luca Guidi', 'Ines Coelho', 'Rosa Faria']
   spec.email         = ['me@lucaguidi.com', 'ines.opcoelho@gmail.com', 'rosa1853@live.com']
 
-  spec.summary       = %q{Mail for Ruby applications.}
-  spec.description   = %q{Mail for Ruby applications and Hanami mailers}
+  spec.summary       = 'Mail for Ruby applications.'
+  spec.description   = 'Mail for Ruby applications and Hanami mailers'
   spec.homepage      = 'http://hanamirb.org'
   spec.license       = 'MIT'
 
-  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/)
+  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/) # rubocop:disable Style/SpecialGlobalVars
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']

@@ -39,9 +39,9 @@ describe Hanami::Mailer do
       it 'sends the correct information' do
         @mail.from.must_equal ['noreply@sender.com']
         @mail.to.must_equal   ['noreply@recipient.com', 'owner@recipient.com']
-        @mail.cc.must_equal   ["cc@recipient.com"]
-        @mail.bcc.must_equal  ["bcc@recipient.com"]
-        @mail.subject.must_equal "Welcome"
+        @mail.cc.must_equal   ['cc@recipient.com']
+        @mail.bcc.must_equal  ['bcc@recipient.com']
+        @mail.subject.must_equal 'Welcome'
       end
 
       it 'has the correct templates' do
@@ -82,9 +82,9 @@ describe Hanami::Mailer do
       end
 
       it 'sends the correct information' do
-        @mail.from.must_equal    ["hello-#{ @user.name.downcase }@example.com"]
+        @mail.from.must_equal    ["hello-#{@user.name.downcase}@example.com"]
         @mail.to.must_equal      [@user.email]
-        @mail.subject.must_equal "Hello, #{ @user.name }"
+        @mail.subject.must_equal "Hello, #{@user.name}"
       end
     end
 
