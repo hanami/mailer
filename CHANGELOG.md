@@ -1,7 +1,7 @@
 # Hanami::Router
 Mail for Ruby applications
 
-## v0.3.0 - (unreleased)
+## v0.3.0 - 2016-07-22
 ### Added
 – [Anton Dabydov] Blind carbon copy (bcc) option
 – [Anton Dabydov] Carbon copy (cc) option

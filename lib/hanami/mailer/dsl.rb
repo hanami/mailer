@@ -7,7 +7,7 @@ module Hanami
     #
     # @since 0.1.0
     module Dsl
-      # @since x.x.x
+      # @since 0.3.0
       # @api private
       def self.extended(base)
         base.class_eval do
@@ -165,7 +165,7 @@ module Hanami
       #   Returns the cc
       #   @return [String, Array, Symbol] the recipient
       #
-      # @since x.x.x
+      # @since 0.3.0
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
@@ -254,7 +254,7 @@ module Hanami
       #   Returns the bcc
       #   @return [String, Array, Symbol] the recipient
       #
-      # @since x.x.x
+      # @since 0.3.0
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
