@@ -1,4 +1,11 @@
+AllCops:
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  ExtraDetails: false
 Metrics/LineLength:
   Enabled: false
 Style/RaiseArgs:
   Enabled: false
+Metrics/BlockLength:
+  Exclude:
+    - 'test/**/*'

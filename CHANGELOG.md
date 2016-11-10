@@ -1,10 +1,14 @@
-# Hanami::Router
+# Hanami::Mailer
 Mail for Ruby applications
+
+## v0.4.0 - (unreleased)
+### Changed
+- [Luca Guidi] Official support for Ruby: MRI 2.3+ and JRuby 9.1.5.0+
 
 ## v0.3.0 - 2016-07-22
 ### Added
-– [Anton Dabydov] Blind carbon copy (bcc) option
-– [Anton Dabydov] Carbon copy (cc) option
+– [Anton Davydov] Blind carbon copy (bcc) option
+– [Anton Davydov] Carbon copy (cc) option
 
 ### Changed
 – [Luca Guidi] Drop support for Ruby 2.0 and 2.1

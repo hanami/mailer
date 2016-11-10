@@ -309,10 +309,12 @@ module Hanami
     # @private
     # @since 0.1.0
     def __part(format)
+      return unless __part?(format)
+
       Mail::Part.new.tap do |part|
         part.content_type = "#{CONTENT_TYPES.fetch(format)}; charset=#{charset}"
         part.body         = render(format)
-      end if __part?(format)
+      end
     end
 
     # @private
@@ -320,6 +322,12 @@ module Hanami
     def __part?(format)
       @format == format ||
         (!@format && !self.class.templates(format).nil?)
+    end
+
+    # @private
+    # @since 0.4.0
+    def respond_to_missing?(m, _include_all)
+      @locals.key?(m)
     end
   end
 end
