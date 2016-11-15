@@ -22,7 +22,7 @@ Mail for Ruby applications.
 
 ## Rubies
 
-__Hanami::Mailer__ supports Ruby (MRI) 2.2+.
+__Hanami::Mailer__ supports Ruby (MRI) 2.3+ and JRuby 9.1.5.0+.
 
 ## Installation
 
