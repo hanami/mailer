@@ -1,11 +1,5 @@
-AllCops:
-  DisplayCopNames: true
-  DisplayStyleGuide: true
-  ExtraDetails: false
-Metrics/LineLength:
-  Enabled: false
-Style/RaiseArgs:
-  Enabled: false
+inherit_from:
+  - https://raw.githubusercontent.com/hanami/hanami/master/.rubocop.yml
 Metrics/BlockLength:
   Exclude:
     - 'test/**/*'
