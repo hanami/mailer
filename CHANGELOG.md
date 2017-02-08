@@ -1,6 +1,10 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.0.0.beta1 (unreleased)
+### Added
+- [Luca Guidi] Official support for Ruby: MRI 2.4
+
 ## v0.4.0 - 2016-11-15
 ### Changed
 - [Luca Guidi] Official support for Ruby: MRI 2.3+ and JRuby 9.1.5.0+
