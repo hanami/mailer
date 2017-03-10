@@ -4,6 +4,9 @@ require 'hanami/mailer/configuration'
 require 'hanami/mailer/dsl'
 require 'mail'
 
+# Hanami
+#
+# @since 0.1.0
 module Hanami
   # Hanami::Mailer
   #
@@ -260,7 +263,7 @@ module Hanami
     def prepare
     end
 
-    # @private
+    # @api private
     # @since 0.1.0
     def method_missing(m)
       @locals.fetch(m) { super }
@@ -269,7 +272,7 @@ module Hanami
     # @since 0.1.0
     attr_reader :mail
 
-    # @private
+    # @api private
     # @since 0.1.0
     attr_reader :charset
 
@@ -295,7 +298,7 @@ module Hanami
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
 
-    # @private
+    # @api private
     # @since 0.1.0
     def __dsl(method_name)
       case result = self.class.__send__(method_name)
@@ -306,7 +309,7 @@ module Hanami
       end
     end
 
-    # @private
+    # @api private
     # @since 0.1.0
     def __part(format)
       return unless __part?(format)
@@ -317,14 +320,14 @@ module Hanami
       end
     end
 
-    # @private
+    # @api private
     # @since 0.1.0
     def __part?(format)
       @format == format ||
         (!@format && !self.class.templates(format).nil?)
     end
 
-    # @private
+    # @api private
     # @since 0.4.0
     def respond_to_missing?(m, _include_all)
       @locals.key?(m)
