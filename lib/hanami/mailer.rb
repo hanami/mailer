@@ -280,6 +280,7 @@ module Hanami
 
     # rubocop:disable Metrics/MethodLength
     # rubocop:disable Metrics/AbcSize
+    # @api private
     def build
       Mail.new.tap do |m|
         m.from    = __dsl(:from)

@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Mailer::Configuration do
+RSpec.describe Hanami::Mailer::Configuration do
   before do
     @configuration = Hanami::Mailer::Configuration.new
   end
@@ -9,15 +7,15 @@ describe Hanami::Mailer::Configuration do
     describe 'when a value is given' do
       describe 'and it is a string' do
         it 'sets it as a Pathname' do
-          @configuration.root 'test'
-          @configuration.root.must_equal(Pathname.new('test').realpath)
+          @configuration.root 'spec'
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
       describe 'and it is a pathname' do
         it 'sets it' do
-          @configuration.root Pathname.new('test')
-          @configuration.root.must_equal(Pathname.new('test').realpath)
+          @configuration.root Pathname.new('spec')
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
@@ -35,42 +33,42 @@ describe Hanami::Mailer::Configuration do
         end
 
         it 'sets the converted value' do
-          @configuration.root RootPath.new('test')
-          @configuration.root.must_equal(Pathname.new('test').realpath)
+          @configuration.root RootPath.new('spec')
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
       describe 'and it is an unexisting path' do
         it 'raises an error' do
-          lambda do
+          expect do
             @configuration.root '/path/to/unknown'
-          end.must_raise(Errno::ENOENT)
+          end.to raise_error(Errno::ENOENT)
         end
       end
     end
 
     describe 'when a value is not given' do
       it 'defaults to the current path' do
-        @configuration.root.must_equal(Pathname.new('.').realpath)
+        expect(@configuration.root).to eq(Pathname.new('.').realpath)
       end
     end
   end
 
   describe '#mailers' do
     it 'defaults to an empty set' do
-      @configuration.mailers.must_be_empty
+      expect(@configuration.mailers).to be_empty
     end
 
     it 'allows to add mailers' do
       @configuration.add_mailer(InvoiceMailer)
-      @configuration.mailers.must_include(InvoiceMailer)
+      expect(@configuration.mailers).to include(InvoiceMailer)
     end
 
     it 'eliminates duplications' do
       @configuration.add_mailer(RenderMailer)
       @configuration.add_mailer(RenderMailer)
 
-      @configuration.mailers.size.must_equal(1)
+      expect(@configuration.mailers.size).to eq(1)
     end
   end
 
@@ -92,8 +90,7 @@ describe Hanami::Mailer::Configuration do
     end
 
     it 'raises error in case of missing block' do
-      exception = -> { @configuration.prepare }.must_raise(ArgumentError)
-      exception.message.must_equal('Please provide a block')
+      expect { @configuration.prepare }.to raise_error(ArgumentError, 'Please provide a block')
     end
   end
 
@@ -123,13 +120,13 @@ describe Hanami::Mailer::Configuration do
 
   describe '#load!' do
     before do
-      @configuration.root 'test'
+      @configuration.root 'spec'
       @configuration.load!
     end
 
     it 'loads root' do
-      root = Pathname.new('test').realpath
-      @configuration.root.must_equal root
+      root = Pathname.new('spec').realpath
+      expect(@configuration.root).to eq(root)
     end
   end
 
@@ -140,7 +137,7 @@ describe Hanami::Mailer::Configuration do
       end
 
       it 'defaults to SMTP' do
-        @configuration.delivery_method.must_equal [:smtp, {}]
+        expect(@configuration.delivery_method).to eq([:smtp, {}])
       end
     end
 
@@ -150,7 +147,7 @@ describe Hanami::Mailer::Configuration do
       end
 
       it 'saves the delivery method in the configuration' do
-        @configuration.delivery_method.must_equal [:exim, { location: '/path/to/exim' }]
+        expect(@configuration.delivery_method).to eq([:exim, { location: '/path/to/exim' }])
       end
     end
 
@@ -161,8 +158,7 @@ describe Hanami::Mailer::Configuration do
       end
 
       it 'saves the delivery method in the configuration' do
-        @configuration.delivery_method.must_equal [MandrillDeliveryMethod,
-                                                   username: 'mandrill-username', password: 'mandrill-api-key']
+        expect(@configuration.delivery_method).to eq([MandrillDeliveryMethod, username: 'mandrill-username', password: 'mandrill-api-key'])
       end
     end
   end
@@ -174,7 +170,7 @@ describe Hanami::Mailer::Configuration do
       end
 
       it 'defaults to UTF-8' do
-        @configuration.default_charset.must_equal 'UTF-8'
+        expect(@configuration.default_charset).to eq('UTF-8')
       end
     end
 
@@ -184,7 +180,7 @@ describe Hanami::Mailer::Configuration do
       end
 
       it 'saves the delivery method in the configuration' do
-        @configuration.default_charset.must_equal 'iso-8859-1'
+        expect(@configuration.default_charset).to eq('iso-8859-1')
       end
     end
   end

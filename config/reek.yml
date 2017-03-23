@@ -1,0 +1,139 @@
+---
+Attribute:
+  enabled: false
+  exclude: []
+BooleanParameter:
+  enabled: true
+  exclude: []
+ClassVariable:
+  enabled: true
+  exclude: []
+ControlParameter:
+  enabled: true
+  exclude: []
+DataClump:
+  enabled: true
+  max_copies: 0
+  min_clump_size: 2
+  exclude:
+    - Hanami::Mailer
+DuplicateMethodCall:
+  enabled: true
+  exclude: []
+  max_calls: 1
+  allow_calls: []
+FeatureEnvy:
+  enabled: true
+  exclude:
+  - Hanami::Mailer#build
+LongParameterList:
+  enabled: true
+  exclude:
+  - Devtools::Config#self.attribute
+  max_params: 2
+  overrides: {}
+LongYieldList:
+  enabled: true
+  exclude: []
+  max_params: 1
+NestedIterators:
+  enabled: true
+  exclude: []
+  max_allowed_nesting: 1
+  ignore_iterators: []
+NilCheck:
+  enabled: true
+  exclude:
+  - Hanami::Mailer::Configuration#default_charset
+  - Hanami::Mailer::Configuration#delivery_method
+  - Hanami::Mailer::Dsl#bcc
+  - Hanami::Mailer::Dsl#cc
+  - Hanami::Mailer::Dsl#from
+  - Hanami::Mailer::Dsl#subject
+  - Hanami::Mailer::Dsl#template
+  - Hanami::Mailer::Dsl#templates
+  - Hanami::Mailer::Dsl#to
+  - Hanami::Mailer#__part?
+RepeatedConditional:
+  enabled: true
+  max_ifs: 1
+  exclude:
+    - Hanami::Mailer::Configuration
+TooManyConstants:
+  enabled: true
+  exclude:
+  - Devtools
+TooManyInstanceVariables:
+  enabled: true
+  max_instance_variables: 2
+  exclude:
+  - Hanami::Mailer::Configuration
+TooManyMethods:
+  enabled: true
+  exclude: []
+  max_methods: 15
+TooManyStatements:
+  enabled: true
+  max_statements: 5
+  exclude:
+  - initialize
+  - Hanami::Mailer::Configuration#duplicate
+  - Hanami::Mailer::Dsl#self.extended
+  - Hanami::Mailer::Rendering::TemplatesFinder#find
+  - Hanami::Mailer#build
+  - Hanami::Mailer#self.included
+UncommunicativeMethodName:
+  enabled: true
+  reject:
+  - !ruby/regexp /^[a-z]$/
+  - !ruby/regexp /[0-9]$/
+  - !ruby/regexp /[A-Z]/
+  accept: []
+  exclude: []
+UncommunicativeModuleName:
+  enabled: true
+  exclude: []
+  reject:
+  - !ruby/regexp /^.$/
+  - !ruby/regexp /[0-9]$/
+  accept: []
+UncommunicativeParameterName:
+  enabled: true
+  reject:
+  - !ruby/regexp /^.$/
+  - !ruby/regexp /[0-9]$/
+  - !ruby/regexp /[A-Z]/
+  accept: []
+  exclude:
+  - Hanami::Mailer#method_missing
+  - Hanami::Mailer#respond_to_missing?
+UncommunicativeVariableName:
+  enabled: true
+  reject:
+  - !ruby/regexp /^.$/
+  - !ruby/regexp /[0-9]$/
+  - !ruby/regexp /[A-Z]/
+  accept: []
+  exclude:
+  - Hanami::Mailer::Configuration#duplicate
+  - Hanami::Mailer::Configuration#load!
+  - Hanami::Mailer#build
+UnusedParameters:
+  enabled: true
+  exclude: []
+UtilityFunction:
+  enabled: true
+  exclude:
+  - Devtools::Project::Initializer::Rspec#require_files # intentional for deduplication
+  - Hanami::Mailer::Rendering::TemplateName#tokens
+  max_helper_calls: 0
+PrimaDonnaMethod:
+  exclude:
+  - Hanami::Mailer::Configuration
+  - Hanami::Mailer::Rendering::TemplateName
+ModuleInitialize:
+  exclude:
+  - Hanami::Mailer
+InstanceVariableAssumption:
+  exclude:
+  - Hanami::Mailer::Configuration
