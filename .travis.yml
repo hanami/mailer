@@ -4,7 +4,7 @@ cache: bundler
 before_install:
   - gem update --system
   - rvm @global do gem uninstall bundler -a -x
-  - rvm @global do gem install bundler -v 1.13.7
+  - rvm @global do gem install bundler -v 1.14.6
 script: 'bundle exec rake --trace'
 rvm:
   - 2.3.3
