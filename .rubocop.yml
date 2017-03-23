@@ -1,6 +1,0 @@
-inherit_from:
-  - https://raw.githubusercontent.com/hanami/hanami/master/.rubocop.yml
-Metrics/BlockLength:
-  Exclude:
-    - 'test/**/*'
-    - 'spec/**/*'
