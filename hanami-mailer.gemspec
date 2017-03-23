@@ -19,11 +19,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.3.0'
 
-  spec.add_dependency 'hanami-utils', '~> 1.0.0.beta1'
-  spec.add_dependency 'tilt',         '~> 2.0', '>= 2.0.1'
-  spec.add_dependency 'mail',         '~> 2.5'
+  spec.add_dependency 'hanami-utils',    '~> 1.0.0.beta1'
+  spec.add_dependency 'tilt',            '~> 2.0', '>= 2.0.1'
+  spec.add_dependency 'mail',            '~> 2.5'
+  spec.add_dependency 'concurrent-ruby', '~> 1.0'
 
-  spec.add_development_dependency 'bundler', '~> 1.10'
+  spec.add_development_dependency 'bundler',  '~> 1.14'
   spec.add_development_dependency 'rake',     '~> 11'
-  spec.add_development_dependency 'devtools'
+  spec.add_development_dependency 'devtools', '~> 0.1'
 end

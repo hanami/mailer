@@ -1,34 +1,28 @@
-class InvoiceMailer
-  include Hanami::Mailer
+# frozen_string_literal: true
+class InvoiceMailer < Hanami::Mailer
   template 'invoice'
 end
 
-class RenderMailer
-  include Hanami::Mailer
+class RenderMailer < Hanami::Mailer
 end
 
-class TemplateEngineMailer
-  include Hanami::Mailer
+class TemplateEngineMailer < Hanami::Mailer
 end
 
-class CharsetMailer
-  include Hanami::Mailer
-
+class CharsetMailer < Hanami::Mailer
   from    'noreply@example.com'
   to      'user@example.com'
   subject 'こんにちは'
 end
 
-class MissingFromMailer
-  include Hanami::Mailer
+class MissingFromMailer < Hanami::Mailer
   template 'missing'
 
   to      'recipient@example.com'
   subject 'Hello'
 end
 
-class MissingToMailer
-  include Hanami::Mailer
+class MissingToMailer < Hanami::Mailer
   template 'missing'
 
   from    'sender@example.com'
@@ -37,35 +31,20 @@ end
 
 User = Struct.new(:name, :email)
 
-class LazyMailer
-  include Hanami::Mailer
+class LazyMailer < Hanami::Mailer
 end
 
-class MethodMailer
-  include Hanami::Mailer
+class ProcMailer < Hanami::Mailer
+  from    ->(locals) { "hello-#{locals.fetch(:user).name.downcase}@example.com" }
+  to      ->(locals) { locals.fetch(:user).email }
+  subject ->(locals) { "[Hanami] #{locals.fetch(:greeting)}" }
 
-  from    :sender
-  to      :recipient
-  subject :greeting
-
-  def greeting
-    "Hello, #{user.name}"
-  end
-
-  private
-
-  def sender
-    "hello-#{user.name.downcase}@example.com"
-  end
-
-  def recipient
-    user.email
+  before do |_, locals|
+    locals[:greeting] = "Hello, #{locals.fetch(:user).name}"
   end
 end
 
-class WelcomeMailer
-  include Hanami::Mailer
-
+class WelcomeMailer < Hanami::Mailer
   from 'noreply@sender.com'
   to   ['noreply@recipient.com', 'owner@recipient.com']
   cc   'cc@recipient.com'
@@ -73,12 +52,34 @@ class WelcomeMailer
 
   subject 'Welcome'
 
+  before do |mail|
+    mail.attachments['invoice.pdf'] = "/path/to/invoice-#{invoice_code}.pdf"
+  end
+
   def greeting
     'Ahoy'
   end
 
-  def prepare
-    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+  def invoice_code
+    "123"
+  end
+end
+
+class EventMailer < Hanami::Mailer
+  from    'events@domain.test'
+  to      ->(locals) { locals.fetch(:user).email }
+  subject ->(locals) { "Invitation: #{locals.fetch(:event).title}" }
+
+  before do |mail, locals|
+    mail.attachments["invitation-#{locals.fetch(:event).id}.ics"] = generate_invitation_attachment
+  end
+
+  private
+
+  # Simulate on-the-fly creation of an attachment file.
+  # For speed purposes we're not gonna create the file, but only return a path.
+  def generate_invitation_attachment
+    "invitation-#{locals.fetch(:event).id}.ics"
   end
 end
 
@@ -93,8 +94,14 @@ class MandrillDeliveryMethod
 end
 
 module Users
-  class Welcome
-    include Hanami::Mailer
+  class Welcome < Hanami::Mailer
+  end
+end
+
+module Web
+  module Mailers
+    class SignupMailer < Hanami::Mailer
+    end
   end
 end
 

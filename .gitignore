@@ -11,3 +11,4 @@
 .greenbar
 .rubocop-*
 measurements
+.rubocop.yml

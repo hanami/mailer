@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -22,35 +23,9 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
+require 'ostruct'
 require 'hanami/utils'
 
 $LOAD_PATH.unshift 'lib'
 require 'hanami/mailer'
-
-Hanami::Mailer.configure do
-  root Pathname.new __dir__ + '/support/fixtures/templates'
-end
-
-Hanami::Mailer.class_eval do
-  def self.reset!
-    self.configuration = configuration.duplicate
-    configuration.reset!
-  end
-end
-
-Hanami::Mailer::Dsl.class_eval do
-  def reset!
-    @templates = {}
-  end
-end
-
 Hanami::Utils.require!("spec/support")
-
-Hanami::Mailer.configure do
-  root __dir__ + '/support/fixtures'
-  delivery_method :test
-
-  prepare do
-    include DefaultSubject
-  end
-end.load!

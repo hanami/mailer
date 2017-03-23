@@ -2,12 +2,10 @@ source 'https://rubygems.org'
 gemspec
 
 unless ENV['TRAVIS']
-  gem 'byebug', require: false, platforms: :mri
-  gem 'yard',   require: false
+  gem 'byebug',           require: false, platforms: :mri
+  gem 'allocation_stats', require: false
+  gem 'benchmark-ips',    require: false
 end
 
-gem 'hanami-utils', '~> 1.0.0.beta1', require: false, github: 'hanami/utils', branch: '1.0.x'
+gem 'hanami-utils', git: 'https://github.com/hanami/utils.git', branch: '1.0.x'
 gem 'haml'
-
-gem 'rubocop', '~> 0.45', require: false
-gem 'coveralls',          require: false

@@ -1,89 +1,27 @@
-require 'hanami/mailer/rendering/template_name'
-require 'hanami/mailer/rendering/templates_finder'
-
+# frozen_string_literal: true
 module Hanami
-  module Mailer
+  class Mailer
+    require 'hanami/mailer/template_name'
+
     # Class level DSL
     #
     # @since 0.1.0
     module Dsl
       # @since 0.3.0
-      # @api private
+      # @api unstable
       def self.extended(base)
         base.class_eval do
-          @from    = nil
-          @to      = nil
-          @cc      = nil
-          @bcc     = nil
-          @subject = nil
+          @from     = nil
+          @to       = nil
+          @cc       = nil
+          @bcc      = nil
+          @subject  = nil
+          @template = nil
+          @before   = ->(*) {}
         end
       end
 
-      # Set the template name IF it differs from the convention.
-      #
-      # For a given mailer named <tt>Signup::Welcome</tt> it will look for
-      # <tt>signup/welcome.*.*</tt> templates under the root directory.
-      #
-      # If for some reason, we need to specify a different template name, we can
-      # use this method.
-      #
-      # This is part of a DSL, for this reason when this method is called with
-      # an argument, it will set the corresponding class variable. When
-      # called without, it will return the already set value, or the default.
-      #
-      # @overload template(value)
-      #   Sets the given value
-      #   @param value [String, #to_s] relative template path, under root
-      #   @return [NilClass]
-      #
-      # @overload template
-      #   Gets the template name
-      #   @return [String]
-      #
-      # @since 0.1.0
-      #
-      # @see Hanami::Mailers::Configuration.root
-      #
-      # @example Custom template name
-      #   require 'hanami/mailer'
-      #
-      #   class MyMailer
-      #     include Hanami::Mailer
-      #     template 'mailer'
-      #   end
-      def template(value = nil)
-        if value.nil?
-          @template ||= ::Hanami::Mailer::Rendering::TemplateName.new(name, configuration.namespace).to_s
-        else
-          @template = value
-        end
-      end
-
-      # Returns a set of associated templates or only one for the given format
-      #
-      # This is part of a DSL, for this reason when this method is called with
-      # an argument, it will set the corresponding class variable. When
-      # called without, it will return the already set value, or the default.
-      #
-      # @overload templates(format)
-      #   Returns the template associated with the given format
-      #   @param value [Symbol] the format
-      #   @return [Hash]
-      #
-      # @overload templates
-      #   Returns all the associated templates
-      #   Gets the template name
-      #   @return [Hash] a set of templates
-      #
-      # @since 0.1.0
-      # @api private
-      def templates(format = nil)
-        if format.nil?
-          @templates = ::Hanami::Mailer::Rendering::TemplatesFinder.new(self).find
-        else
-          @templates.fetch(format, nil)
-        end
-      end
+      private_class_method :extended
 
       # Sets the sender for mail messages
       #
@@ -114,30 +52,89 @@ module Hanami
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
+      #   class WelcomeMailer < Hanami::Mailer
       #     from "noreply@example.com"
       #   end
       #
-      # @example Method (Symbol)
+      # @example Lazy (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     from :sender
-      #
-      #     private
-      #
-      #     def sender
-      #       "noreply@example.com"
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     from ->(locals) { locals.fetch(:sender).email }
       #   end
       def from(value = nil)
         if value.nil?
           @from
         else
           @from = value
+        end
+      end
+
+      # Sets the recipient for mail messages
+      #
+      # It accepts a hardcoded value as a string or array of strings.
+      # For dynamic values, you can specify a symbol that represents an instance
+      # method.
+      #
+      # This value MUST be set, otherwise an exception is raised at the delivery
+      # time.
+      #
+      # When a value is given, specify the recipient of the email
+      # Otherwise, it returns the recipient of the email
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload to(value)
+      #   Sets the recipient
+      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload to
+      #   Returns the recipient
+      #   @return [String, Array, Symbol] the recipient
+      #
+      # @since 0.1.0
+      #
+      # @example Hardcoded value (String)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     to "user@example.com"
+      #   end
+      #
+      # @example Hardcoded value (Array)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     to ["user-1@example.com", "user-2@example.com"]
+      #   end
+      #
+      # @example Lazy value (Proc)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     to ->(locals) { locals.fetch(:user).email }
+      #   end
+      #
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
+      #
+      # @example Lazy values (Proc)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     to ->(locals) { locals.fetch(:users).map(&:email) }
+      #   end
+      #
+      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.new(configuration: configuration).deliver(users: users)
+      def to(value = nil)
+        if value.nil?
+          @to
+        else
+          @to = value
         end
       end
 
@@ -170,58 +167,36 @@ module Hanami
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to "user@example.com"
+      #   class WelcomeMailer < Hanami::Mailer
       #     cc "other.user@example.com"
       #   end
       #
       # @example Hardcoded value (Array)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to ["user-1@example.com", "user-2@example.com"]
+      #   class WelcomeMailer < Hanami::Mailer
       #     cc ["other.user-1@example.com", "other.user-2@example.com"]
       #   end
       #
-      # @example Method (Symbol)
+      # @example Lazy value (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to "user@example.com"
-      #     cc :email_address
-      #
-      #     private
-      #
-      #     def email_address
-      #       user.email
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     cc ->(locals) { locals.fetch(:user).email }
       #   end
       #
-      #   other_user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(user: other_user)
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
       #
-      # @example Method that returns a collection of recipients
+      # @example Lazy values (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to "user@example.com"
-      #     cc :recipients
-      #
-      #     private
-      #
-      #     def recipients
-      #       users.map(&:email)
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     cc ->(locals) { locals.fetch(:users).map(&:email) }
       #   end
       #
-      #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(users: other_users)
+      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.new(configuration: configuration).deliver(users: users)
       def cc(value = nil)
         if value.nil?
           @cc
@@ -259,149 +234,41 @@ module Hanami
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to "user@example.com"
+      #   class WelcomeMailer < Hanami::Mailer
       #     bcc "other.user@example.com"
       #   end
       #
       # @example Hardcoded value (Array)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to ["user-1@example.com", "user-2@example.com"]
+      #   class WelcomeMailer < Hanami::Mailer
       #     bcc ["other.user-1@example.com", "other.user-2@example.com"]
       #   end
       #
-      # @example Method (Symbol)
+      # @example Lazy value (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to "user@example.com"
-      #     bcc :email_address
-      #
-      #     private
-      #
-      #     def email_address
-      #       user.email
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc ->(locals) { locals.fetch(:user).email }
       #   end
       #
-      #   other_user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(user: other_user)
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
       #
-      # @example Method that returns a collection of recipients
+      # @example Lazy values (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to "user@example.com"
-      #     bcc :recipients
-      #
-      #     private
-      #
-      #     def recipients
-      #       users.map(&:email)
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc ->(locals) { locals.fetch(:users).map(&:email) }
       #   end
       #
-      #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(users: other_users)
+      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.new(configuration: configuration).deliver(users: users)
       def bcc(value = nil)
         if value.nil?
           @bcc
         else
           @bcc = value
-        end
-      end
-
-      # Sets the recipient for mail messages
-      #
-      # It accepts a hardcoded value as a string or array of strings.
-      # For dynamic values, you can specify a symbol that represents an instance
-      # method.
-      #
-      # This value MUST be set, otherwise an exception is raised at the delivery
-      # time.
-      #
-      # When a value is given, specify the recipient of the email
-      # Otherwise, it returns the recipient of the email
-      #
-      # This is part of a DSL, for this reason when this method is called with
-      # an argument, it will set the corresponding class variable. When
-      # called without, it will return the already set value, or the default.
-      #
-      # @overload to(value)
-      #   Sets the recipient
-      #   @param value [String, Array, Symbol] the hardcoded value or method name
-      #   @return [NilClass]
-      #
-      # @overload to
-      #   Returns the recipient
-      #   @return [String, Array, Symbol] the recipient
-      #
-      # @since 0.1.0
-      #
-      # @example Hardcoded value (String)
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to "user@example.com"
-      #   end
-      #
-      # @example Hardcoded value (Array)
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
-      #     to ["user-1@example.com", "user-2@example.com"]
-      #   end
-      #
-      # @example Method (Symbol)
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to :email_address
-      #
-      #     private
-      #
-      #     def email_address
-      #       user.email
-      #     end
-      #   end
-      #
-      #   user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(user: user)
-      #
-      # @example Method that returns a collection of recipients
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     to :recipients
-      #
-      #     private
-      #
-      #     def recipients
-      #       users.map(&:email)
-      #     end
-      #   end
-      #
-      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.deliver(users: users)
-      def to(value = nil)
-        if value.nil?
-          @to
-        else
-          @to = value
         end
       end
 
@@ -431,28 +298,19 @@ module Hanami
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #
+      #   class WelcomeMailer < Hanami::Mailer
       #     subject "Welcome"
       #   end
       #
-      # @example Method (Symbol)
+      # @example Lazy value (Proc)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer
-      #     include Hanami::Mailer
-      #     subject :greeting
-      #
-      #     private
-      #
-      #     def greeting
-      #       "Hello, #{ user.name }"
-      #     end
+      #   class WelcomeMailer < Hanami::Mailer
+      #     subject ->(locals) { "Hello #{locals.fetch(:user).name}" }
       #   end
       #
       #   user = User.new(name: 'L')
-      #   WelcomeMailer.deliver(user: user)
+      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
       def subject(value = nil)
         if value.nil?
           @subject
@@ -461,17 +319,70 @@ module Hanami
         end
       end
 
-      protected
-
-      # Loading mechanism hook.
+      # Set the template name **IF** it differs from the naming convention.
       #
-      # @api private
+      # For a given mailer named `Signup::Welcome` it will look for
+      # `signup/welcome.*.*` templates under the root directory.
+      #
+      # If for some reason, we need to specify a different template name, we can
+      # use this method.
+      #
+      # @param value [String] the template name
+      #
       # @since 0.1.0
+      # @api unstable
       #
-      # @see Hanami::Mailer.load!
-      def load!
-        templates.freeze
-        configuration.freeze
+      # @example Custom template name
+      #   require 'hanami/mailer'
+      #
+      #   class MyMailer < Hanami::Mailer
+      #     template 'mailer'
+      #   end
+      def template(value)
+        @template = value
+      end
+
+      # @since next
+      # @api unstable
+      def template_name
+        @template || name
+      end
+
+      # Before callback for email delivery
+      #
+      # @since next
+      # @api unstable
+      #
+      # @example
+      #   require 'hanami/mailer'
+      #
+      #   module Billing
+      #     class InvoiceMailer < Hanami::Mailer
+      #       subject 'Invoice'
+      #       from    'noreply@example.com'
+      #       to      ->(locals) { locals.fetch(:user).email }
+      #
+      #       before do |mail, locals|
+      #         user = locals.fetch(:user)
+      #         mail.attachments["invoice-#{invoice_code}-#{user.id}.pdf"] = File.read('/path/to/invoice.pdf')
+      #       end
+      #
+      #       def invoice_code
+      #         "123"
+      #       end
+      #     end
+      #   end
+      #
+      #   invoice = Invoice.new
+      #   user    = User.new(name: 'L', email: 'user@example.com')
+      #
+      #   InvoiceMailer.new(configuration: configuration).deliver(invoice: invoice, user: user)
+      def before(&blk)
+        if block_given?
+          @before = blk
+        else
+          @before
+        end
       end
     end
   end
