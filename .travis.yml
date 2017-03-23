@@ -5,7 +5,7 @@ before_install:
   - gem update --system
   - rvm @global do gem uninstall bundler -a -x
   - rvm @global do gem install bundler -v 1.13.7
-script: 'bundle exec rake'
+script: 'bundle exec rake --trace'
 rvm:
   - 2.3.3
   - 2.4.0
