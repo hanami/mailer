@@ -23,7 +23,7 @@ describe Hanami::Mailer do
     describe 'when no value is set' do
       it 'returns a set of templates' do
         template_formats = LazyMailer.templates.keys
-        template_formats.must_equal [:html, :txt]
+        template_formats.must_equal %i(html txt)
       end
 
       it 'returns only the template for the given format' do
