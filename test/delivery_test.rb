@@ -14,12 +14,26 @@ describe Hanami::Mailer do
       mail.parts.first.charset.must_equal charset
     end
 
-    it "raises error when 'from' isn't specified" do
+    it "raises specific error when 'from' isn't specified" do
       -> { MissingFromMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
     end
 
-    it "raises error when 'to' isn't specified" do
+    it "raises specific error when 'to' isn't specified" do
       -> { MissingToMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
+    end
+
+    it "lets other errors to bubble up" do
+      mailer = CharsetMailer.new({})
+      mail   = Class.new do
+        def deliver
+          raise ArgumentError, "ouch"
+        end
+      end.new
+
+      mailer.stub(:mail, mail) do
+        exception = -> { mailer.deliver }.must_raise ArgumentError
+        exception.message.must_equal "ouch"
+      end
     end
 
     describe 'test delivery with hardcoded values' do
