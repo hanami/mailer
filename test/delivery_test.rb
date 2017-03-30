@@ -22,6 +22,14 @@ describe Hanami::Mailer do
       -> { MissingToMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
     end
 
+    it "doesn't raise error when 'cc' is specified but 'to' isn't" do
+      CcOnlyMailer.deliver
+    end
+
+    it "doesn't raise error when 'bcc' is specified but 'to' isn't" do
+      BccOnlyMailer.deliver
+    end
+
     it "lets other errors to bubble up" do
       mailer = CharsetMailer.new({})
       mail   = Class.new do
