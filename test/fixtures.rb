@@ -35,6 +35,24 @@ class MissingToMailer
   subject 'Hello'
 end
 
+class CcOnlyMailer
+  include Hanami::Mailer
+  template 'missing'
+
+  cc      'recipient@example.com'
+  from    'sender@example.com'
+  subject 'Hello'
+end
+
+class BccOnlyMailer
+  include Hanami::Mailer
+  template 'missing'
+
+  bcc      'recipient@example.com'
+  from    'sender@example.com'
+  subject 'Hello'
+end
+
 User = Struct.new(:name, :email)
 
 class LazyMailer
