@@ -1,6 +1,8 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.0.0 - 2017-04-06
+
 ## v1.0.0.rc1 - 2017-03-31
 ### Fixed
 - [Luca Guidi] Let `Hanami::Mailer.deliver` to bubble up `ArgumentError` exceptions
