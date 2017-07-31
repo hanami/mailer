@@ -5,8 +5,8 @@ require 'hanami/mailer/version'
 Gem::Specification.new do |spec|
   spec.name          = 'hanami-mailer'
   spec.version       = Hanami::Mailer::VERSION
-  spec.authors       = ['Luca Guidi', 'Ines Coelho', 'Rosa Faria']
-  spec.email         = ['me@lucaguidi.com', 'ines.opcoelho@gmail.com', 'rosa1853@live.com']
+  spec.authors       = ['Luca Guidi']
+  spec.email         = ['me@lucaguidi.com']
 
   spec.summary       = 'Mail for Ruby applications.'
   spec.description   = 'Mail for Ruby applications and Hanami mailers'
@@ -19,9 +19,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 2.3.0'
 
-  spec.add_dependency 'hanami-utils', '~> 1.0.0.beta1'
+  spec.add_dependency 'hanami-utils', '~> 1.0'
   spec.add_dependency 'tilt',         '~> 2.0', '>= 2.0.1'
-  spec.add_dependency 'mail',         '~> 2.5'
+  spec.add_dependency 'mail',         '~> 2.6'
 
   spec.add_development_dependency 'bundler', '~> 1.10'
   spec.add_development_dependency 'rake',     '~> 11'

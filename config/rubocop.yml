@@ -94,4 +94,4 @@ RedundantFreeze:
 
 # Prefer using `fail` when raising and `raise` when reraising
 SignalException:
-  EnforcedStyle: semantic
+  Enabled: false

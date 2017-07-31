@@ -223,8 +223,9 @@ module Hanami
     # @api private
     def deliver
       mail.deliver
-    rescue ArgumentError
-      raise MissingDeliveryDataError
+    rescue ArgumentError => exception
+      raise MissingDeliveryDataError if exception.message =~ /SMTP (From|To) address/
+      raise
     end
 
     protected
