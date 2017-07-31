@@ -7,15 +7,15 @@ RSpec.describe Hanami::Mailer::Configuration do
     describe 'when a value is given' do
       describe 'and it is a string' do
         it 'sets it as a Pathname' do
-          @configuration.root 'test'
-          expect(@configuration.root).to eq(Pathname.new('test').realpath)
+          @configuration.root 'spec'
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
       describe 'and it is a pathname' do
         it 'sets it' do
-          @configuration.root Pathname.new('test')
-          expect(@configuration.root).to eq(Pathname.new('test').realpath)
+          @configuration.root Pathname.new('spec')
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
@@ -33,8 +33,8 @@ RSpec.describe Hanami::Mailer::Configuration do
         end
 
         it 'sets the converted value' do
-          @configuration.root RootPath.new('test')
-          expect(@configuration.root).to eq(Pathname.new('test').realpath)
+          @configuration.root RootPath.new('spec')
+          expect(@configuration.root).to eq(Pathname.new('spec').realpath)
         end
       end
 
@@ -120,12 +120,12 @@ RSpec.describe Hanami::Mailer::Configuration do
 
   describe '#load!' do
     before do
-      @configuration.root 'test'
+      @configuration.root 'spec'
       @configuration.load!
     end
 
     it 'loads root' do
-      root = Pathname.new('test').realpath
+      root = Pathname.new('spec').realpath
       expect(@configuration.root).to eq(root)
     end
   end
