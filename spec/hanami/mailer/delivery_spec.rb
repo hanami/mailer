@@ -1,6 +1,4 @@
-require 'test_helper'
-
-describe Hanami::Mailer do
+RSpec.describe Hanami::Mailer do
   describe '.deliver' do
     before do
       Hanami::Mailer.deliveries.clear
@@ -10,16 +8,16 @@ describe Hanami::Mailer do
       CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
 
       mail = Hanami::Mailer.deliveries.first
-      mail.charset.must_equal             charset
-      mail.parts.first.charset.must_equal charset
+      expect(mail.charset).to             eq(charset)
+      expect(mail.parts.first.charset).to eq(charset)
     end
 
-    it "raises specific error when 'from' isn't specified" do
-      -> { MissingFromMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
+    it "raises error when 'from' isn't specified" do
+      expect { MissingFromMailer.deliver }.to raise_error(Hanami::Mailer::MissingDeliveryDataError)
     end
 
-    it "raises specific error when 'to' isn't specified" do
-      -> { MissingToMailer.deliver }.must_raise Hanami::Mailer::MissingDeliveryDataError
+    it "raises error when 'to' isn't specified" do
+      expect { MissingToMailer.deliver }.to raise_error(Hanami::Mailer::MissingDeliveryDataError)
     end
 
     it "doesn't raise error when 'cc' is specified but 'to' isn't" do
@@ -38,10 +36,8 @@ describe Hanami::Mailer do
         end
       end.new
 
-      mailer.stub(:mail, mail) do
-        exception = -> { mailer.deliver }.must_raise ArgumentError
-        exception.message.must_equal "ouch"
-      end
+      expect(mailer).to receive(:mail).and_return(mail)
+      expect { mailer.deliver }.to raise_error(ArgumentError, "ouch")
     end
 
     describe 'test delivery with hardcoded values' do
@@ -55,35 +51,35 @@ describe Hanami::Mailer do
       end
 
       it 'delivers the mail' do
-        Hanami::Mailer.deliveries.length.must_equal 1
+        expect(Hanami::Mailer.deliveries.length).to eq(1)
       end
 
       it 'sends the correct information' do
-        @mail.from.must_equal ['noreply@sender.com']
-        @mail.to.must_equal   ['noreply@recipient.com', 'owner@recipient.com']
-        @mail.cc.must_equal   ['cc@recipient.com']
-        @mail.bcc.must_equal  ['bcc@recipient.com']
-        @mail.subject.must_equal 'Welcome'
+        expect(@mail.from).to    eq(['noreply@sender.com'])
+        expect(@mail.to).to      eq(['noreply@recipient.com', 'owner@recipient.com'])
+        expect(@mail.cc).to      eq(['cc@recipient.com'])
+        expect(@mail.bcc).to     eq(['bcc@recipient.com'])
+        expect(@mail.subject).to eq('Welcome')
       end
 
       it 'has the correct templates' do
-        @mail.html_part.to_s.must_include %(template)
-        @mail.text_part.to_s.must_include %(template)
+        expect(@mail.html_part.to_s).to include(%(template))
+        expect(@mail.text_part.to_s).to include(%(template))
       end
 
       it 'interprets the prepare statement' do
         attachment = @mail.attachments['invoice.pdf']
 
-        attachment.must_be_kind_of(Mail::Part)
+        expect(attachment).to be_kind_of(Mail::Part)
 
-        attachment.must_be :attachment?
-        attachment.wont_be :inline?
-        attachment.wont_be :multipart?
+        expect(attachment).to be_attachment
+        expect(attachment).to_not be_inline
+        expect(attachment).to_not be_multipart
 
-        attachment.filename.must_equal     'invoice.pdf'
+        expect(attachment.filename).to eq('invoice.pdf')
 
-        attachment.content_type.must_match 'application/pdf'
-        attachment.content_type.must_match 'filename=invoice.pdf'
+        expect(attachment.content_type).to match('application/pdf')
+        expect(attachment.content_type).to match('filename=invoice.pdf')
       end
     end
 
@@ -100,13 +96,13 @@ describe Hanami::Mailer do
       end
 
       it 'delivers the mail' do
-        Hanami::Mailer.deliveries.length.must_equal 1
+        expect(Hanami::Mailer.deliveries.length).to eq(1)
       end
 
       it 'sends the correct information' do
-        @mail.from.must_equal    ["hello-#{@user.name.downcase}@example.com"]
-        @mail.to.must_equal      [@user.email]
-        @mail.subject.must_equal "Hello, #{@user.name}"
+        expect(@mail.from).to    eq(["hello-#{@user.name.downcase}@example.com"])
+        expect(@mail.to).to      eq([@user.email])
+        expect(@mail.subject).to eq("Hello, #{@user.name}")
       end
     end
 
@@ -121,8 +117,8 @@ describe Hanami::Mailer do
         mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
-        body.must_include %(<h1>Hello World!</h1>)
-        body.must_include %(This is a txt template)
+        expect(body).to include(%(<h1>Hello World!</h1>))
+        expect(body).to include(%(This is a txt template))
       end
 
       it 'can deliver only the text part' do
@@ -131,8 +127,8 @@ describe Hanami::Mailer do
         mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
-        body.wont_include %(<h1>Hello World!</h1>)
-        body.must_include %(This is a txt template)
+        expect(body).to_not include(%(<h1>Hello World!</h1>))
+        expect(body).to     include(%(This is a txt template))
       end
 
       it 'can deliver only the html part' do
@@ -141,8 +137,8 @@ describe Hanami::Mailer do
         mail = Hanami::Mailer.deliveries.first
         body = mail.body.encoded
 
-        body.must_include %(<h1>Hello World!</h1>)
-        body.wont_include %(This is a txt template)
+        expect(body).to     include(%(<h1>Hello World!</h1>))
+        expect(body).to_not include(%(This is a txt template))
       end
     end
 
