@@ -20,6 +20,26 @@ RSpec.describe Hanami::Mailer do
       expect { MissingToMailer.deliver }.to raise_error(Hanami::Mailer::MissingDeliveryDataError)
     end
 
+    it "doesn't raise error when 'cc' is specified but 'to' isn't" do
+      CcOnlyMailer.deliver
+    end
+
+    it "doesn't raise error when 'bcc' is specified but 'to' isn't" do
+      BccOnlyMailer.deliver
+    end
+
+    it "lets other errors to bubble up" do
+      mailer = CharsetMailer.new({})
+      mail   = Class.new do
+        def deliver
+          raise ArgumentError, "ouch"
+        end
+      end.new
+
+      expect(mailer).to receive(:mail).and_return(mail)
+      expect { mailer.deliver }.to raise_error(ArgumentError, "ouch")
+    end
+
     describe 'test delivery with hardcoded values' do
       before do
         WelcomeMailer.deliver
