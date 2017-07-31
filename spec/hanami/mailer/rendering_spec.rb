@@ -37,7 +37,7 @@ RSpec.describe Hanami::Mailer do
       let(:mailer) { TemplateEngineMailer.new(user: User.new('Luca')) }
 
       it 'renders template with parsed locals' do
-        expect(mailer.render(:html)).to include(%(<h1>\n  Luca\n</h1>\n))
+        expect(mailer.render(:html)).to include(%(<h1>\nLuca\n</h1>\n))
       end
     end
   end
