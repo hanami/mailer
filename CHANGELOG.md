@@ -1,6 +1,8 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.1.0.beta1 (unreleased)
+
 ## v1.0.0 - 2017-04-06
 
 ## v1.0.0.rc1 - 2017-03-31
