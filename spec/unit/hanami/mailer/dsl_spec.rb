@@ -21,7 +21,7 @@ RSpec.describe Hanami::Mailer do
     describe 'when no value is set' do
       it 'returns a set of templates' do
         template_formats = LazyMailer.templates.keys
-        expect(template_formats).to eq(%i(html txt))
+        expect(template_formats).to eq(%i[html txt])
       end
 
       it 'returns only the template for the given format' do
