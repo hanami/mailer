@@ -147,7 +147,7 @@ module Hanami
         if block_given? # rubocop:disable Style/GuardClause
           @modules.push(blk)
         else
-          fail ArgumentError.new('Please provide a block')
+          raise ArgumentError.new('Please provide a block')
         end
       end
 
