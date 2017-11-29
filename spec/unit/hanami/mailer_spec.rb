@@ -121,46 +121,46 @@ RSpec.describe Hanami::Mailer do
     end
   end
 
-  describe '#render' do
-    describe 'when template is explicitly declared' do
+  describe "#render" do
+    describe "when template is explicitly declared" do
       let(:mailer) { InvoiceMailer.new(configuration: configuration) }
 
-      it 'renders the given template' do
+      it "renders the given template" do
         expect(mailer.render(:html, {})).to include(%(<h1>Invoice template</h1>))
       end
     end
 
-    describe 'when template is implicitly declared' do
+    describe "when template is implicitly declared" do
       let(:mailer) { LazyMailer.new(configuration: configuration) }
 
-      it 'looks for template with same name with inflected classname and render it' do
+      it "looks for template with same name with inflected classname and render it" do
         expect(mailer.render(:html, {})).to include(%(Hello World))
         expect(mailer.render(:txt, {})).to include(%(This is a txt template))
       end
     end
 
-    describe 'when mailer defines context' do
+    describe "when mailer defines context" do
       let(:mailer) { WelcomeMailer.new(configuration: configuration) }
 
-      it 'renders template with defined context' do
+      it "renders template with defined context" do
         expect(mailer.render(:txt, {})).to include(%(Ahoy))
       end
     end
 
-    describe 'when locals are parsed in' do
+    describe "when locals are parsed in" do
       let(:mailer) { RenderMailer.new(configuration: configuration) }
-      let(:locals) { { user: User.new('Luca') } }
+      let(:locals) { { user: User.new("Luca") } }
 
-      it 'renders template with parsed locals' do
+      it "renders template with parsed locals" do
         expect(mailer.render(:html, locals)).to include(locals.fetch(:user).name)
       end
     end
 
-    describe 'with HAML template engine' do
+    describe "with HAML template engine" do
       let(:mailer) { TemplateEngineMailer.new(configuration: configuration) }
-      let(:locals) { { user: User.new('MG') } }
+      let(:locals) { { user: User.new("MG") } }
 
-      it 'renders template with parsed locals' do
+      it "renders template with parsed locals" do
         expect(mailer.render(:html, locals)).to include(%(<h1>\n#{locals.fetch(:user).name}\n</h1>\n))
       end
     end

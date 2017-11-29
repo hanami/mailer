@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'hanami/mailer'
-require 'benchmark/ips'
-require 'allocation_stats'
-require_relative './examples/base'
+require "bundler/setup"
+require "hanami/mailer"
+require "benchmark/ips"
+require "allocation_stats"
+require_relative "./examples/base"
 
 configuration = Hanami::Mailer::Configuration.new do |config|
   config.root            = "examples/base"
@@ -44,5 +44,5 @@ detailed_allocations = stats.allocations(alias_paths: true)
                             .sort_by_count
                             .to_text
 
-puts 'allocations by source file and class:'
+puts "allocations by source file and class:"
 puts detailed_allocations

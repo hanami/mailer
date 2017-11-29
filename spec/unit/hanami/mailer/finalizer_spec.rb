@@ -3,14 +3,14 @@
 RSpec.describe Hanami::Mailer::Finalizer do
   let(:configuration) do
     Hanami::Mailer::Configuration.new do |config|
-      config.root = 'spec/support/fixtures'
+      config.root = "spec/support/fixtures"
     end
   end
 
-  let(:mailers) { [double('mailer', template_name: "invoice")] }
+  let(:mailers) { [double("mailer", template_name: "invoice")] }
 
-  describe '.finalize' do
-    it 'eager autoloads modules from mail gem' do
+  describe ".finalize" do
+    it "eager autoloads modules from mail gem" do
       expect(Mail).to receive(:eager_autoload!)
       described_class.finalize(mailers, configuration)
     end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'hanami/mailer'
+require "bundler/setup"
+require "hanami/mailer"
 
 configuration = Hanami::Mailer::Configuration.new do |config|
   config.root            = File.expand_path(__dir__, "base")

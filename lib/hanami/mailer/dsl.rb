@@ -5,7 +5,7 @@ module Hanami
   #
   # @since 0.1.0
   class Mailer
-    require 'hanami/mailer/template_name'
+    require "hanami/mailer/template_name"
 
     # Class level DSL
     #

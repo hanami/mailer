@@ -16,7 +16,7 @@ RSpec.configure do |config|
 
   config.warnings = true
 
-  config.default_formatter = 'doc' if config.files_to_run.one?
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   config.profile_examples = 10
 
@@ -24,9 +24,9 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 end
 
-require 'ostruct'
-require 'hanami/utils'
+require "ostruct"
+require "hanami/utils"
 
-$LOAD_PATH.unshift 'lib'
-require 'hanami/mailer'
+$LOAD_PATH.unshift "lib"
+require "hanami/mailer"
 Hanami::Utils.require!("spec/support")

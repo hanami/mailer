@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'tilt'
+require "tilt"
 
 module Hanami
   class Mailer

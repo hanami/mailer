@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'hanami/mailer/template'
-require 'hanami/utils/file_list'
-require 'pathname'
+require "hanami/mailer/template"
+require "hanami/utils/file_list"
+require "pathname"
 
 module Hanami
   class Mailer
@@ -17,19 +17,19 @@ module Hanami
       #
       # @api private
       # @since 0.1.0
-      FORMAT    = '*'
+      FORMAT    = "*"
 
       # Default template engines
       #
       # @api private
       # @since 0.1.0
-      ENGINES   = '*'
+      ENGINES   = "*"
 
       # Recursive pattern
       #
       # @api private
       # @since 0.1.0
-      RECURSIVE = '**'
+      RECURSIVE = "**"
 
       # Format separator
       #
@@ -38,7 +38,7 @@ module Hanami
       #
       # @example
       #   welcome.html.erb
-      FORMAT_SEPARATOR = '.'
+      FORMAT_SEPARATOR = "."
 
       private_constant(*constants(true))
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvoiceMailer < Hanami::Mailer
-  template 'invoice'
+  template "invoice"
 end
 
 class RenderMailer < Hanami::Mailer
@@ -11,39 +11,39 @@ class TemplateEngineMailer < Hanami::Mailer
 end
 
 class CharsetMailer < Hanami::Mailer
-  from    'noreply@example.com'
-  to      'user@example.com'
-  subject 'こんにちは'
+  from    "noreply@example.com"
+  to      "user@example.com"
+  subject "こんにちは"
 end
 
 class MissingFromMailer < Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  to      'recipient@example.com'
-  subject 'Hello'
+  to      "recipient@example.com"
+  subject "Hello"
 end
 
 class MissingToMailer < Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  from    'sender@example.com'
-  subject 'Hello'
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 class CcOnlyMailer < Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  cc      'recipient@example.com'
-  from    'sender@example.com'
-  subject 'Hello'
+  cc      "recipient@example.com"
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 class BccOnlyMailer < Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  bcc      'recipient@example.com'
-  from    'sender@example.com'
-  subject 'Hello'
+  bcc      "recipient@example.com"
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 User = Struct.new(:name, :email)
@@ -62,19 +62,19 @@ class ProcMailer < Hanami::Mailer
 end
 
 class WelcomeMailer < Hanami::Mailer
-  from 'noreply@sender.com'
-  to   ['noreply@recipient.com', 'owner@recipient.com']
-  cc   'cc@recipient.com'
-  bcc  'bcc@recipient.com'
+  from "noreply@sender.com"
+  to   ["noreply@recipient.com", "owner@recipient.com"]
+  cc   "cc@recipient.com"
+  bcc  "bcc@recipient.com"
 
-  subject 'Welcome'
+  subject "Welcome"
 
   before do |mail|
-    mail.attachments['invoice.pdf'] = "/path/to/invoice-#{invoice_code}.pdf"
+    mail.attachments["invoice.pdf"] = "/path/to/invoice-#{invoice_code}.pdf"
   end
 
   def greeting
-    'Ahoy'
+    "Ahoy"
   end
 
   def invoice_code
@@ -83,7 +83,7 @@ class WelcomeMailer < Hanami::Mailer
 end
 
 class EventMailer < Hanami::Mailer
-  from    'events@domain.test'
+  from    "events@domain.test"
   to      ->(locals) { locals.fetch(:user).email }
   subject ->(locals) { "Invitation: #{locals.fetch(:event).title}" }
 
@@ -124,6 +124,6 @@ end
 
 module DefaultSubject
   def self.included(mailer)
-    mailer.subject 'default subject'
+    mailer.subject "default subject"
   end
 end

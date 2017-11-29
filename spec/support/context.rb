@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RSpec
   module Support
     module Context
@@ -5,7 +7,7 @@ module RSpec
         base.class_eval do
           let(:configuration) do
             configuration = Hanami::Mailer::Configuration.new do |config|
-              config.root            = 'spec/support/fixtures'
+              config.root            = "spec/support/fixtures"
               config.delivery_method = :test
             end
 

@@ -3,117 +3,117 @@
 RSpec.describe Hanami::Mailer::Dsl do
   let(:mailer) { Class.new { extend Hanami::Mailer::Dsl } }
 
-  describe '.from' do
-    it 'returns the default value' do
+  describe ".from" do
+    it "returns the default value" do
       expect(mailer.from).to be(nil)
     end
 
-    it 'sets the value' do
-      sender = 'sender@hanami.test'
+    it "sets the value" do
+      sender = "sender@hanami.test"
       mailer.from sender
 
       expect(mailer.from).to eq(sender)
     end
   end
 
-  describe '.to' do
-    it 'returns the default value' do
+  describe ".to" do
+    it "returns the default value" do
       expect(mailer.to).to be(nil)
     end
 
-    it 'sets a single value' do
-      recipient = 'recipient@hanami.test'
+    it "sets a single value" do
+      recipient = "recipient@hanami.test"
       mailer.to recipient
 
       expect(mailer.to).to eq(recipient)
     end
 
-    it 'sets an array of values' do
-      recipients = ['recipient@hanami.test']
+    it "sets an array of values" do
+      recipients = ["recipient@hanami.test"]
       mailer.to recipients
 
       expect(mailer.to).to eq(recipients)
     end
   end
 
-  describe '.cc' do
-    it 'returns the default value' do
+  describe ".cc" do
+    it "returns the default value" do
       expect(mailer.cc).to be(nil)
     end
 
-    it 'sets a single value' do
-      recipient = 'cc@hanami.test'
+    it "sets a single value" do
+      recipient = "cc@hanami.test"
       mailer.cc recipient
 
       expect(mailer.cc).to eq(recipient)
     end
 
-    it 'sets an array of values' do
-      recipients = ['cc@hanami.test']
+    it "sets an array of values" do
+      recipients = ["cc@hanami.test"]
       mailer.cc recipients
 
       expect(mailer.cc).to eq(recipients)
     end
   end
 
-  describe '.bcc' do
-    it 'returns the default value' do
+  describe ".bcc" do
+    it "returns the default value" do
       expect(mailer.bcc).to be(nil)
     end
 
-    it 'sets a single value' do
-      recipient = 'bcc@hanami.test'
+    it "sets a single value" do
+      recipient = "bcc@hanami.test"
       mailer.bcc recipient
 
       expect(mailer.bcc).to eq(recipient)
     end
 
-    it 'sets an array of values' do
-      recipients = ['bcc@hanami.test']
+    it "sets an array of values" do
+      recipients = ["bcc@hanami.test"]
       mailer.bcc recipients
 
       expect(mailer.bcc).to eq(recipients)
     end
   end
 
-  describe '.subject' do
-    it 'returns the default value' do
+  describe ".subject" do
+    it "returns the default value" do
       expect(mailer.subject).to be(nil)
     end
 
-    it 'sets a value' do
-      mail_subject = 'Hello'
+    it "sets a value" do
+      mail_subject = "Hello"
       mailer.subject mail_subject
 
       expect(mailer.subject).to eq(mail_subject)
     end
   end
 
-  describe '.template' do
-    it 'sets a value' do
-      mailer.template 'file'
+  describe ".template" do
+    it "sets a value" do
+      mailer.template "file"
     end
   end
 
-  describe '.template_name' do
-    it 'returns the default value' do
+  describe ".template_name" do
+    it "returns the default value" do
       expect(mailer.template_name).to be(nil)
     end
 
-    it 'returns value, if set' do
-      template = 'file'
+    it "returns value, if set" do
+      template = "file"
       mailer.template template
 
       expect(mailer.template_name).to eq(template)
     end
   end
 
-  describe '.before' do
-    it 'returns the default value' do
+  describe ".before" do
+    it "returns the default value" do
       expect(mailer.before).to be_kind_of(Proc)
     end
 
-    it 'sets a value' do
+    it "sets a value" do
       blk = ->(*) {}
       mailer.before(&blk)
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'mail'
-require 'concurrent'
+require "mail"
+require "concurrent"
 
 # Hanami
 #
@@ -11,19 +11,19 @@ module Hanami
   #
   # @since 0.1.0
   class Mailer
-    require 'hanami/mailer/version'
-    require 'hanami/mailer/template'
-    require 'hanami/mailer/finalizer'
-    require 'hanami/mailer/configuration'
-    require 'hanami/mailer/dsl'
+    require "hanami/mailer/version"
+    require "hanami/mailer/template"
+    require "hanami/mailer/finalizer"
+    require "hanami/mailer/configuration"
+    require "hanami/mailer/dsl"
 
     # Content types mapping
     #
     # @since 0.1.0
     # @api private
     CONTENT_TYPES = {
-      html: 'text/html',
-      txt:  'text/plain'
+      html: "text/html",
+      txt:  "text/plain"
     }.freeze
 
     private_constant(:CONTENT_TYPES)
