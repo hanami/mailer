@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Hanami
-  module Mailer
+  class Mailer
     # @since 0.1.0
-    VERSION = '1.1.0'.freeze
+    VERSION = '1.1.0'
   end
 end

@@ -25,12 +25,12 @@ DuplicateMethodCall:
 FeatureEnvy:
   enabled: true
   exclude:
-  - Hanami::Mailer#build
+  - Hanami::Mailer#__part?
 LongParameterList:
   enabled: true
   exclude:
   - Devtools::Config#self.attribute
-  max_params: 2
+  max_params: 4
   overrides: {}
 LongYieldList:
   enabled: true
@@ -44,28 +44,23 @@ NestedIterators:
 NilCheck:
   enabled: true
   exclude:
-  - Hanami::Mailer::Configuration#default_charset
-  - Hanami::Mailer::Configuration#delivery_method
   - Hanami::Mailer::Dsl#bcc
   - Hanami::Mailer::Dsl#cc
   - Hanami::Mailer::Dsl#from
   - Hanami::Mailer::Dsl#subject
-  - Hanami::Mailer::Dsl#template
-  - Hanami::Mailer::Dsl#templates
   - Hanami::Mailer::Dsl#to
   - Hanami::Mailer#__part?
 RepeatedConditional:
   enabled: true
   max_ifs: 1
-  exclude:
-    - Hanami::Mailer::Configuration
+  exclude: []
 TooManyConstants:
   enabled: true
   exclude:
   - Devtools
 TooManyInstanceVariables:
   enabled: true
-  max_instance_variables: 2
+  max_instance_variables: 3
   exclude:
   - Hanami::Mailer::Configuration
 TooManyMethods:
@@ -76,12 +71,10 @@ TooManyStatements:
   enabled: true
   max_statements: 5
   exclude:
-  - initialize
-  - Hanami::Mailer::Configuration#duplicate
-  - Hanami::Mailer::Dsl#self.extended
-  - Hanami::Mailer::Rendering::TemplatesFinder#find
-  - Hanami::Mailer#build
-  - Hanami::Mailer#self.included
+    - Hanami::Mailer#bind
+    - Hanami::Mailer::Configuration#initialize
+    - Hanami::Mailer::Dsl#self.extended
+    - Hanami::Mailer::TemplatesFinder#find
 UncommunicativeMethodName:
   enabled: true
   reject:
@@ -104,9 +97,7 @@ UncommunicativeParameterName:
   - !ruby/regexp /[0-9]$/
   - !ruby/regexp /[A-Z]/
   accept: []
-  exclude:
-  - Hanami::Mailer#method_missing
-  - Hanami::Mailer#respond_to_missing?
+  exclude: []
 UncommunicativeVariableName:
   enabled: true
   reject:
@@ -114,10 +105,7 @@ UncommunicativeVariableName:
   - !ruby/regexp /[0-9]$/
   - !ruby/regexp /[A-Z]/
   accept: []
-  exclude:
-  - Hanami::Mailer::Configuration#duplicate
-  - Hanami::Mailer::Configuration#load!
-  - Hanami::Mailer#build
+  exclude: []
 UnusedParameters:
   enabled: true
   exclude: []
@@ -125,15 +113,10 @@ UtilityFunction:
   enabled: true
   exclude:
   - Devtools::Project::Initializer::Rspec#require_files # intentional for deduplication
-  - Hanami::Mailer::Rendering::TemplateName#tokens
   max_helper_calls: 0
 PrimaDonnaMethod:
-  exclude:
-  - Hanami::Mailer::Configuration
-  - Hanami::Mailer::Rendering::TemplateName
+  exclude: []
 ModuleInitialize:
-  exclude:
-  - Hanami::Mailer
+  exclude: []
 InstanceVariableAssumption:
-  exclude:
-  - Hanami::Mailer::Configuration
+  exclude: []
