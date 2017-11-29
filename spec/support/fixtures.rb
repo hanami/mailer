@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class InvoiceMailer < Hanami::Mailer
   template 'invoice'
 end
@@ -25,6 +26,22 @@ end
 class MissingToMailer < Hanami::Mailer
   template 'missing'
 
+  from    'sender@example.com'
+  subject 'Hello'
+end
+
+class CcOnlyMailer < Hanami::Mailer
+  template 'missing'
+
+  cc      'recipient@example.com'
+  from    'sender@example.com'
+  subject 'Hello'
+end
+
+class BccOnlyMailer < Hanami::Mailer
+  template 'missing'
+
+  bcc      'recipient@example.com'
   from    'sender@example.com'
   subject 'Hello'
 end

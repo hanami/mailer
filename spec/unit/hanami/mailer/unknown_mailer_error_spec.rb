@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::UnknownMailerError do
   it "inherits from Hanami::Error" do
     expect(described_class.ancestors).to include(Hanami::Mailer::Error)

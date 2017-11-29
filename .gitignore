@@ -11,4 +11,4 @@
 .greenbar
 .rubocop-*
 measurements
-.rubocop.yml
+.byebug_history

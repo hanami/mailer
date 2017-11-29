@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'hanami/utils/kernel'
 require 'hanami/mailer/template_name'
 require 'hanami/mailer/templates_finder'
@@ -13,7 +14,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_ROOT = '.'.freeze
+      DEFAULT_ROOT = '.'
 
       # Default delivery method
       #
@@ -25,7 +26,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_CHARSET = 'UTF-8'.freeze
+      DEFAULT_CHARSET = 'UTF-8'
 
       private_constant(*constants(false))
 
@@ -105,6 +106,68 @@ module Hanami
       # @since next
       # @api unstable
       attr_reader :root
+
+      # @param blk [Proc] the code block
+      #
+      # @return [void]
+      #
+      # @raise [ArgumentError] if called without passing a block
+      #
+      # @since 0.1.0
+      #
+      # @see Hanami::Mailer.configure
+      def prepare(&blk)
+        raise ArgumentError.new('Please provide a block') unless block_given?
+        @modules.push(blk)
+      end
+
+      # Duplicate by copying the settings in a new instance.
+      #
+      # @return [Hanami::Mailer::Configuration] a copy of the configuration
+      #
+      # @since 0.1.0
+      # @api private
+      def duplicate
+        Configuration.new.tap do |c|
+          c.namespace  = namespace
+          c.root       = root.dup
+          c.modules    = modules.dup
+          c.delivery_method = delivery_method
+          c.default_charset = default_charset
+        end
+      end
+
+      # Load the configuration
+      def load!
+        mailers.each { |m| m.__send__(:load!) }
+        freeze
+      end
+
+      # Reset the configuration
+      def reset!
+        root(DEFAULT_ROOT)
+        delivery_method(DEFAULT_DELIVERY_METHOD)
+        default_charset(DEFAULT_CHARSET)
+
+        @mailers = Set.new
+        @modules = []
+      end
+
+      alias unload! reset!
+
+      # Copy the configuration for the given mailer
+      #
+      # @param base [Class] the target mailer
+      #
+      # @return void
+      #
+      # @since 0.1.0
+      # @api private
+      def copy!(base)
+        modules.each do |mod|
+          base.class_eval(&mod)
+        end
+      end
 
       # Specify a global delivery method for the mail gateway.
       #

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::TemplateName do
   describe ".call" do
     context "with top level namespace" do

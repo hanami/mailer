@@ -1,5 +1,9 @@
 # frozen_string_literal: true
+
 module Hanami
+  # Hanami::Mailer
+  #
+  # @since 0.1.0
   class Mailer
     require 'hanami/mailer/template_name'
 

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer do
   describe '.deliver' do
     it 'can deliver with specified charset' do

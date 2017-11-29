@@ -1,6 +1,7 @@
 # frozen_string_literal: true
+
 require 'mail'
-require 'ice_nine'
+# require 'ice_nine'
 
 module Hanami
   class Mailer

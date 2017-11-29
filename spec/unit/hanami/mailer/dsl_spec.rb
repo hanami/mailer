@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::Dsl do
   let(:mailer) { Class.new { extend Hanami::Mailer::Dsl } }
 

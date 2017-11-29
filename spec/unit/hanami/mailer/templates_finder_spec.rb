@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::TemplatesFinder do
   subject { described_class.new(root) }
   # NOTE: please do not change this name, because `#find` specs are relying on
@@ -53,7 +54,7 @@ RSpec.describe Hanami::Mailer::TemplatesFinder do
         #
         # Only the last two are matching the pattern, here's why we have only
         # two templates loaded.
-        expect(actual.keys).to eq([:html, :txt])
+        expect(actual.keys).to eq(%i[html txt])
         actual.each_value do |template|
           expect(template).to be_kind_of(Hanami::Mailer::Template)
           expect(template.instance_variable_get(:@_template).__send__(:file)).to match(%r{spec/support/fixtures/templates/welcome_mailer.(html|txt).erb})

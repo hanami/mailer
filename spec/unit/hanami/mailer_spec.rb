@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer do
   context "constants" do
     it "marks them as private" do
@@ -170,7 +171,7 @@ RSpec.describe Hanami::Mailer do
       let(:locals) { { user: User.new('MG') } }
 
       it 'renders template with parsed locals' do
-        expect(mailer.render(:html, locals)).to include(%(<h1>\n  #{locals.fetch(:user).name}\n</h1>\n))
+        expect(mailer.render(:html, locals)).to include(%(<h1>\n#{locals.fetch(:user).name}\n</h1>\n))
       end
     end
   end

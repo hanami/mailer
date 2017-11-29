@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'mail'
 require 'concurrent'
 
@@ -119,21 +120,7 @@ module Hanami
       freeze
     end
 
-    # Delivers a multipart email message.
-    #
-    # When a mailer defines a `html` and `txt` template, they are
-    # both delivered.
-    #
-    # In order to selectively deliver only one of the two templates, use
-    # `mailer.deliver(format: :txt)`
-    #
-    # All the given locals, excepted the reserved ones (`:format` and
-    # `charset`), are available as rendering context for the templates.
-    #
-    # @param locals [Hash] a set of objects that acts as context for the
-    #   rendering
-    # @option locals [Symbol] :format specify format to deliver
-    # @option locals [String] :charser override default charset for this email
+    # Prepare the email message when a new mailer is initialized.
     #
     # @return [Mail::Message] the delivered email
     #
@@ -205,15 +192,13 @@ module Hanami
       template(format).render(self, locals)
     end
 
-    protected
+    private
 
     # @since next
     # @api unstable
     def locals
       thread_locals.value
     end
-
-    private
 
     # @api unstable
     # @since next

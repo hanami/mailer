@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::Template do
   subject    { described_class.new(file) }
   let(:file) { "spec/support/fixtures/templates/welcome_mailer.txt.erb" }
@@ -32,7 +33,7 @@ RSpec.describe Hanami::Mailer::Template do
       scope  = Object.new
       actual = subject.render(scope, greeting: "Hello")
 
-      expect(actual).to eq("This is a txt template\nHello\n")
+      expect(actual).to eq("This is a txt template\nHello")
     end
 
     it "renders with unfrozen object" do
