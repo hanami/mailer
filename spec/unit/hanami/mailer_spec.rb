@@ -118,16 +118,6 @@ RSpec.describe Hanami::Mailer do
         expect(mail.subject).to                 eq("Invitation: Event #23")
         expect(mail.attachments[0].filename).to eq("invitation-23.ics")
       end
-
-      it "resets locals after mail delivery" do
-        mailer.deliver(user: user, event: event)
-        expect(mailer.__send__(:locals)).to be(nil)
-      end
-
-      it "resets locals after exception is raised during delivery" do
-        expect { mailer.deliver({}) }.to raise_error(KeyError)
-        expect(mailer.__send__(:locals)).to be(nil)
-      end
     end
   end
 

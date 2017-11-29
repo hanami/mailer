@@ -116,7 +116,6 @@ module Hanami
     # @since 0.1.0
     def initialize(configuration:)
       @configuration = configuration
-      @thread_locals = Concurrent::ThreadLocalVar.new(nil)
       freeze
     end
 
@@ -168,12 +167,9 @@ module Hanami
     #   # Deliver both the parts with "iso-8859"
     #   mailer.deliver(invoice: invoice, user: user, charset: 'iso-8859')
     def deliver(locals)
-      thread_locals.value = locals
       mail(locals).deliver
     rescue ArgumentError
       raise MissingDeliveryDataError
-    ensure
-      thread_locals.value = nil
     end
 
     # @since next
@@ -194,19 +190,9 @@ module Hanami
 
     private
 
-    # @since next
-    # @api unstable
-    def locals
-      thread_locals.value
-    end
-
     # @api unstable
     # @since next
     attr_reader :configuration
-
-    # @api unstable
-    # @since next
-    attr_reader :thread_locals
 
     # @api unstable
     # @since next

@@ -88,14 +88,14 @@ class EventMailer < Hanami::Mailer
   subject ->(locals) { "Invitation: #{locals.fetch(:event).title}" }
 
   before do |mail, locals|
-    mail.attachments["invitation-#{locals.fetch(:event).id}.ics"] = generate_invitation_attachment
+    mail.attachments["invitation-#{locals.fetch(:event).id}.ics"] = generate_invitation_attachment(locals)
   end
 
   private
 
   # Simulate on-the-fly creation of an attachment file.
   # For speed purposes we're not gonna create the file, but only return a path.
-  def generate_invitation_attachment
+  def generate_invitation_attachment(locals)
     "invitation-#{locals.fetch(:event).id}.ics"
   end
 end
