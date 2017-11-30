@@ -274,6 +274,34 @@ module Hanami
         mailers.fetch(mailer) { raise UnknownMailerError.new(mailer) }[format]
       end
 
+      # Returns a new updated instance of the mailer with the given settings.
+      #
+      # @yieldparam [Hanami::Mailer::Configuration] the new configuration instance
+      #
+      # @raise [LocalJumpError] if no block is given
+      #
+      # @since x.x.x
+      # @api unstable
+      #
+      # @example
+      #   require "hanami/mailer"
+      #
+      #   configuration = Hanami::Mailer::Configuration.new
+      #   configuration.delivery_method # => :smtp
+      #
+      #   updated = configuration.with do |config|
+      #     config.delivery_method = :test
+      #   end
+      #
+      #   configuration.delivery_method # => :smtp
+      #   updated.delivery_method       # => :test
+      def with
+        dup.tap do |new|
+          yield(new)
+          new.freeze
+        end
+      end
+
       # Deep freeze the important instance variables
       #
       # @since next

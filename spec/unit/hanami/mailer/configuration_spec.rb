@@ -101,6 +101,24 @@ RSpec.describe Hanami::Mailer::Configuration do
     end
   end
 
+  describe "#with" do
+    it "initialize a new instance with the given settings" do
+      updated = subject.with do |config|
+        config.delivery_method = :new
+      end
+
+      expect(updated.object_id).to_not be(subject.object_id)
+      expect(updated.frozen?).to be(true)
+
+      expect(subject.delivery_method).to_not eq(:new)
+      expect(updated.delivery_method).to     eq(:new)
+    end
+
+    it "raises error if no block is given" do
+      expect { subject.with }.to raise_error(LocalJumpError)
+    end
+  end
+
   describe "#freeze" do
     before do
       subject.freeze
