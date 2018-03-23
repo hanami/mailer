@@ -1,6 +1,8 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.2.0.beta2 - 2018-03-23
+
 ## v1.2.0.beta1 - 2018-02-28
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.5
@@ -33,11 +35,11 @@ Mail for Ruby applications
 
 ## v0.3.0 - 2016-07-22
 ### Added
-– [Anton Davydov] Blind carbon copy (bcc) option
-– [Anton Davydov] Carbon copy (cc) option
+- [Anton Davydov] Blind carbon copy (bcc) option
+- [Anton Davydov] Carbon copy (cc) option
 
 ### Changed
-– [Luca Guidi] Drop support for Ruby 2.0 and 2.1
+- [Luca Guidi] Drop support for Ruby 2.0 and 2.1
 
 ## v0.2.0 - 2016-01-22
 ### Changed
