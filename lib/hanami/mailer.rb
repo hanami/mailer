@@ -266,8 +266,8 @@ module Hanami
 
     # @api private
     # @since 0.1.0
-    def method_missing(m)
-      @locals.fetch(m) { super }
+    def method_missing(method_name)
+      @locals.fetch(method_name) { super }
     end
 
     # @since 0.1.0
@@ -330,8 +330,8 @@ module Hanami
 
     # @api private
     # @since 0.4.0
-    def respond_to_missing?(m, _include_all)
-      @locals.key?(m)
+    def respond_to_missing?(method_name, _include_all)
+      @locals.key?(method_name)
     end
   end
 end
