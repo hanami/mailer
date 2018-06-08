@@ -1,1 +1,1 @@
-require 'hanami/mailer' # rubocop:disable Naming/FileName
+require 'hanami/mailer'
