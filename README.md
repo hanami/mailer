@@ -326,6 +326,7 @@ Hanami::Maler.configure do
   # Argument: Symbol
   # Argument: Hash, optional configurations
   delivery_method :stmp
+end
 ```
 
 ### Attachments
