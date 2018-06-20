@@ -283,11 +283,12 @@ module Hanami
     # rubocop:disable Metrics/AbcSize
     def build
       Mail.new.tap do |m|
-        m.from    = __dsl(:from)
-        m.to      = __dsl(:to)
-        m.cc      = __dsl(:cc)
-        m.bcc     = __dsl(:bcc)
-        m.subject = __dsl(:subject)
+        m.from     = __dsl(:from)
+        m.to       = __dsl(:to)
+        m.cc       = __dsl(:cc)
+        m.bcc      = __dsl(:bcc)
+        m.reply_to = __dsl(:reply_to)
+        m.subject  = __dsl(:subject)
 
         m.charset   = charset
         m.html_part = __part(:html)

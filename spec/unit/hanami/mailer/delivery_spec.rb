@@ -55,11 +55,12 @@ RSpec.describe Hanami::Mailer do
       end
 
       it 'sends the correct information' do
-        expect(@mail.from).to    eq(['noreply@sender.com'])
-        expect(@mail.to).to      eq(['noreply@recipient.com', 'owner@recipient.com'])
-        expect(@mail.cc).to      eq(['cc@recipient.com'])
-        expect(@mail.bcc).to     eq(['bcc@recipient.com'])
-        expect(@mail.subject).to eq('Welcome')
+        expect(@mail.from).to     eq(['noreply@sender.com'])
+        expect(@mail.to).to       eq(['noreply@recipient.com', 'owner@recipient.com'])
+        expect(@mail.cc).to       eq(['cc@recipient.com'])
+        expect(@mail.bcc).to      eq(['bcc@recipient.com'])
+        expect(@mail.reply_to).to eq(['reply_to@recipient.com'])
+        expect(@mail.subject).to  eq('Welcome')
       end
 
       it 'has the correct templates' do
