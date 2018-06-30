@@ -443,4 +443,4 @@ __Hanami::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 Copyright © 2015-2017 Luca Guidi – Released under MIT License
 
-This project was formerly known as Hanami (`hanami-mailer`).
+This project was formerly known as Lotus (`lotus-mailer`).
