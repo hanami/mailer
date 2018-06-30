@@ -1,4 +1,51 @@
 RSpec.describe Hanami::Mailer do
+  describe '.layout' do
+    describe 'when no value is set' do
+      it 'returns default layout' do
+        expect(RenderMailer.layout).to eq(Hanami::Mailer::Dsl::DEFAULT_LAYOUT)
+      end
+    end
+
+    describe 'when a value is set' do
+      it 'returns that name' do
+        expect(WithLayoutMailer.layout).to eq('custom_layout')
+      end
+    end
+  end
+
+  describe '.layouts' do
+    describe 'when no value is set' do
+      it 'returns a set of layouts' do
+        layout_formats = RenderMailer.layouts.keys
+        expect(layout_formats).to match_array(%i[html txt])
+      end
+
+      it 'returns only the layout for the given format' do
+        layout = RenderMailer.layouts(:html)
+        expect(layout).to be_kind_of(Hanami::Mailer::Layout)
+        defult_layout_name = Hanami::Mailer::Dsl::DEFAULT_LAYOUT
+        expect(layout.file).to match(
+          %r{spec/support/fixtures/templates/layouts/#{defult_layout_name}.html.erb\z}
+        )
+      end
+    end
+
+    describe 'when a value is set' do
+      it 'returns a set of layouts' do
+        layout_formats = WithLayoutMailer.layouts.keys
+        expect(layout_formats).to eq([:html])
+      end
+
+      it 'returns only the layout for the given format' do
+        layout = WithLayoutMailer.layouts(:html)
+        expect(layout).to be_kind_of(Hanami::Mailer::Layout)
+        expect(layout.file).to match(
+          %r{spec/support/fixtures/templates/layouts/custom_layout.html.erb\z}
+        )
+      end
+    end
+  end
+
   describe '.template' do
     describe 'when no value is set' do
       it 'returns the convention name' do

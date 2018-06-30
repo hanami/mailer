@@ -175,6 +175,32 @@ end
 #  * app/templates/invoice.txt.erb
 ```
 
+### Layout
+
+The layout file must be located under the relevant `root` in `layouts` subfolder. By default mailer use `mailer` layout.
+```ruby
+# Given this root
+Hanami::Mailer.configuration.root      # => #<Pathname:app/templates>
+
+# For InvoiceMailer, it looks for:
+#  * app/templates/layouts/mailer.html.erb
+#  * app/templates/layouts/mailer.txt.erb
+```
+
+If we want to specify a different template, we can do:
+
+```ruby
+class InvoiceMailer
+  include Hanami::Mailer
+
+  layout 'custom_layout'
+end
+
+# It will look for:
+#  * app/templates/layouts/custom_layout.html.erb
+#  * app/templates/layouts/custom_layout.txt.erb
+```
+
 ### Engines
 
 The builtin rendering engine is [ERb](http://en.wikipedia.org/wiki/ERuby).
@@ -417,4 +443,4 @@ __Hanami::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 Copyright © 2015-2017 Luca Guidi – Released under MIT License
 
-This project was formerly known as Lotus (`lotus-mailer`).
+This project was formerly known as Hanami (`hanami-mailer`).

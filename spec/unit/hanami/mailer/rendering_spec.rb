@@ -5,6 +5,7 @@ RSpec.describe Hanami::Mailer do
 
       it 'renders the given template' do
         expect(mailer.render(:html)).to include(%(<h1>Invoice template</h1>))
+        expect(mailer.render(:html)).to include(%(This is a html layout))
       end
     end
 
@@ -14,6 +15,7 @@ RSpec.describe Hanami::Mailer do
       it 'looks for template with same name with inflected classname and render it' do
         expect(mailer.render(:html)).to include(%(Hello World))
         expect(mailer.render(:txt)).to include(%(This is a txt template))
+        expect(mailer.render(:txt)).to include(%(This is a txt layout))
       end
     end
 
@@ -22,6 +24,7 @@ RSpec.describe Hanami::Mailer do
 
       it 'renders template with defined context' do
         expect(mailer.render(:txt)).to include(%(Ahoy))
+        expect(mailer.render(:txt)).to include(%(This is a txt layout))
       end
     end
 
@@ -30,6 +33,16 @@ RSpec.describe Hanami::Mailer do
 
       it 'renders template with parsed locals' do
         expect(mailer.render(:html)).to include(%(Luca))
+        expect(mailer.render(:html)).to include(%(This is a html layout))
+      end
+    end
+
+    describe 'when layout is explicitly declared' do
+      let(:mailer) { WithLayoutMailer.new }
+
+      it 'renders template with parsed locals' do
+        expect(mailer.render(:html)).to include(%(This mailer with layout))
+        expect(mailer.render(:html)).to include(%(This is a custom html layout))
       end
     end
 
@@ -38,6 +51,7 @@ RSpec.describe Hanami::Mailer do
 
       it 'renders template with parsed locals' do
         expect(mailer.render(:html)).to include(%(<h1>\nLuca\n</h1>\n))
+        expect(mailer.render(:html)).to include(%(This is a html layout))
       end
     end
   end

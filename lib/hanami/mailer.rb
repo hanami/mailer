@@ -214,7 +214,14 @@ module Hanami
     # @since 0.1.0
     # @api private
     def render(format)
-      self.class.templates(format).render(self, @locals)
+      layout_template = self.class.layouts(format)
+      if layout_template.nil?
+        self.class.templates(format).render(self, @locals)
+      else
+        layout_template.render(self, @locals) do
+          self.class.templates(format).render(self, @locals)
+        end
+      end
     end
 
     # Delivers a multipart email, by looking at all the associated templates and render them.

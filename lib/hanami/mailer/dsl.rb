@@ -1,3 +1,4 @@
+require 'hanami/mailer/rendering/layouts_finder'
 require 'hanami/mailer/rendering/template_name'
 require 'hanami/mailer/rendering/templates_finder'
 
@@ -7,6 +8,12 @@ module Hanami
     #
     # @since 0.1.0
     module Dsl
+      # Default layout
+      #
+      # @api private
+      # @since 0.3.0
+      DEFAULT_LAYOUT = 'mailer'.freeze
+
       # @since 0.3.0
       # @api private
       def self.extended(base)
@@ -17,6 +24,7 @@ module Hanami
           @bcc      = nil
           @reply_to = nil
           @subject  = nil
+          @layout   = nil
         end
       end
 
@@ -83,6 +91,67 @@ module Hanami
           @templates = ::Hanami::Mailer::Rendering::TemplatesFinder.new(self).find
         else
           @templates.fetch(format, nil)
+        end
+      end
+
+      # Set the layout name, by default layout is `mailer`.
+      #
+      # If for some reason, we need to specify a different template name, we can
+      # use this method.
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload layout(value)
+      #   Sets the given value
+      #   @param value [String, Symbol] layout name
+      #   @return [NilClass]
+      #
+      # @overload layout
+      #   Gets the layout name
+      #   @return [String]
+      #
+      # @since 0.3.0
+      #
+      # @example Set layout name
+      #   require 'hanami/mailer'
+      #
+      #   class MyMailer
+      #     include Hanami::Mailer
+      #     layout 'custom'
+      #   end
+      def layout(value = nil)
+        if value.nil?
+          @layout ||= DEFAULT_LAYOUT.dup
+        else
+          @layout = value
+        end
+      end
+
+      # Returns a set of associated layouts or only one for the given format
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload layouts(format)
+      #   Returns the layout associated with the given format
+      #   @param value [Symbol] the format
+      #   @return [Hash]
+      #
+      # @overload layouts
+      #   Returns all the associated layouts
+      #   Gets the layout name
+      #   @return [Hash] a set of layouts
+      #
+      # @since 0.3.0
+      # @api private
+      def layouts(format = nil)
+        if format.nil?
+          @layouts = ::Hanami::Mailer::Rendering::LayoutsFinder.new(self).find
+        else
+          @layouts.fetch(format, nil)
         end
       end
 
@@ -560,6 +629,7 @@ module Hanami
       #
       # @see Hanami::Mailer.load!
       def load!
+        layouts.freeze
         templates.freeze
         configuration.freeze
       end

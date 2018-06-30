@@ -7,6 +7,11 @@ class RenderMailer
   include Hanami::Mailer
 end
 
+class WithLayoutMailer
+  include Hanami::Mailer
+  layout 'custom_layout'
+end
+
 class TemplateEngineMailer
   include Hanami::Mailer
 end
