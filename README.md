@@ -4,11 +4,11 @@ Mail for Ruby applications.
 
 ## Status
 
-[![Gem Version](http://img.shields.io/gem/v/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![Build Status](http://img.shields.io/travis/hanami/mailer/master.svg)](https://travis-ci.org/hanami/mailer?branch=master)
-[![Coverage](http://img.shields.io/coveralls/hanami/mailer/master.svg)](https://coveralls.io/r/hanami/mailer)
-[![Code Climate](http://img.shields.io/codeclimate/github/hanami/mailer.svg)](https://codeclimate.com/github/hanami/mailer)
-[![Dependencies](http://img.shields.io/gemnasium/hanami/mailer.svg)](https://gemnasium.com/hanami/mailer)
+[![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
+[![TravisCI](https://travis-ci.org/hanami/mailer.svg?branch=master)](https://travis-ci.org/hanami/mailer)
+[![CircleCI](https://circleci.com/gh/hanami/mailer/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/mailer/tree/master)
+[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
+[![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
 [![Inline Docs](http://inch-ci.org/github/hanami/mailer.svg)](http://inch-ci.org/github/hanami/mailer)
 
 ## Contact
