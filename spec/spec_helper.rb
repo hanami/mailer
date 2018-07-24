@@ -1,61 +1,6 @@
-if ENV['COVERALL']
-  require 'coveralls'
-  Coveralls.wear!
-end
-
-require 'hanami/utils'
-
-RSpec.configure do |config|
-  config.expect_with :rspec do |expectations|
-    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end
-
-  config.mock_with :rspec do |mocks|
-    mocks.verify_partial_doubles = true
-  end
-
-  config.shared_context_metadata_behavior = :apply_to_host_groups
-
-  config.filter_run_when_matching :focus
-  config.disable_monkey_patching!
-
-  config.warnings = true
-
-  config.default_formatter = 'doc' if config.files_to_run.one?
-
-  config.profile_examples = 10
-
-  config.order = :random
-  Kernel.srand config.seed
-end
-
-$LOAD_PATH.unshift 'lib'
-require 'hanami/mailer'
-
-Hanami::Mailer.configure do
-  root Pathname.new __dir__ + '/support/fixtures/templates'
-end
-
-Hanami::Mailer.class_eval do
-  def self.reset!
-    self.configuration = configuration.duplicate
-    configuration.reset!
-  end
-end
-
-Hanami::Mailer::Dsl.class_eval do
-  def reset!
-    @templates = {}
-  end
-end
+$LOAD_PATH.unshift "lib"
+require "hanami/utils"
+require "hanami/devtools/unit"
+require "hanami/mailer"
 
 Hanami::Utils.require!("spec/support")
-
-Hanami::Mailer.configure do
-  root __dir__ + '/support/fixtures'
-  delivery_method :test
-
-  prepare do
-    include DefaultSubject
-  end
-end.load!
