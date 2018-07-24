@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 gemspec
 
-unless ENV["TRAVIS"]
+unless ENV["CI"]
   gem "byebug",           require: false, platforms: :mri
   gem "allocation_stats", require: false
   gem "benchmark-ips",    require: false
@@ -13,4 +13,3 @@ gem "hanami-utils", "~> 2.0.alpha", require: false, git: "https://github.com/han
 gem "haml"
 
 gem "hanami-devtools", require: false, git: "https://github.com/hanami/devtools.git"
-gem "coveralls", require: false

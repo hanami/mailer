@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "ostruct"
+
 RSpec.describe Hanami::Mailer do
   context "constants" do
     it "marks them as private" do
