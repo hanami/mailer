@@ -1,7 +1,9 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
-## v1.3.0.beta1 (unreleased)
+## v1.3.0.beta1 - 2018-08-08
+### Added
+- [Luca Guidi] Official support for JRuby 9.2.0.0
 
 ## v1.2.0 - 2018-04-11
 
