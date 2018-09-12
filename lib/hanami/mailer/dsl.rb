@@ -344,7 +344,7 @@ module Hanami
       #   Returns the reply_to
       #   @return [String, Array, Symbol] the recipient
       #
-      # @since 0.3.0
+      # @since 1.3.0
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
