@@ -12,6 +12,11 @@ class WithLayoutMailer
   layout 'custom_layout'
 end
 
+class NotExistLayoutMailer
+  include Hanami::Mailer
+  layout 'not_exist_layout'
+end
+
 class TemplateEngineMailer
   include Hanami::Mailer
 end

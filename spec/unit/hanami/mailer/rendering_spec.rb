@@ -46,6 +46,14 @@ RSpec.describe Hanami::Mailer do
       end
     end
 
+    describe 'when layout not exist' do
+      let(:mailer) { NotExistLayoutMailer.new }
+
+      it 'return layout name' do
+        expect(mailer.render(:html).strip).to eq('<p>Layout not exist</p>')
+      end
+    end
+
     describe 'with HAML template engine' do
       let(:mailer) { TemplateEngineMailer.new(user: User.new('Luca')) }
 

@@ -1,3 +1,4 @@
+require 'hanami/utils/kernel'
 require 'tilt'
 
 module Hanami
@@ -32,6 +33,17 @@ module Hanami
       # @since 0.1.0
       def file
         @_layout.file
+      end
+
+      # Checks for the existence of layout
+      #
+      # @return [Bool]
+      #
+      # @api private
+      # @since 0.1.0
+      def exist?
+        return false if file.nil?
+        Utils::Kernel.Pathname(file).exist?
       end
     end
   end

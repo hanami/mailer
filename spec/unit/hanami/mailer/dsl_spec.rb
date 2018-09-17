@@ -11,6 +11,12 @@ RSpec.describe Hanami::Mailer do
         expect(WithLayoutMailer.layout).to eq('custom_layout')
       end
     end
+
+    describe 'when layout not exist' do
+      it 'return layout name' do
+        expect(NotExistLayoutMailer.layout).to eq('not_exist_layout')
+      end
+    end
   end
 
   describe '.layouts' do
