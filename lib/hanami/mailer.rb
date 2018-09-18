@@ -215,9 +215,7 @@ module Hanami
     # @api private
     def render(format)
       layout_template = self.class.layouts(format)
-      if layout_template.nil? || !layout_template.exist?
-        return self.class.templates(format).render(self, @locals)
-      end
+      return self.class.templates(format).render(self, @locals) if layout_template.nil? || !layout_template.exist?
 
       layout_template.render(self, @locals) do
         self.class.templates(format).render(self, @locals)
