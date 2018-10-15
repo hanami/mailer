@@ -62,10 +62,11 @@ class ProcMailer < Hanami::Mailer
 end
 
 class WelcomeMailer < Hanami::Mailer
-  from "noreply@sender.com"
-  to   ["noreply@recipient.com", "owner@recipient.com"]
-  cc   "cc@recipient.com"
-  bcc  "bcc@recipient.com"
+  from     "noreply@sender.com"
+  to       ["noreply@recipient.com", "owner@recipient.com"]
+  cc       "cc@recipient.com"
+  bcc      "bcc@recipient.com"
+  reply_to "reply_to@recipient.com"
 
   subject "Welcome"
 

@@ -118,6 +118,7 @@ module Hanami
       # @see Hanami::Mailer.configure
       def prepare(&blk)
         raise ArgumentError.new("Please provide a block") unless block_given?
+
         @modules.push(blk)
       end
 

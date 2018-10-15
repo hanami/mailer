@@ -168,8 +168,10 @@ module Hanami
     #   mailer.deliver(invoice: invoice, user: user, charset: 'iso-8859')
     def deliver(locals)
       mail(locals).deliver
-    rescue ArgumentError
-      raise MissingDeliveryDataError
+    rescue ArgumentError => e
+      raise MissingDeliveryDataError if e.message =~ /SMTP (From|To) address/
+
+      raise
     end
 
     # @since next
@@ -205,14 +207,18 @@ module Hanami
 
     # @api unstable
     # @since next
-    def bind(mail, locals) # rubocop:disable Metrics/AbcSize
+    #
+    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/MethodLength
+    def bind(mail, locals)
       charset = locals.fetch(:charset, configuration.default_charset)
 
-      mail.from    = __dsl(:from,    locals)
-      mail.to      = __dsl(:to,      locals)
-      mail.cc      = __dsl(:cc,      locals)
-      mail.bcc     = __dsl(:bcc,     locals)
-      mail.subject = __dsl(:subject, locals)
+      mail.from     = __dsl(:from,     locals)
+      mail.to       = __dsl(:to,       locals)
+      mail.cc       = __dsl(:cc,       locals)
+      mail.bcc      = __dsl(:bcc,      locals)
+      mail.reply_to = __dsl(:reply_to, locals)
+      mail.subject  = __dsl(:subject,  locals)
 
       mail.html_part = __part(:html, charset, locals)
       mail.text_part = __part(:txt,  charset, locals)
@@ -220,6 +226,8 @@ module Hanami
       mail.charset = charset
       mail.delivery_method(*configuration.delivery_method)
     end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Metrics/AbcSize
 
     # @since next
     # @api unstable
