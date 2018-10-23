@@ -1,6 +1,10 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.3.0 - 2018-10-24
+### Added
+- [Ben Bachhuber] Added support for `reply_to`
+
 ## v1.3.0.beta1 - 2018-08-08
 ### Added
 - [Luca Guidi] Official support for JRuby 9.2.0.0
