@@ -11,11 +11,12 @@ module Hanami
       # @api private
       def self.extended(base)
         base.class_eval do
-          @from    = nil
-          @to      = nil
-          @cc      = nil
-          @bcc     = nil
-          @subject = nil
+          @from     = nil
+          @to       = nil
+          @cc       = nil
+          @bcc      = nil
+          @reply_to = nil
+          @subject  = nil
         end
       end
 
@@ -316,6 +317,95 @@ module Hanami
           @bcc
         else
           @bcc = value
+        end
+      end
+
+      # Sets the reply_to for mail messages
+      #
+      # It accepts a hardcoded value as a string or array of strings.
+      # For dynamic values, you can specify a symbol that represents an instance
+      # method.
+      #
+      # This value is optional.
+      #
+      # When a value is given, it specifies the reply_to for the email.
+      # When a value is not given, it returns the reply_to of the email.
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload reply_to(value)
+      #   Sets the reply_to
+      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload reply_to
+      #   Returns the reply_to
+      #   @return [String, Array, Symbol] the recipient
+      #
+      # @since 1.3.0
+      #
+      # @example Hardcoded value (String)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     to "user@example.com"
+      #     reply_to "other.user@example.com"
+      #   end
+      #
+      # @example Hardcoded value (Array)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     to ["user-1@example.com", "user-2@example.com"]
+      #     reply_to ["other.user-1@example.com", "other.user-2@example.com"]
+      #   end
+      #
+      # @example Method (Symbol)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     to "user@example.com"
+      #     reply_to :email_address
+      #
+      #     private
+      #
+      #     def email_address
+      #       user.email
+      #     end
+      #   end
+      #
+      #   other_user = User.new(name: 'L')
+      #   WelcomeMailer.deliver(user: other_user)
+      #
+      # @example Method that returns a collection of recipients
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     to "user@example.com"
+      #     reply_to :recipients
+      #
+      #     private
+      #
+      #     def recipients
+      #       users.map(&:email)
+      #     end
+      #   end
+      #
+      #   other_users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.deliver(users: other_users)
+      def reply_to(value = nil)
+        if value.nil?
+          @reply_to
+        else
+          @reply_to = value
         end
       end
 
