@@ -35,7 +35,7 @@ module Hanami
     # @api private
     CONTENT_TYPES = {
       html: 'text/html',
-      txt:  'text/plain'
+      txt: 'text/plain'
     }.freeze
 
     include Utils::ClassAttribute
