@@ -23,7 +23,7 @@ module Hanami
     # @api private
     CONTENT_TYPES = {
       html: "text/html",
-      txt:  "text/plain"
+      txt: "text/plain"
     }.freeze
 
     private_constant(:CONTENT_TYPES)
