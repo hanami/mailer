@@ -76,12 +76,6 @@ module Hanami
 
         # @api private
         # @since 0.1.0
-        def root
-          @mailer.configuration.root
-        end
-
-        # @api private
-        # @since 0.1.0
         def search_path
           recursive
         end
