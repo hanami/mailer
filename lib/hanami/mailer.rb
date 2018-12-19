@@ -11,6 +11,7 @@ module Hanami
   # Hanami::Mailer
   #
   # @since 0.1.0
+  # rubocop:disable Metrics/ModuleLength
   module Mailer
     # Base error for Hanami::Mailer
     #
@@ -351,4 +352,5 @@ module Hanami
       @locals.key?(method_name)
     end
   end
+  # rubocop:enable Metrics/ModuleLength
 end
