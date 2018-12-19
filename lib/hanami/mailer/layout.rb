@@ -43,6 +43,7 @@ module Hanami
       # @since 0.1.0
       def exist?
         return false if file.nil?
+
         Utils::Kernel.Pathname(file).exist?
       end
     end

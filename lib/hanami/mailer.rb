@@ -35,7 +35,7 @@ module Hanami
     # @api private
     CONTENT_TYPES = {
       html: 'text/html',
-      txt:  'text/plain'
+      txt: 'text/plain'
     }.freeze
 
     include Utils::ClassAttribute
@@ -215,18 +215,18 @@ module Hanami
     # @api private
     def render(format)
       layout_template = self.class.layouts(format)
-      if layout_template && layout_template.exist?
+      if layout_template&.exist?
         render_with_layout layout_template, format
       else
         render_without_layout format
       end
     end
 
-    def render_without_layout format
+    def render_without_layout(format)
       self.class.templates(format).render(self, @locals)
     end
 
-    def render_with_layout layout_template, format
+    def render_with_layout(layout_template, format)
       layout_template.render(self, @locals) do
         self.class.templates(format).render(self, @locals)
       end
@@ -240,6 +240,7 @@ module Hanami
       mail.deliver
     rescue ArgumentError => e
       raise MissingDeliveryDataError if e.message =~ /SMTP (From|To) address/
+
       raise
     end
 
