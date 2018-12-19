@@ -215,7 +215,6 @@ module Hanami
     # @api private
     def render(format)
       layout_template = self.class.layouts(format)
-      binding.pry
       if layout_template && layout_template.exist?
         render_with_layout layout_template, format
       else

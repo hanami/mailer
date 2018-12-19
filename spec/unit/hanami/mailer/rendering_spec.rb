@@ -39,10 +39,11 @@ RSpec.describe Hanami::Mailer do
 
     describe 'when layout is explicitly declared' do
       let(:mailer) { WithLayoutMailer.new }
+      let(:rendered) { mailer.render(:html) }
 
       it 'renders template with parsed locals' do
-        expect(mailer.render(:html)).to include(%(This mailer with layout))
-        expect(mailer.render(:html)).to include(%(This is a custom html layout))
+        expect(rendered).to include(%(This mailer with layout))
+        expect(rendered).to include(%(This is a custom html layout))
       end
     end
 

@@ -5,4 +5,9 @@ require "hanami/mailer"
 require "pry"
 require "pry-nav"
 
+
+Hanami::Mailer.configure do
+  root 'spec/support/fixtures/templates'
+end
+
 Hanami::Utils.require!("spec/support")
