@@ -55,6 +55,7 @@ RSpec.describe Hanami::Mailer do
       end
 
       it 'sends the correct information' do
+        expect(@mail.return_path).to eq('bounce@sender.com')
         expect(@mail.from).to     eq(['noreply@sender.com'])
         expect(@mail.to).to       eq(['noreply@recipient.com', 'owner@recipient.com'])
         expect(@mail.cc).to       eq(['cc@recipient.com'])

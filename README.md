@@ -5,7 +5,7 @@ Mail for Ruby applications.
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![TravisCI](https://travis-ci.org/hanami/mailer.svg?branch=master)](https://travis-ci.org/hanami/mailer)
+[![Build Status](https://ci.hanamirb.org/api/badges/hanami/mailer/status.svg)](https://ci.hanamirb.org/hanami/mailer)
 [![CircleCI](https://circleci.com/gh/hanami/mailer/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/mailer/tree/master)
 [![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
 [![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
@@ -80,6 +80,7 @@ end.load!
 class WelcomeMailer
   include Hanami::Mailer
 
+  return_path 'bounce@sender.com'
   from 'noreply@sender.com'
   to   'noreply@recipient.com'
   cc   'cc@sender.com'

@@ -45,7 +45,7 @@ module Hanami
         # @since 0.1.0
         # @api private
         def replace!(token)
-          @name.gsub!(/\A#{token}#{NAMESPACE_SEPARATOR}/, '')
+          @name = @name.gsub(/\A#{token}#{NAMESPACE_SEPARATOR}/, '')
         end
       end
     end

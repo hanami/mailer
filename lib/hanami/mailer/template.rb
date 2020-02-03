@@ -9,8 +9,8 @@ module Hanami
     #
     # TODO this is identical to Hanami::View, consider to move into Hanami::Utils
     class Template
-      def initialize(template)
-        @_template = Tilt.new(template)
+      def initialize(template, encoding = Encoding::UTF_8)
+        @_template = Tilt.new(template, default_encoding: encoding)
       end
 
       # Render the template within the context of the given scope.
