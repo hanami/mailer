@@ -223,8 +223,8 @@ module Hanami
     # @api private
     def deliver
       mail.deliver
-    rescue ArgumentError => e
-      raise MissingDeliveryDataError if e.message =~ /SMTP (From|To) address/
+    rescue ArgumentError => exception
+      raise MissingDeliveryDataError if exception.message =~ /SMTP (From|To) address/
 
       raise
     end
@@ -284,6 +284,7 @@ module Hanami
     # rubocop:disable Metrics/AbcSize
     def build
       Mail.new.tap do |m|
+        m.return_path = __dsl(:return_path)
         m.from     = __dsl(:from)
         m.to       = __dsl(:to)
         m.cc       = __dsl(:cc)
