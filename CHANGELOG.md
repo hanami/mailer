@@ -1,6 +1,11 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.3.2 - 2020-02-03
+### Added
+- [Luca Guidi] Official support for Ruby: MRI 2.7
+- [glaszig] Added `Hanami::Mailer.return_path` and `#return_path` to specify `MAIL FROM` address
+
 ## v1.3.1 - 2019-01-18
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.6

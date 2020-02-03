@@ -11,12 +11,13 @@ module Hanami
       # @api private
       def self.extended(base)
         base.class_eval do
-          @from     = nil
-          @to       = nil
-          @cc       = nil
-          @bcc      = nil
-          @reply_to = nil
-          @subject  = nil
+          @from        = nil
+          @to          = nil
+          @cc          = nil
+          @bcc         = nil
+          @reply_to    = nil
+          @return_path = nil
+          @subject     = nil
         end
       end
 
