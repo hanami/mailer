@@ -80,6 +80,7 @@ end.load!
 class WelcomeMailer
   include Hanami::Mailer
 
+  return_path 'bounce@sender.com'
   from 'noreply@sender.com'
   to   'noreply@recipient.com'
   cc   'cc@sender.com'

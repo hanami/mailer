@@ -86,6 +86,63 @@ module Hanami
         end
       end
 
+      # Sets the MAIL FROM address for mail messages.
+      # This lets you specify a "bounce address" different from the sender
+      # address specified with `from`.
+      #
+      # It accepts a hardcoded value as a string, or a symbol that represents
+      # an instance method for more complex logic.
+      #
+      # This value is optional.
+      #
+      # When a value is given, specify the MAIL FROM address of the email
+      # Otherwise, it returns the MAIL FROM address of the email
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload return_path(value)
+      #   Sets the MAIL FROM address
+      #   @param value [String, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload return_path
+      #   Returns the MAIL FROM address
+      #   @return [String, Symbol] the MAIL FROM address
+      #
+      # @since 1.3.2
+      #
+      # @example Hardcoded value (String)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     return_path "bounce@example.com"
+      #   end
+      #
+      # @example Method (Symbol)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     return_path :bounce_address
+      #
+      #     private
+      #
+      #     def bounce_address
+      #       "bounce@example.com"
+      #     end
+      #   end
+      def return_path(value = nil)
+        if value.nil?
+          @return_path
+        else
+          @return_path = value
+        end
+      end
+
       # Sets the sender for mail messages
       #
       # It accepts a hardcoded value as a string, or a symbol that represents
