@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer::Configuration do
   before do
     @configuration = Hanami::Mailer::Configuration.new
