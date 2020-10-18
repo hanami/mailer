@@ -183,10 +183,17 @@ module Hanami
       #   invoice = Invoice.new
       #   user    = User.new(name: 'L', email: 'user@example.com')
       #
-      #   Billing::Invoice.deliver(invoice: invoice, user: user)                      # Deliver both text, HTML parts and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)        # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)       # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: 'iso-8859') # Deliver both the parts with "iso-8859"
+      #   # Deliver both text, HTML parts and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user)
+      #
+      #   # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)
+      #
+      #   # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)
+      #
+      #   # Deliver both the parts with "iso-8859"
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: "iso-8859")
       def deliver(locals = {})
         new(locals).deliver
       end
