@@ -1,4 +1,6 @@
-require 'hanami/utils/string'
+# frozen_string_literal: true
+
+require "hanami/utils/string"
 
 module Hanami
   module Mailer
@@ -10,7 +12,7 @@ module Hanami
       class TemplateName
         # @since 0.1.0
         # @api private
-        NAMESPACE_SEPARATOR = '::'.freeze
+        NAMESPACE_SEPARATOR = "::"
 
         # @since 0.1.0
         # @api private
@@ -45,7 +47,7 @@ module Hanami
         # @since 0.1.0
         # @api private
         def replace!(token)
-          @name = @name.gsub(/\A#{token}#{NAMESPACE_SEPARATOR}/, '')
+          @name = @name.gsub(/\A#{token}#{NAMESPACE_SEPARATOR}/, "")
         end
       end
     end

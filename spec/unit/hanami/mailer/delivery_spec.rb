@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 RSpec.describe Hanami::Mailer do
-  describe '.deliver' do
+  describe ".deliver" do
     before do
       Hanami::Mailer.deliveries.clear
     end
 
-    it 'can deliver with specified charset' do
-      CharsetMailer.deliver(charset: charset = 'iso-2022-jp')
+    it "can deliver with specified charset" do
+      CharsetMailer.deliver(charset: charset = "iso-2022-jp")
 
       mail = Hanami::Mailer.deliveries.first
       expect(mail.charset).to             eq(charset)
@@ -40,7 +42,7 @@ RSpec.describe Hanami::Mailer do
       expect { mailer.deliver }.to raise_error(ArgumentError, "ouch")
     end
 
-    describe 'test delivery with hardcoded values' do
+    describe "test delivery with hardcoded values" do
       before do
         WelcomeMailer.deliver
         @mail = Hanami::Mailer.deliveries.first
@@ -50,27 +52,27 @@ RSpec.describe Hanami::Mailer do
         Hanami::Mailer.deliveries.clear
       end
 
-      it 'delivers the mail' do
+      it "delivers the mail" do
         expect(Hanami::Mailer.deliveries.length).to eq(1)
       end
 
-      it 'sends the correct information' do
-        expect(@mail.return_path).to eq('bounce@sender.com')
-        expect(@mail.from).to     eq(['noreply@sender.com'])
-        expect(@mail.to).to       eq(['noreply@recipient.com', 'owner@recipient.com'])
-        expect(@mail.cc).to       eq(['cc@recipient.com'])
-        expect(@mail.bcc).to      eq(['bcc@recipient.com'])
-        expect(@mail.reply_to).to eq(['reply_to@recipient.com'])
-        expect(@mail.subject).to  eq('Welcome')
+      it "sends the correct information" do
+        expect(@mail.return_path).to eq("bounce@sender.com")
+        expect(@mail.from).to     eq(["noreply@sender.com"])
+        expect(@mail.to).to       eq(["noreply@recipient.com", "owner@recipient.com"])
+        expect(@mail.cc).to       eq(["cc@recipient.com"])
+        expect(@mail.bcc).to      eq(["bcc@recipient.com"])
+        expect(@mail.reply_to).to eq(["reply_to@recipient.com"])
+        expect(@mail.subject).to  eq("Welcome")
       end
 
-      it 'has the correct templates' do
+      it "has the correct templates" do
         expect(@mail.html_part.to_s).to include(%(template))
         expect(@mail.text_part.to_s).to include(%(template))
       end
 
-      it 'interprets the prepare statement' do
-        attachment = @mail.attachments['invoice.pdf']
+      it "interprets the prepare statement" do
+        attachment = @mail.attachments["invoice.pdf"]
 
         expect(attachment).to be_kind_of(Mail::Part)
 
@@ -78,16 +80,16 @@ RSpec.describe Hanami::Mailer do
         expect(attachment).to_not be_inline
         expect(attachment).to_not be_multipart
 
-        expect(attachment.filename).to eq('invoice.pdf')
+        expect(attachment.filename).to eq("invoice.pdf")
 
-        expect(attachment.content_type).to match('application/pdf')
-        expect(attachment.content_type).to match('filename=invoice.pdf')
+        expect(attachment.content_type).to match("application/pdf")
+        expect(attachment.content_type).to match("filename=invoice.pdf")
       end
     end
 
-    describe 'test delivery with methods' do
+    describe "test delivery with methods" do
       before do
-        @user = User.new('Name', 'student@deigirls.com')
+        @user = User.new("Name", "student@deigirls.com")
         MethodMailer.deliver(user: @user)
 
         @mail = Hanami::Mailer.deliveries.first
@@ -97,23 +99,23 @@ RSpec.describe Hanami::Mailer do
         Hanami::Mailer.deliveries.clear
       end
 
-      it 'delivers the mail' do
+      it "delivers the mail" do
         expect(Hanami::Mailer.deliveries.length).to eq(1)
       end
 
-      it 'sends the correct information' do
+      it "sends the correct information" do
         expect(@mail.from).to    eq(["hello-#{@user.name.downcase}@example.com"])
         expect(@mail.to).to      eq([@user.email])
         expect(@mail.subject).to eq("Hello, #{@user.name}")
       end
     end
 
-    describe 'multipart' do
+    describe "multipart" do
       after do
         Hanami::Mailer.deliveries.clear
       end
 
-      it 'delivers all the parts by default' do
+      it "delivers all the parts by default" do
         WelcomeMailer.deliver
 
         mail = Hanami::Mailer.deliveries.first
@@ -123,7 +125,7 @@ RSpec.describe Hanami::Mailer do
         expect(body).to include(%(This is a txt template))
       end
 
-      it 'can deliver only the text part' do
+      it "can deliver only the text part" do
         WelcomeMailer.deliver(format: :txt)
 
         mail = Hanami::Mailer.deliveries.first
@@ -133,7 +135,7 @@ RSpec.describe Hanami::Mailer do
         expect(body).to     include(%(This is a txt template))
       end
 
-      it 'can deliver only the html part' do
+      it "can deliver only the html part" do
         WelcomeMailer.deliver(format: :html)
 
         mail = Hanami::Mailer.deliveries.first
@@ -144,9 +146,9 @@ RSpec.describe Hanami::Mailer do
       end
     end
 
-    describe 'custom delivery' do
+    describe "custom delivery" do
       before do
-        @options = options = { deliveries: [] }
+        @options = options = {deliveries: []}
 
         # Hanami::Mailer.reset!
         # Hanami::Mailer.configure do
@@ -158,7 +160,7 @@ RSpec.describe Hanami::Mailer do
         @mail = options.fetch(:deliveries).first
       end
 
-      it 'delivers the mail'
+      it "delivers the mail"
       # it 'delivers the mail' do
       #   @options.fetch(:deliveries).length.must_equal 1
       # end
