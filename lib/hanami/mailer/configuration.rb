@@ -13,7 +13,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_ROOT = ".".freeze
+      DEFAULT_ROOT = "."
 
       # Default delivery method
       #
@@ -25,7 +25,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_CHARSET = "UTF-8".freeze
+      DEFAULT_CHARSET = "UTF-8"
 
       # @since 0.1.0
       # @api private
