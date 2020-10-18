@@ -1,1 +1,3 @@
-require 'hanami/mailer'
+# frozen_string_literal: true
+
+require "hanami/mailer"
