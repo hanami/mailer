@@ -193,7 +193,7 @@ module Hanami
         @modules = []
       end
 
-      alias unload! reset!
+      alias_method :unload!, :reset!
 
       # Copy the configuration for the given mailer
       #
