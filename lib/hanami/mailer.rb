@@ -1,8 +1,8 @@
-require 'hanami/utils/class_attribute'
-require 'hanami/mailer/version'
-require 'hanami/mailer/configuration'
-require 'hanami/mailer/dsl'
-require 'mail'
+require "hanami/utils/class_attribute"
+require "hanami/mailer/version"
+require "hanami/mailer/configuration"
+require "hanami/mailer/dsl"
+require "mail"
 
 # Hanami
 #
@@ -34,8 +34,8 @@ module Hanami
     # @since 0.1.0
     # @api private
     CONTENT_TYPES = {
-      html: 'text/html',
-      txt: 'text/plain'
+      html: "text/html",
+      txt: "text/plain"
     }.freeze
 
     include Utils::ClassAttribute

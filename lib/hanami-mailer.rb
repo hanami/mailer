@@ -1,1 +1,1 @@
-require 'hanami/mailer'
+require "hanami/mailer"

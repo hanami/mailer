@@ -1,5 +1,5 @@
-require 'hanami/mailer/rendering/template_name'
-require 'hanami/mailer/rendering/templates_finder'
+require "hanami/mailer/rendering/template_name"
+require "hanami/mailer/rendering/templates_finder"
 
 module Hanami
   module Mailer

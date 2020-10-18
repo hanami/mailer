@@ -1,6 +1,6 @@
 class InvoiceMailer
   include Hanami::Mailer
-  template 'invoice'
+  template "invoice"
 end
 
 class RenderMailer
@@ -14,43 +14,43 @@ end
 class CharsetMailer
   include Hanami::Mailer
 
-  from    'noreply@example.com'
-  to      'user@example.com'
-  subject 'こんにちは'
+  from    "noreply@example.com"
+  to      "user@example.com"
+  subject "こんにちは"
 end
 
 class MissingFromMailer
   include Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  to      'recipient@example.com'
-  subject 'Hello'
+  to      "recipient@example.com"
+  subject "Hello"
 end
 
 class MissingToMailer
   include Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  from    'sender@example.com'
-  subject 'Hello'
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 class CcOnlyMailer
   include Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  cc      'recipient@example.com'
-  from    'sender@example.com'
-  subject 'Hello'
+  cc      "recipient@example.com"
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 class BccOnlyMailer
   include Hanami::Mailer
-  template 'missing'
+  template "missing"
 
-  bcc      'recipient@example.com'
-  from    'sender@example.com'
-  subject 'Hello'
+  bcc      "recipient@example.com"
+  from    "sender@example.com"
+  subject "Hello"
 end
 
 User = Struct.new(:name, :email)
@@ -84,21 +84,21 @@ end
 class WelcomeMailer
   include Hanami::Mailer
 
-  return_path 'bounce@sender.com'
-  from     'noreply@sender.com'
-  to       ['noreply@recipient.com', 'owner@recipient.com']
-  cc       'cc@recipient.com'
-  bcc      'bcc@recipient.com'
-  reply_to 'reply_to@recipient.com'
+  return_path "bounce@sender.com"
+  from     "noreply@sender.com"
+  to       ["noreply@recipient.com", "owner@recipient.com"]
+  cc       "cc@recipient.com"
+  bcc      "bcc@recipient.com"
+  reply_to "reply_to@recipient.com"
 
-  subject 'Welcome'
+  subject "Welcome"
 
   def greeting
-    'Ahoy'
+    "Ahoy"
   end
 
   def prepare
-    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
+    mail.attachments["invoice.pdf"] = "/path/to/invoice.pdf"
   end
 end
 
@@ -120,6 +120,6 @@ end
 
 module DefaultSubject
   def self.included(mailer)
-    mailer.subject 'default subject'
+    mailer.subject "default subject"
   end
 end

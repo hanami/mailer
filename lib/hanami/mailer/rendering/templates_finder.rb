@@ -1,4 +1,4 @@
-require 'hanami/mailer/template'
+require "hanami/mailer/template"
 
 module Hanami
   module Mailer
@@ -14,19 +14,19 @@ module Hanami
         #
         # @api private
         # @since 0.1.0
-        FORMAT    = '*'.freeze
+        FORMAT    = "*".freeze
 
         # Default template engines
         #
         # @api private
         # @since 0.1.0
-        ENGINES   = '*'.freeze
+        ENGINES   = "*".freeze
 
         # Recursive pattern
         #
         # @api private
         # @since 0.1.0
-        RECURSIVE = '**'.freeze
+        RECURSIVE = "**".freeze
 
         # Initialize a finder
         #
@@ -72,7 +72,7 @@ module Hanami
           templates = Hash[]
           _find.map do |template|
             name = File.basename(template)
-            format = (name.split('.')[-2]).to_sym
+            format = (name.split(".")[-2]).to_sym
             templates[format] = Mailer::Template.new(template)
           end
           templates
