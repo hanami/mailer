@@ -148,7 +148,7 @@ RSpec.describe Hanami::Mailer do
 
     describe "custom delivery" do
       before do
-        @options = options = { deliveries: [] }
+        @options = options = {deliveries: []}
 
         # Hanami::Mailer.reset!
         # Hanami::Mailer.configure do

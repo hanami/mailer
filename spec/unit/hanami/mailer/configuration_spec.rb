@@ -149,7 +149,7 @@ RSpec.describe Hanami::Mailer::Configuration do
       end
 
       it "saves the delivery method in the configuration" do
-        expect(@configuration.delivery_method).to eq([:exim, { location: "/path/to/exim" }])
+        expect(@configuration.delivery_method).to eq([:exim, {location: "/path/to/exim"}])
       end
     end
 
