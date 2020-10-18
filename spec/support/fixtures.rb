@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class InvoiceMailer
   include Hanami::Mailer
   template "invoice"

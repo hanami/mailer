@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hanami::Mailer do
   describe ".template" do
     describe "when no value is set" do

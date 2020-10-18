@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 RSpec.describe Hanami::Mailer do
   describe "#render" do
     describe "when template is explicitly declared" do
