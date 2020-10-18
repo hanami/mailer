@@ -5,7 +5,6 @@ Mail for Ruby applications.
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![Build Status](https://ci.hanamirb.org/api/badges/hanami/mailer/status.svg)](https://ci.hanamirb.org/hanami/mailer)
 [![CircleCI](https://circleci.com/gh/hanami/mailer/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/mailer/tree/master)
 [![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
 [![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
@@ -416,6 +415,6 @@ __Hanami::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Copyright
 
-Copyright © 2015-2017 Luca Guidi – Released under MIT License
+Copyright © 2015-2020 Luca Guidi – Released under MIT License
 
 This project was formerly known as Lotus (`lotus-mailer`).

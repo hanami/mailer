@@ -1,5 +1,7 @@
-require 'set'
-require 'hanami/utils/kernel'
+# frozen_string_literal: true
+
+require "set"
+require "hanami/utils/kernel"
 
 module Hanami
   module Mailer
@@ -11,7 +13,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_ROOT = '.'.freeze
+      DEFAULT_ROOT = "."
 
       # Default delivery method
       #
@@ -23,7 +25,7 @@ module Hanami
       #
       # @since 0.1.0
       # @api private
-      DEFAULT_CHARSET = 'UTF-8'.freeze
+      DEFAULT_CHARSET = "UTF-8"
 
       # @since 0.1.0
       # @api private
@@ -144,10 +146,10 @@ module Hanami
       #
       # @see Hanami::Mailer.configure
       def prepare(&blk)
-        if block_given? # rubocop:disable Style/GuardClause
+        if block_given?
           @modules.push(blk)
         else
-          raise ArgumentError.new('Please provide a block')
+          raise ArgumentError.new("Please provide a block")
         end
       end
 
@@ -191,7 +193,7 @@ module Hanami
         @modules = []
       end
 
-      alias unload! reset!
+      alias_method :unload!, :reset!
 
       # Copy the configuration for the given mailer
       #

@@ -1,5 +1,7 @@
-require 'hanami/mailer/rendering/template_name'
-require 'hanami/mailer/rendering/templates_finder'
+# frozen_string_literal: true
+
+require "hanami/mailer/rendering/template_name"
+require "hanami/mailer/rendering/templates_finder"
 
 module Hanami
   module Mailer

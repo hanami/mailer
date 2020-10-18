@@ -1,8 +1,10 @@
-require 'hanami/utils/class_attribute'
-require 'hanami/mailer/version'
-require 'hanami/mailer/configuration'
-require 'hanami/mailer/dsl'
-require 'mail'
+# frozen_string_literal: true
+
+require "hanami/utils/class_attribute"
+require "hanami/mailer/version"
+require "hanami/mailer/configuration"
+require "hanami/mailer/dsl"
+require "mail"
 
 # Hanami
 #
@@ -34,8 +36,8 @@ module Hanami
     # @since 0.1.0
     # @api private
     CONTENT_TYPES = {
-      html: 'text/html',
-      txt: 'text/plain'
+      html: "text/html",
+      txt: "text/plain"
     }.freeze
 
     include Utils::ClassAttribute
@@ -181,10 +183,17 @@ module Hanami
       #   invoice = Invoice.new
       #   user    = User.new(name: 'L', email: 'user@example.com')
       #
-      #   Billing::Invoice.deliver(invoice: invoice, user: user)                      # Deliver both text, HTML parts and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)        # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)       # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: 'iso-8859') # Deliver both the parts with "iso-8859"
+      #   # Deliver both text, HTML parts and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user)
+      #
+      #   # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)
+      #
+      #   # Deliver only the text part and the attachment
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)
+      #
+      #   # Deliver both the parts with "iso-8859"
+      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: "iso-8859")
       def deliver(locals = {})
         new(locals).deliver
       end
@@ -280,8 +289,6 @@ module Hanami
 
     private
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def build
       Mail.new.tap do |m|
         m.return_path = __dsl(:return_path)
@@ -299,8 +306,6 @@ module Hanami
         m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
     # @api private
     # @since 0.1.0
