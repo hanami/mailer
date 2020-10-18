@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "http://hanamirb.org"
   spec.license       = "MIT"
 
-  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/) # rubocop:disable Style/SpecialGlobalVars
+  spec.files         = `git ls-files -- lib/* CHANGELOG.md LICENSE.md README.md hanami-mailer.gemspec`.split($/)
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]

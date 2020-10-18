@@ -289,8 +289,6 @@ module Hanami
 
     private
 
-    # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def build
       Mail.new.tap do |m|
         m.return_path = __dsl(:return_path)
@@ -308,8 +306,6 @@ module Hanami
         m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
       end
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
     # @api private
     # @since 0.1.0

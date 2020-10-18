@@ -146,7 +146,7 @@ module Hanami
       #
       # @see Hanami::Mailer.configure
       def prepare(&blk)
-        if block_given? # rubocop:disable Style/GuardClause
+        if block_given?
           @modules.push(blk)
         else
           raise ArgumentError.new("Please provide a block")
