@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "set"
 require "hanami/utils/kernel"
 require "hanami/mailer/template_name"
 require "hanami/mailer/templates_finder"
@@ -154,7 +155,7 @@ module Hanami
         @modules = []
       end
 
-      alias unload! reset!
+      alias_method :unload!, :reset!
 
       # Copy the configuration for the given mailer
       #

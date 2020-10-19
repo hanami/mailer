@@ -76,6 +76,46 @@ RSpec.describe Hanami::Mailer::Dsl do
     end
   end
 
+  describe ".reply_to" do
+    it "returns the default value" do
+      expect(mailer.reply_to).to be(nil)
+    end
+
+    it "sets a single value" do
+      email_address = "reply@hanami.test"
+      mailer.reply_to email_address
+
+      expect(mailer.reply_to).to eq(email_address)
+    end
+
+    it "sets an array of values" do
+      email_addresses = ["bcc@hanami.test"]
+      mailer.reply_to email_addresses
+
+      expect(mailer.reply_to).to eq(email_addresses)
+    end
+  end
+
+  describe ".return_path" do
+    it "returns the default value" do
+      expect(mailer.return_path).to be(nil)
+    end
+
+    it "sets a single value" do
+      email_address = "return@hanami.test"
+      mailer.return_path email_address
+
+      expect(mailer.return_path).to eq(email_address)
+    end
+
+    it "sets an array of values" do
+      email_addresses = ["return@hanami.test"]
+      mailer.return_path email_addresses
+
+      expect(mailer.return_path).to eq(email_addresses)
+    end
+  end
+
   describe ".subject" do
     it "returns the default value" do
       expect(mailer.subject).to be(nil)

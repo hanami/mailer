@@ -98,7 +98,10 @@ module Hanami
       # @api unstable
       # @since 0.1.0
       def templates(template_name, lookup = search_path)
-        Utils::FileList["#{[root, lookup, template_name].join(separator)}#{format_separator}#{format}#{format_separator}#{engines}"]
+        root_path = [root, lookup, template_name].join(separator)
+        search_path = "#{format_separator}#{format}#{format_separator}#{engines}"
+
+        Utils::FileList["#{root_path}#{search_path}"]
       end
 
       # @api unstable

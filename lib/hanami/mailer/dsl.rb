@@ -15,14 +15,15 @@ module Hanami
       # @api unstable
       def self.extended(base)
         base.class_eval do
-          @from     = nil
-          @to       = nil
-          @cc       = nil
-          @bcc      = nil
-          @reply_to = nil
-          @subject  = nil
-          @template = nil
-          @before   = ->(*) {}
+          @from        = nil
+          @to          = nil
+          @cc          = nil
+          @bcc         = nil
+          @reply_to    = nil
+          @return_path = nil
+          @subject     = nil
+          @template    = nil
+          @before      = ->(*) {}
         end
       end
 
@@ -210,6 +211,73 @@ module Hanami
         end
       end
 
+      # Sets the bcc (blind carbon copy) for mail messages
+      #
+      # It accepts a hardcoded value as a string or array of strings.
+      # For dynamic values, you can specify a symbol that represents an instance
+      # method.
+      #
+      # This value is optional.
+      #
+      # When a value is given, it specifies the bcc for the email.
+      # When a value is not given, it returns the bcc of the email.
+      #
+      # This is part of a DSL, for this reason when this method is called with
+      # an argument, it will set the corresponding class variable. When
+      # called without, it will return the already set value, or the default.
+      #
+      # @overload bcc(value)
+      #   Sets the bcc
+      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      #   @return [NilClass]
+      #
+      # @overload bcc
+      #   Returns the bcc
+      #   @return [String, Array, Symbol] the recipient
+      #
+      # @since 0.3.0
+      #
+      # @example Hardcoded value (String)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc "other.user@example.com"
+      #   end
+      #
+      # @example Hardcoded value (Array)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc ["other.user-1@example.com", "other.user-2@example.com"]
+      #   end
+      #
+      # @example Lazy value (Proc)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc ->(locals) { locals.fetch(:user).email }
+      #   end
+      #
+      #   user = User.new(name: 'L')
+      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
+      #
+      # @example Lazy values (Proc)
+      #   require 'hanami/mailer'
+      #
+      #   class WelcomeMailer < Hanami::Mailer
+      #     bcc ->(locals) { locals.fetch(:users).map(&:email) }
+      #   end
+      #
+      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
+      #   WelcomeMailer.new(configuration: configuration).deliver(users: users)
+      def bcc(value = nil)
+        if value.nil?
+          @bcc
+        else
+          @bcc = value
+        end
+      end
+
       # Sets the reply_to for mail messages
       #
       # It accepts a hardcoded value as a string or array of strings.
@@ -299,70 +367,60 @@ module Hanami
         end
       end
 
-      # Sets the bcc (blind carbon copy) for mail messages
+      # Sets the MAIL FROM address for mail messages.
+      # This lets you specify a "bounce address" different from the sender
+      # address specified with `from`.
       #
-      # It accepts a hardcoded value as a string or array of strings.
-      # For dynamic values, you can specify a symbol that represents an instance
-      # method.
+      # It accepts a hardcoded value as a string, or a symbol that represents
+      # an instance method for more complex logic.
       #
       # This value is optional.
       #
-      # When a value is given, it specifies the bcc for the email.
-      # When a value is not given, it returns the bcc of the email.
+      # When a value is given, specify the MAIL FROM address of the email
+      # Otherwise, it returns the MAIL FROM address of the email
       #
       # This is part of a DSL, for this reason when this method is called with
       # an argument, it will set the corresponding class variable. When
       # called without, it will return the already set value, or the default.
       #
-      # @overload bcc(value)
-      #   Sets the bcc
-      #   @param value [String, Array, Symbol] the hardcoded value or method name
+      # @overload return_path(value)
+      #   Sets the MAIL FROM address
+      #   @param value [String, Symbol] the hardcoded value or method name
       #   @return [NilClass]
       #
-      # @overload bcc
-      #   Returns the bcc
-      #   @return [String, Array, Symbol] the recipient
+      # @overload return_path
+      #   Returns the MAIL FROM address
+      #   @return [String, Symbol] the MAIL FROM address
       #
-      # @since 0.3.0
+      # @since 1.3.2
       #
       # @example Hardcoded value (String)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer < Hanami::Mailer
-      #     bcc "other.user@example.com"
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #
+      #     return_path "bounce@example.com"
       #   end
       #
-      # @example Hardcoded value (Array)
+      # @example Method (Symbol)
       #   require 'hanami/mailer'
       #
-      #   class WelcomeMailer < Hanami::Mailer
-      #     bcc ["other.user-1@example.com", "other.user-2@example.com"]
+      #   class WelcomeMailer
+      #     include Hanami::Mailer
+      #     return_path :bounce_address
+      #
+      #     private
+      #
+      #     def bounce_address
+      #       "bounce@example.com"
+      #     end
       #   end
-      #
-      # @example Lazy value (Proc)
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer < Hanami::Mailer
-      #     bcc ->(locals) { locals.fetch(:user).email }
-      #   end
-      #
-      #   user = User.new(name: 'L')
-      #   WelcomeMailer.new(configuration: configuration).deliver(user: user)
-      #
-      # @example Lazy values (Proc)
-      #   require 'hanami/mailer'
-      #
-      #   class WelcomeMailer < Hanami::Mailer
-      #     bcc ->(locals) { locals.fetch(:users).map(&:email) }
-      #   end
-      #
-      #   users = [User.new(name: 'L'), User.new(name: 'MG')]
-      #   WelcomeMailer.new(configuration: configuration).deliver(users: users)
-      def bcc(value = nil)
+      def return_path(value = nil)
         if value.nil?
-          @bcc
+          @return_path
         else
-          @bcc = value
+          @return_path = value
         end
       end
 

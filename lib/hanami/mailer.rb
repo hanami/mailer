@@ -77,6 +77,7 @@ module Hanami
     # @since next
     # @api unstable
     def self.inherited(base)
+      super
       @_subclasses.push(base)
       base.extend Dsl
     end
@@ -168,15 +169,15 @@ module Hanami
     #   mailer.deliver(invoice: invoice, user: user, charset: 'iso-8859')
     def deliver(locals)
       mail(locals).deliver
-    rescue ArgumentError => e
-      raise MissingDeliveryDataError if e.message =~ /SMTP (From|To) address/
+    rescue ArgumentError => exception
+      raise MissingDeliveryDataError if exception.message =~ /SMTP (From|To) address/
 
       raise
     end
 
     # @since next
     # @api unstable
-    alias call deliver
+    alias_method :call, :deliver
 
     # Render a single template with the specified format.
     #
@@ -208,17 +209,16 @@ module Hanami
     # @api unstable
     # @since next
     #
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    def bind(mail, locals)
+    def bind(mail, locals) # rubocop:disable Metrics/AbcSize
       charset = locals.fetch(:charset, configuration.default_charset)
 
-      mail.from     = __dsl(:from,     locals)
-      mail.to       = __dsl(:to,       locals)
-      mail.cc       = __dsl(:cc,       locals)
-      mail.bcc      = __dsl(:bcc,      locals)
-      mail.reply_to = __dsl(:reply_to, locals)
-      mail.subject  = __dsl(:subject,  locals)
+      mail.return_path = __dsl(:return_path, locals)
+      mail.from        = __dsl(:from,        locals)
+      mail.to          = __dsl(:to,          locals)
+      mail.cc          = __dsl(:cc,          locals)
+      mail.bcc         = __dsl(:bcc,         locals)
+      mail.reply_to    = __dsl(:reply_to,    locals)
+      mail.subject     = __dsl(:subject,     locals)
 
       mail.html_part = __part(:html, charset, locals)
       mail.text_part = __part(:txt,  charset, locals)
@@ -226,8 +226,6 @@ module Hanami
       mail.charset = charset
       mail.delivery_method(*configuration.delivery_method)
     end
-    # rubocop:enable Metrics/MethodLength
-    # rubocop:enable Metrics/AbcSize
 
     # @since next
     # @api unstable

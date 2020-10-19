@@ -5,9 +5,8 @@ Mail for Ruby applications.
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![TravisCI](https://travis-ci.org/hanami/mailer.svg?branch=master)](https://travis-ci.org/hanami/mailer)
-[![CircleCI](https://circleci.com/gh/hanami/mailer/tree/master.svg?style=svg)](https://circleci.com/gh/hanami/mailer/tree/master)
-[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
+[![CircleCI](https://circleci.com/gh/hanami/mailer/tree/unstable.svg?style=svg)](https://circleci.com/gh/hanami/mailer/tree/unstable)
+[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/unstable/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
 [![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
 [![Inline Docs](http://inch-ci.org/github/hanami/mailer.svg)](http://inch-ci.org/github/hanami/mailer)
 
@@ -22,7 +21,7 @@ Mail for Ruby applications.
 
 ## Rubies
 
-__Hanami::Mailer__ supports Ruby (MRI) 2.5+
+__Hanami::Mailer__ supports Ruby (MRI) 2.6+
 
 ## Installation
 
@@ -128,6 +127,7 @@ configuration = Hanami::Mailer::Configuration.new do |config|
 end
 
 class WelcomeMailer < Hanami::Mailer
+  return_path 'bounce@sender.com'
   from 'noreply@sender.com'
   to   'noreply@recipient.com'
   cc   'cc@sender.com'
@@ -447,6 +447,6 @@ __Hanami::Mailer__ uses [Semantic Versioning 2.0.0](http://semver.org)
 
 ## Copyright
 
-Copyright © 2015-2019 Luca Guidi – Released under MIT License
+Copyright © 2015-2020 Luca Guidi – Released under MIT License
 
 This project was formerly known as Lotus (`lotus-mailer`).

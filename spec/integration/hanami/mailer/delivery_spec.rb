@@ -120,7 +120,7 @@ RSpec.describe Hanami::Mailer do
 
       subject       { options.fetch(:deliveries).first }
       let(:mailer)  { WelcomeMailer.new(configuration: configuration) }
-      let(:options) { { deliveries: [] } }
+      let(:options) { {deliveries: []} }
 
       let(:configuration) do
         configuration = Hanami::Mailer::Configuration.new do |config|

@@ -151,7 +151,7 @@ RSpec.describe Hanami::Mailer do
 
     describe "when locals are parsed in" do
       let(:mailer) { RenderMailer.new(configuration: configuration) }
-      let(:locals) { { user: User.new("Luca") } }
+      let(:locals) { {user: User.new("Luca")} }
 
       it "renders template with parsed locals" do
         expect(mailer.render(:html, locals)).to include(locals.fetch(:user).name)
@@ -160,7 +160,7 @@ RSpec.describe Hanami::Mailer do
 
     describe "with HAML template engine" do
       let(:mailer) { TemplateEngineMailer.new(configuration: configuration) }
-      let(:locals) { { user: User.new("MG") } }
+      let(:locals) { {user: User.new("MG")} }
 
       it "renders template with parsed locals" do
         expect(mailer.render(:html, locals)).to include(%(<h1>\n#{locals.fetch(:user).name}\n</h1>\n))

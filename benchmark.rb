@@ -40,9 +40,9 @@ total_memsize = stats.allocations.bytes.to_a.inject(&:+)
 puts "total memsize: #{total_memsize}"
 
 detailed_allocations = stats.allocations(alias_paths: true)
-                            .group_by(:sourcefile, :class_plus)
-                            .sort_by_count
-                            .to_text
+  .group_by(:sourcefile, :class_plus)
+  .sort_by_count
+  .to_text
 
 puts "allocations by source file and class:"
 puts detailed_allocations

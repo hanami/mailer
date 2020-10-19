@@ -18,7 +18,7 @@ module Hanami
       class << self
         # @since next
         # @api unstable
-        alias [] call
+        alias_method :[], :call
       end
     end
   end

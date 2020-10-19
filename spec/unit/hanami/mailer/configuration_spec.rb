@@ -63,22 +63,22 @@ RSpec.describe Hanami::Mailer::Configuration do
 
     describe "set with a symbol" do
       before do
-        subject.delivery_method = :exim, { location: "/path/to/exim" }
+        subject.delivery_method = :exim, {location: "/path/to/exim"}
       end
 
       it "saves the delivery method in the configuration" do
-        expect(subject.delivery_method).to eq([:exim, { location: "/path/to/exim" }])
+        expect(subject.delivery_method).to eq([:exim, {location: "/path/to/exim"}])
       end
     end
 
     describe "set with a class" do
       before do
         subject.delivery_method = MandrillDeliveryMethod,
-                                  { username: "mandrill-username", password: "mandrill-api-key" }
+                                  {username: "mandrill-username", password: "mandrill-api-key"}
       end
 
       it "saves the delivery method in the configuration" do
-        expect(subject.delivery_method).to eq([MandrillDeliveryMethod, username: "mandrill-username", password: "mandrill-api-key"])
+        expect(subject.delivery_method).to eq([MandrillDeliveryMethod, {username: "mandrill-username", password: "mandrill-api-key"}])
       end
     end
   end
