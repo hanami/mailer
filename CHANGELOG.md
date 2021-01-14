@@ -1,16 +1,18 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
-<<<<<<< HEAD
 ## v2.0.0.alpha1 (unreleased)
 ### Changed
-- [Luca Guidi] Drop support for Ruby: MRI 2.3, and 2.4.
-=======
+- [Luca Guidi] Drop support for Ruby: MRI 2.3, 2.4, 2.5, 2.6
+
+## v1.3.3 - 2021-01-14
+### Added
+- [Luca Guidi] Official support for Ruby: MRI 3.0
+
 ## v1.3.2 - 2020-02-03
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.7
 - [glaszig] Added `Hanami::Mailer.return_path` and `#return_path` to specify `MAIL FROM` address
->>>>>>> develop
 
 ## v1.3.1 - 2019-01-18
 ### Added
