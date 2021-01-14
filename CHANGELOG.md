@@ -1,6 +1,10 @@
 # Hanami::Mailer
 Mail for Ruby applications
 
+## v1.3.3 - 2021-01-14
+### Added
+- [Luca Guidi] Official support for Ruby: MRI 3.0
+
 ## v1.3.2 - 2020-02-03
 ### Added
 - [Luca Guidi] Official support for Ruby: MRI 2.7
