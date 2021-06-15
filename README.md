@@ -2,11 +2,15 @@
 
 Mail for Ruby applications.
 
+## Version
+
+**This branch contains the code for `hanami-mailer` 1.3.x.**
+
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![CI](https://github.com/hanami/mailer/workflows/ci/badge.svg?branch=master)](https://github.com/hanami/mailer/actions?query=workflow%3Aci+branch%3Amaster)
-[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
+[![CI](https://github.com/hanami/mailer/workflows/ci/badge.svg?branch=1.3.x)](https://github.com/hanami/mailer/actions?query=workflow%3Aci+branch%3A1.3.x)
+[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/1.3.x/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
 [![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
 [![Inline Docs](http://inch-ci.org/github/hanami/mailer.svg)](http://inch-ci.org/github/hanami/mailer)
 
