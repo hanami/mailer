@@ -5,8 +5,8 @@ Mail for Ruby applications.
 ## Status
 
 [![Gem Version](https://badge.fury.io/rb/hanami-mailer.svg)](https://badge.fury.io/rb/hanami-mailer)
-[![CI](https://github.com/hanami/mailer/workflows/ci/badge.svg?branch=master)](https://github.com/hanami/mailer/actions?query=workflow%3Aci+branch%3Amaster)
-[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/master/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
+[![CI](https://github.com/hanami/mailer/workflows/ci/badge.svg?branch=unstable)](https://github.com/hanami/mailer/actions?query=workflow%3Aci+branch%3Aunstable)
+[![Test Coverage](https://codecov.io/gh/hanami/mailer/branch/unstable/graph/badge.svg)](https://codecov.io/gh/hanami/mailer)
 [![Depfu](https://badges.depfu.com/badges/739c6e10eaf20d3ba4240d00828284db/overview.svg)](https://depfu.com/github/hanami/mailer?project=Bundler)
 [![Inline Docs](http://inch-ci.org/github/hanami/mailer.svg)](http://inch-ci.org/github/hanami/mailer)
 
@@ -21,7 +21,7 @@ Mail for Ruby applications.
 
 ## Rubies
 
-__Hanami::Mailer__ supports Ruby (MRI) 2.3+ and JRuby 9.1.5.0+.
+__Hanami::Mailer__ supports Ruby (MRI) 2.6+
 
 ## Installation
 
@@ -43,10 +43,10 @@ Or install it yourself as:
 
 ### Conventions
 
-  * Templates are searched under `Hanami::Mailer.configuration.root`, set this value according to your app structure (eg. `"app/templates"`).
+  * Templates are searched under `Hanami::Mailer::Configuration#root`, set this value according to your app structure (eg. `"app/templates"`).
   * A mailer will look for a template with a file name that is composed by its full class name (eg. `"articles/index"`).
   * A template must have two concatenated extensions: one for the format and one for the engine (eg. `".html.erb"`).
-  * The framework must be loaded before rendering the first time: `Hanami::Mailer.load!`.
+  * The framework must be loaded before rendering the first time: `Hanami::Mailer.finalize(configuration)`.
 
 ### Mailers
 
@@ -54,10 +54,60 @@ A simple mailer looks like this:
 
 ```ruby
 require 'hanami/mailer'
+require 'ostruct'
 
-class InvoiceMailer
-  include Hanami::Mailer
+# Create two files: `invoice.html.erb` and `invoice.txt.erb`
+
+configuration = Hanami::Mailer::Configuration.new do |config|
+  config.delivery_method = :test
 end
+
+class Invoice < Hanami::Mailer
+  from "noreply@example.com"
+  to ->(locals) { locals.fetch(:user).email }
+end
+
+configuration = Hanami::Mailer.finalize(configuration)
+
+invoice = OpenStruct.new(number: 23)
+mailer  = InvoiceMailer.new(configuration: configuration)
+mail    = mailer.deliver(invoice: invoice)
+
+mail
+  # => #<Mail::Message:70303354246540, Multipart: true, Headers: <Date: Wed, 22 Mar 2017 11:48:57 +0100>, <From: noreply@example.com>, <To: user@example.com>, <Cc: >, <Bcc: >, <Message-ID: <58d25699e47f9_b4e13ff0c503e4f4632e6@escher.mail>>, <Subject: >, <Mime-Version: 1.0>, <Content-Type: multipart/alternative; boundary=--==_mimepart_58d25699e42d2_b4e13ff0c503e4f463186>, <Content-Transfer-Encoding: 7bit>>
+
+mail.to_s
+  # =>
+  # From: noreply@example.com
+  # To: user@example.com
+  # Message-ID: <58d25699e47f9_b4e13ff0c503e4f4632e6@escher.mail>
+  # Subject:
+  # Mime-Version: 1.0
+  # Content-Type: multipart/alternative;
+  #  boundary="--==_mimepart_58d25699e42d2_b4e13ff0c503e4f463186";
+  #  charset=UTF-8
+  # Content-Transfer-Encoding: 7bit
+  #
+  #
+  # ----==_mimepart_58d25699e42d2_b4e13ff0c503e4f463186
+  # Content-Type: text/plain;
+  #  charset=UTF-8
+  # Content-Transfer-Encoding: 7bit
+  #
+  # Invoice #23
+  #
+  # ----==_mimepart_58d25699e42d2_b4e13ff0c503e4f463186
+  # Content-Type: text/html;
+  #  charset=UTF-8
+  # Content-Transfer-Encoding: 7bit
+  #
+  # <html>
+  #   <body>
+  #     <h1>Invoice template</h1>
+  #   </body>
+  # </html>
+  #
+  # ----==_mimepart_58d25699e42d2_b4e13ff0c503e4f463186--
 ```
 
 A mailer with `.to` and `.from` addresses and mailer delivery:
@@ -65,20 +115,18 @@ A mailer with `.to` and `.from` addresses and mailer delivery:
 ```ruby
 require 'hanami/mailer'
 
-Hanami::Mailer.configure do
-  delivery_method :smtp,
-    address:              "smtp.gmail.com",
-    port:                 587,
-    domain:               "example.com",
-    user_name:            ENV['SMTP_USERNAME'],
-    password:             ENV['SMTP_PASSWORD'],
-    authentication:       "plain",
-    enable_starttls_auto: true
-end.load!
+configuration = Hanami::Mailer::Configuration.new do |config|
+  config.delivery_method = :smtp,
+                           address:              "smtp.gmail.com",
+                           port:                 587,
+                           domain:               "example.com",
+                           user_name:            ENV['SMTP_USERNAME'],
+                           password:             ENV['SMTP_PASSWORD'],
+                           authentication:       "plain",
+                           enable_starttls_auto: true
+end
 
-class WelcomeMailer
-  include Hanami::Mailer
-
+class WelcomeMailer < Hanami::Mailer
   return_path 'bounce@sender.com'
   from 'noreply@sender.com'
   to   'noreply@recipient.com'
@@ -88,7 +136,7 @@ class WelcomeMailer
   subject 'Welcome'
 end
 
-WelcomeMailer.deliver
+WelcomeMailer.new(configuration: configuration).call(locals)
 ```
 
 ### Locals
@@ -97,25 +145,17 @@ The set of objects passed in the `deliver` call are called `locals` and are avai
 
 ```ruby
 require 'hanami/mailer'
+require 'ostruct'
 
-User = Struct.new(:name, :username, :email)
-luca = User.new('Luca', 'jodosha', 'luca@jodosha.com')
+user = OpenStruct.new(name: Luca', email: 'user@hanamirb.org')
 
-class WelcomeMailer
-  include Hanami::Mailer
-
+class WelcomeMailer < Hanami::Mailer
   from    'noreply@sender.com'
   subject 'Welcome'
-  to      :recipient
-
-  private
-
-  def recipient
-    user.email
-  end
+  to      ->(locals) { locals.fetch(:user).email }
 end
 
-WelcomeMailer.deliver(user: luca)
+WelcomeMailer.new(configuration: configuration).deliver(user: luca)
 ```
 
 The corresponding `erb` file:
@@ -131,9 +171,7 @@ All public methods defined in the mailer are accessible from the template:
 ```ruby
 require 'hanami/mailer'
 
-class WelcomeMailer
-  include Hanami::Mailer
-
+class WelcomeMailer < Hanami::Mailer
   from    'noreply@sender.com'
   to      'noreply@recipient.com'
   subject 'Welcome'
@@ -154,7 +192,7 @@ The template file must be located under the relevant `root` and must match the i
 
 ```ruby
 # Given this root
-Hanami::Mailer.configuration.root      # => #<Pathname:app/templates>
+configuration.root      # => #<Pathname:app/templates>
 
 # For InvoiceMailer, it looks for:
 #  * app/templates/invoice_mailer.html.erb
@@ -164,9 +202,7 @@ Hanami::Mailer.configuration.root      # => #<Pathname:app/templates>
 If we want to specify a different template, we can do:
 
 ```ruby
-class InvoiceMailer
-  include Hanami::Mailer
-
+class InvoiceMailer < Hanami::Mailer
   template 'invoice'
 end
 
@@ -309,23 +345,23 @@ __Hanami::Mailer__ can be configured with a DSL that determines its behavior.
 It supports a few options:
 
 ```ruby
-require 'hanami/mailer'
+require "hanami/mailer"
 
-Hanami::Mailer.configure do
+configuration = Hanami::Mailer::Configuration.new do |config|
   # Set the root path where to search for templates
   # Argument: String, Pathname, #to_pathname, defaults to the current directory
   #
-  root '/path/to/root'
+  config.root = "path/to/root"
 
   # Set the default charset for emails
   # Argument: String, defaults to "UTF-8"
   #
-  default_charset 'iso-8859'
+  config.default_charset = "iso-8859"
 
   # Set the delivery method
   # Argument: Symbol
   # Argument: Hash, optional configurations
-  delivery_method :stmp
+  config.delivery_method = :stmp
 end
 ```
 
@@ -334,14 +370,10 @@ end
 Attachments can be added with the following API:
 
 ```ruby
-class InvoiceMailer
-  include Hanami::Mailer
+class InvoiceMailer < Hanami::Mailer
   # ...
-
-  def prepare
-    mail.attachments['invoice.pdf'] = '/path/to/invoice.pdf'
-    # or
-    mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
+  before do |mail, locals|
+    mail.attachments["invoice-#{locals.fetch(:invoice).number}.pdf"] = 'path/to/invoice.pdf'
   end
 end
 ```
@@ -351,14 +383,14 @@ end
 The global delivery method is defined through the __Hanami::Mailer__ configuration, as:
 
 ```ruby
-Hanami::Mailer.configuration do
-  delivery_method :smtp
+configuration = Hanami::Mailer::Configuration.new do |config|
+  config.delivery_method = :smtp
 end
 ```
 
 ```ruby
-Hanami::Mailer.configuration do
-  delivery_method :smtp, address: "localhost", port: 1025
+configuration = Hanami::Mailer::Configuration.new do |config|
+  config.delivery_method = :smtp, { address: "localhost", port: 1025 }
 end
 ```
 
@@ -387,14 +419,14 @@ class MandrillDeliveryMethod
   end
 end
 
-Hanami::Mailer.configure do
-  delivery_method MandrillDeliveryMethod,
-    username: ENV['MANDRILL_USERNAME'],
-    password: ENV['MANDRILL_API_KEY']
-end.load!
+configuration = Hanami::Mailer::Configuration.new do |config|
+  config.delivery_method = MandrillDeliveryMethod,
+                           username: ENV['MANDRILL_USERNAME'],
+                           password: ENV['MANDRILL_API_KEY']
+end
 ```
 
-The class passed to `.delivery_method` must accept an optional set of options
+The class passed to `.delivery_method=` must accept an optional set of options
 with the constructor (`#initialize`) and respond to `#deliver!`.
 
 ### Multipart Delivery
@@ -403,8 +435,8 @@ All the email are sent as multipart messages by default.
 For a given mailer, the framework looks up for associated text (`.txt`) and `HTML` (`.html`) templates and render them.
 
 ```ruby
-InvoiceMailer.deliver               # delivers both text and html templates
-InvoiceMailer.deliver(format: :txt) # delivers only text template
+InvoiceMailer.new(configuration: configuration).deliver({})           # delivers both text and html templates
+InvoiceMailer.new(configuration: configuration).deliver(format: :txt) # delivers only text template
 ```
 
 Please note that **they aren't both mandatory, but at least one of them MUST** be present.
