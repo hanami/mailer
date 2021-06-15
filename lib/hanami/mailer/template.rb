@@ -3,7 +3,7 @@
 require "tilt"
 
 module Hanami
-  module Mailer
+  class Mailer
     # A logic-less template.
     #
     # @api private
@@ -13,29 +13,20 @@ module Hanami
     class Template
       def initialize(template, encoding = Encoding::UTF_8)
         @_template = Tilt.new(template, default_encoding: encoding)
+        freeze
       end
 
       # Render the template within the context of the given scope.
       #
-      # @param scope [Class] the rendering scope
+      # @param scope [Object] the rendering scope
       # @param locals [Hash] set of objects passed to the constructor
       #
       # @return [String] the output of the rendering process
       #
       # @api private
       # @since 0.1.0
-      def render(scope = Object.new, locals = {})
-        @_template.render(scope, locals)
-      end
-
-      # Get the path to the template
-      #
-      # @return [String] the pathname
-      #
-      # @api private
-      # @since 0.1.0
-      def file
-        @_template.file
+      def render(scope, locals = {})
+        @_template.render(scope.dup, locals)
       end
     end
   end

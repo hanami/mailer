@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require "hanami/utils/class_attribute"
-require "hanami/mailer/version"
-require "hanami/mailer/configuration"
-require "hanami/mailer/dsl"
 require "mail"
+require "concurrent"
 
 # Hanami
 #
@@ -13,23 +10,12 @@ module Hanami
   # Hanami::Mailer
   #
   # @since 0.1.0
-  module Mailer
-    # Base error for Hanami::Mailer
-    #
-    # @since 0.1.0
-    class Error < ::StandardError
-    end
-
-    # Missing delivery data error
-    #
-    # It's raised when a mailer doesn't specify <tt>from</tt> or <tt>to</tt>.
-    #
-    # @since 0.1.0
-    class MissingDeliveryDataError < Error
-      def initialize
-        super("Missing delivery data, please check 'from', or 'to'")
-      end
-    end
+  class Mailer
+    require "hanami/mailer/version"
+    require "hanami/mailer/template"
+    require "hanami/mailer/finalizer"
+    require "hanami/mailer/configuration"
+    require "hanami/mailer/dsl"
 
     # Content types mapping
     #
@@ -40,179 +26,158 @@ module Hanami
       txt: "text/plain"
     }.freeze
 
-    include Utils::ClassAttribute
+    private_constant(:CONTENT_TYPES)
 
-    # @since 0.1.0
-    # @api private
-    class_attribute :configuration
-    self.configuration = Configuration.new
-
-    # Configure the framework.
-    # It yields the given block in the context of the configuration
-    #
-    # @param blk [Proc] the configuration block
+    # Base error for Hanami::Mailer
     #
     # @since 0.1.0
-    #
-    # @see Hanami::Mailer::Configuration
-    #
-    # @example
-    #   require 'hanami/mailer'
-    #
-    #   Hanami::Mailer.configure do
-    #     root '/path/to/root'
-    #   end
-    def self.configure(&blk)
-      configuration.instance_eval(&blk)
-      self
+    class Error < ::StandardError
     end
 
+    # Unknown mailer
+    #
+    # This error is raised at the runtime when trying to deliver a mail message,
+    # by using a configuration that it wasn't finalized yet.
+    #
+    # @since next
+    # @api unstable
+    #
+    # @see Hanami::Mailer.finalize
+    class UnknownMailerError < Error
+      # @param mailer [Hanami::Mailer] a mailer
+      #
+      # @since next
+      # @api unstable
+      def initialize(mailer)
+        super("Unknown mailer: #{mailer.inspect}. Please finalize the configuration before to use it.")
+      end
+    end
+
+    # Missing delivery data error
+    #
+    # It's raised when a mailer doesn't specify `from` or `to`.
+    #
+    # @since 0.1.0
+    class MissingDeliveryDataError < Error
+      def initialize
+        super("Missing delivery data, please check 'from', or 'to'")
+      end
+    end
+
+    # @since next
+    # @api unstable
+    @_subclasses = Concurrent::Array.new
+
     # Override Ruby's hook for modules.
-    # It includes basic Hanami::Mailer modules to the given Class.
+    # It includes basic `Hanami::Mailer` modules to the given Class.
     # It sets a copy of the framework configuration
     #
     # @param base [Class] the target mailer
     #
-    # @since 0.1.0
-    # @api private
-    #
-    # @see http://www.ruby-doc.org/core/Module.html#method-i-included
-    def self.included(base)
-      conf = configuration
-      conf.add_mailer(base)
-
-      base.class_eval do
-        extend Dsl
-        extend ClassMethods
-
-        include Utils::ClassAttribute
-        class_attribute :configuration
-
-        self.configuration = conf.duplicate
-      end
-
-      conf.copy!(base)
+    # @since next
+    # @api unstable
+    def self.inherited(base)
+      super
+      @_subclasses.push(base)
+      base.extend Dsl
     end
 
-    # Test deliveries
+    private_class_method :inherited
+
+    # Finalize the configuration
     #
-    # This is a collection of delivered messages, used when <tt>delivery_method</tt>
-    # is set on <tt>:test</tt>
+    # This should be used before to start to use the mailers
     #
-    # @return [Array] a collection of delivered messages
+    # @param configuration [Hanami::Mailer::Configuration] the configuration to
+    #   finalize
     #
-    # @since 0.1.0
+    # @return [Hanami::Mailer::Configuration] the finalized configuration
     #
-    # @see Hanami::Mailer::Configuration#delivery_mode
+    # @since next
+    # @api unstable
     #
     # @example
     #   require 'hanami/mailer'
     #
-    #   Hanami::Mailer.configure do
-    #     delivery_method :test
-    #   end.load!
+    #   configuration = Hanami::Mailer::Configuration.new do |config|
+    #     # ...
+    #   end
     #
-    #   # In testing code
-    #   Signup::Welcome.deliver
-    #   Hanami::Mailer.deliveries.count # => 1
-    def self.deliveries
-      Mail::TestMailer.deliveries
-    end
-
-    # Load the framework
-    #
-    # @since 0.1.0
-    # @api private
-    def self.load!
-      Mail.eager_autoload!
-      configuration.load!
-    end
-
-    # @since 0.1.0
-    module ClassMethods
-      # Delivers a multipart email message.
-      #
-      # When a mailer defines a <tt>html</tt> and <tt>txt</tt> template, they are
-      # both delivered.
-      #
-      # In order to selectively deliver only one of the two templates, use
-      # <tt>Signup::Welcome.deliver(format: :txt)</tt>
-      #
-      # All the given locals, excepted the reserved ones (<tt>:format</tt> and
-      # <tt>charset</tt>), are available as rendering context for the templates.
-      #
-      # @param locals [Hash] a set of objects that acts as context for the rendering
-      # @option :format [Symbol] specify format to deliver
-      # @option :charset [String] charset
-      #
-      # @since 0.1.0
-      #
-      # @see Hanami::Mailer::Configuration#default_charset
-      #
-      # @example
-      #   require 'hanami/mailer'
-      #
-      #   Hanami::Mailer.configure do
-      #     delivery_method :smtp
-      #   end.load!
-      #
-      #   module Billing
-      #     class Invoice
-      #       include Hanami::Mailer
-      #
-      #       from    'noreply@example.com'
-      #       to      :recipient
-      #       subject :subject_line
-      #
-      #       def prepare
-      #         mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
-      #       end
-      #
-      #       private
-      #
-      #       def recipient
-      #         user.email
-      #       end
-      #
-      #       def subject_line
-      #         "Invoice - #{ invoice.number }"
-      #       end
-      #     end
-      #   end
-      #
-      #   invoice = Invoice.new
-      #   user    = User.new(name: 'L', email: 'user@example.com')
-      #
-      #   # Deliver both text, HTML parts and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user)
-      #
-      #   # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :txt)
-      #
-      #   # Deliver only the text part and the attachment
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, format: :html)
-      #
-      #   # Deliver both the parts with "iso-8859"
-      #   Billing::Invoice.deliver(invoice: invoice, user: user, charset: "iso-8859")
-      def deliver(locals = {})
-        new(locals).deliver
-      end
+    #   configuration = Hanami::Mailer.finalize(configuration)
+    #   MyMailer.new(configuration: configuration)
+    def self.finalize(configuration)
+      Finalizer.finalize(@_subclasses, configuration)
     end
 
     # Initialize a mailer
     #
-    # @param locals [Hash] a set of objects that acts as context for the rendering
-    # @option :format [Symbol] specify format to deliver
-    # @option :charset [String] charset
+    # @param configuration [Hanami::Mailer::Configuration] the configuration
+    # @return [Hanami::Mailer]
     #
     # @since 0.1.0
-    def initialize(locals = {})
-      @locals  = locals
-      @format  = locals.fetch(:format, nil)
-      @charset = locals.fetch(:charset, self.class.configuration.default_charset)
-      @mail    = build
-      prepare
+    def initialize(configuration:)
+      @configuration = configuration
+      freeze
     end
+
+    # Prepare the email message when a new mailer is initialized.
+    #
+    # @return [Mail::Message] the delivered email
+    #
+    # @since 0.1.0
+    # @api unstable
+    #
+    # @see Hanami::Mailer::Configuration#default_charset
+    #
+    # @example
+    #   require 'hanami/mailer'
+    #
+    #   configuration = Hanami::Mailer::Configuration.new do |config|
+    #     config.delivery_method = :smtp
+    #   end
+    #
+    #   configuration = Hanami::Mailer.finalize(configuration)
+    #
+    #   module Billing
+    #     class InvoiceMailer < Hanami::Mailer
+    #       from    'noreply@example.com'
+    #       to      ->(locals) { locals.fetch(:user).email }
+    #       subject ->(locals) { "Invoice number #{locals.fetch(:invoice).number}" }
+    #
+    #       before do |mail, locals|
+    #         mail.attachments["invoice-#{locals.fetch(:invoice).number}.pdf"] =
+    #           File.read('/path/to/invoice.pdf')
+    #       end
+    #     end
+    #   end
+    #
+    #   invoice = Invoice.new(number: 23)
+    #   user    = User.new(name: 'L', email: 'user@example.com')
+    #
+    #   mailer = Billing::InvoiceMailer.new(configuration: configuration)
+    #
+    #   # Deliver both text, HTML parts and the attachment
+    #   mailer.deliver(invoice: invoice, user: user)
+    #
+    #   # Deliver only the text part and the attachment
+    #   mailer.deliver(invoice: invoice, user: user, format: :txt)
+    #
+    #   # Deliver only the text part and the attachment
+    #   mailer.deliver(invoice: invoice, user: user, format: :html)
+    #
+    #   # Deliver both the parts with "iso-8859"
+    #   mailer.deliver(invoice: invoice, user: user, charset: 'iso-8859')
+    def deliver(locals)
+      mail(locals).deliver
+    rescue ArgumentError => exception
+      raise MissingDeliveryDataError if exception.message =~ /SMTP (From|To) address/
+
+      raise
+    end
+
+    # @since next
+    # @api unstable
+    alias_method :call, :deliver
 
     # Render a single template with the specified format.
     #
@@ -221,125 +186,81 @@ module Hanami
     # @return [String] the output of the rendering process.
     #
     # @since 0.1.0
-    # @api private
-    def render(format)
-      self.class.templates(format).render(self, @locals)
+    # @api unstable
+    def render(format, locals)
+      template(format).render(self, locals)
     end
-
-    # Delivers a multipart email, by looking at all the associated templates and render them.
-    #
-    # @since 0.1.0
-    # @api private
-    def deliver
-      mail.deliver
-    rescue ArgumentError => exception
-      raise MissingDeliveryDataError if exception.message =~ /SMTP (From|To) address/
-
-      raise
-    end
-
-    protected
-
-    # Prepare the email message when a new mailer is initialized.
-    #
-    # This is a hook that can be overwritten by mailers.
-    #
-    # @since 0.1.0
-    #
-    # @example
-    #   require 'hanami/mailer'
-    #
-    #   module Billing
-    #     class Invoice
-    #       include Hanami::Mailer
-    #
-    #       subject 'Invoice'
-    #       from    'noreply@example.com'
-    #       to      ''
-    #
-    #       def prepare
-    #         mail.attachments['invoice.pdf'] = File.read('/path/to/invoice.pdf')
-    #       end
-    #
-    #       private
-    #
-    #       def recipient
-    #         user.email
-    #       end
-    #     end
-    #   end
-    #
-    #   invoice = Invoice.new
-    #   user    = User.new(name: 'L', email: 'user@example.com')
-    def prepare
-    end
-
-    # @api private
-    # @since 0.1.0
-    def method_missing(method_name)
-      @locals.fetch(method_name) { super }
-    end
-
-    # @since 0.1.0
-    attr_reader :mail
-
-    # @api private
-    # @since 0.1.0
-    attr_reader :charset
 
     private
 
-    def build
-      Mail.new.tap do |m|
-        m.return_path = __dsl(:return_path)
-        m.from     = __dsl(:from)
-        m.to       = __dsl(:to)
-        m.cc       = __dsl(:cc)
-        m.bcc      = __dsl(:bcc)
-        m.reply_to = __dsl(:reply_to)
-        m.subject  = __dsl(:subject)
+    # @api unstable
+    # @since next
+    attr_reader :configuration
 
-        m.charset   = charset
-        m.html_part = __part(:html)
-        m.text_part = __part(:txt)
-
-        m.delivery_method(*Hanami::Mailer.configuration.delivery_method)
+    # @api unstable
+    # @since next
+    def mail(locals)
+      Mail.new.tap do |mail|
+        instance_exec(mail, locals, &self.class.before)
+        bind(mail, locals)
       end
     end
 
-    # @api private
+    # @api unstable
+    # @since next
+    #
+    def bind(mail, locals) # rubocop:disable Metrics/AbcSize
+      charset = locals.fetch(:charset, configuration.default_charset)
+
+      mail.return_path = __dsl(:return_path, locals)
+      mail.from        = __dsl(:from,        locals)
+      mail.to          = __dsl(:to,          locals)
+      mail.cc          = __dsl(:cc,          locals)
+      mail.bcc         = __dsl(:bcc,         locals)
+      mail.reply_to    = __dsl(:reply_to,    locals)
+      mail.subject     = __dsl(:subject,     locals)
+
+      mail.html_part = __part(:html, charset, locals)
+      mail.text_part = __part(:txt,  charset, locals)
+
+      mail.charset = charset
+      mail.delivery_method(*configuration.delivery_method)
+    end
+
+    # @since next
+    # @api unstable
+    def template(format)
+      configuration.template(self.class, format)
+    end
+
     # @since 0.1.0
-    def __dsl(method_name)
+    # @api unstable
+    def __dsl(method_name, locals)
       case result = self.class.__send__(method_name)
-      when Symbol
-        __send__(result)
+      when Proc
+        result.call(locals)
       else
         result
       end
     end
 
-    # @api private
     # @since 0.1.0
-    def __part(format)
-      return unless __part?(format)
+    # @api unstable
+    def __part(format, charset, locals)
+      return unless __part?(format, locals)
 
       Mail::Part.new.tap do |part|
         part.content_type = "#{CONTENT_TYPES.fetch(format)}; charset=#{charset}"
-        part.body         = render(format)
+        part.body         = render(format, locals)
       end
     end
 
-    # @api private
     # @since 0.1.0
-    def __part?(format)
-      @format == format ||
-        (!@format && !self.class.templates(format).nil?)
-    end
-
-    # @api private
-    # @since 0.4.0
-    def respond_to_missing?(method_name, _include_all)
-      @locals.key?(method_name)
+    # @api unstable
+    def __part?(format, locals)
+      wanted = locals.fetch(:format, nil)
+      wanted == format ||
+        (!wanted && !template(format).nil?)
     end
   end
 end
