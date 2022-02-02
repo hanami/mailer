@@ -70,8 +70,8 @@ RSpec.describe Hanami::Mailer do
 
         count.times do |i|
           threads << Thread.new do
-            user  = OpenStruct.new(name: "Luca #{i}", email: "luca-#{i}@domain.test")
-            event = OpenStruct.new(id: i, title: "Event ##{i}")
+            user  = double(name: "Luca #{i}", email: "luca-#{i}@domain.test")
+            event = double(id: i, title: "Event ##{i}")
 
             mails[i] = subject.deliver(user: user, event: event)
           end

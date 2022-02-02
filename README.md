@@ -25,7 +25,7 @@ Mail for Ruby applications.
 
 ## Rubies
 
-__Hanami::Mailer__ supports Ruby (MRI) 2.6+
+__Hanami::Mailer__ supports Ruby (MRI) 3.0+
 
 ## Installation
 

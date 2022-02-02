@@ -110,8 +110,8 @@ RSpec.describe Hanami::Mailer do
 
     context "locals" do
       let(:mailer) { EventMailer.new(configuration: configuration) }
-      let(:user)   { OpenStruct.new(name: "Luca", email: "luca@domain.test") }
-      let(:event)  { OpenStruct.new(id: 23, title: "Event #23") }
+      let(:user)   { double(name: "Luca", email: "luca@domain.test") }
+      let(:event)  { double(id: 23, title: "Event #23") }
 
       it "uses locals during the delivery process" do
         mail = mailer.deliver(user: user, event: event)
