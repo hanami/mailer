@@ -66,7 +66,7 @@ configuration = Hanami::Mailer::Configuration.new do |config|
   config.delivery_method = :test
 end
 
-class Invoice < Hanami::Mailer
+class InvoiceMailer < Hanami::Mailer
   from "noreply@example.com"
   to ->(locals) { locals.fetch(:user).email }
 end
