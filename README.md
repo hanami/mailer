@@ -365,7 +365,7 @@ configuration = Hanami::Mailer::Configuration.new do |config|
   # Set the delivery method
   # Argument: Symbol
   # Argument: Hash, optional configurations
-  config.delivery_method = :stmp
+  config.delivery_method = :smtp
 end
 ```
 
