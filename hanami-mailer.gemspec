@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.metadata["rubygems_mfa_required"] = "true"
   spec.required_ruby_version = ">= 3.0"
 
-  spec.add_dependency "hanami-utils", "~> 2.1"
+  spec.add_dependency "hanami-utils", "~> 2.0"
   spec.add_dependency "tilt",         "~> 2.0", ">= 2.0.1"
   spec.add_dependency "mail",         "~> 2.8", ">= 2.8.1"
 
