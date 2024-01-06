@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "mail",         "~> 2.7"
 
   # FIXME: remove when https://github.com/mikel/mail/pull/1439 gets merged AND a new version of `mail` gets released
-  spec.add_dependency "net-smtp", "~> 0.3"
+  spec.add_dependency "net-smtp", "0.4.0.1"
   spec.add_dependency "net-pop",  "~> 0.1"
   spec.add_dependency "net-imap", "~> 0.2"
 
